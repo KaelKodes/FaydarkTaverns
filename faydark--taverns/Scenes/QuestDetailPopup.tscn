@@ -1,0 +1,75 @@
+[gd_scene load_steps=2 format=3 uid="uid://g7cdgtjmhjxt"]
+
+[ext_resource type="Script" uid="uid://sfjxjgulmfra" path="res://Scenes/UI/QuestDetailPopup.cs" id="1_jec6c"]
+
+[node name="QuestDetailPopup" type="Window" node_paths=PackedStringArray("TitleLabel", "RegionLabel", "TypeLabel", "RewardLabel", "TimeLabel", "OptimalRolesLabel", "DescriptionLabel", "AcceptButton", "CloseButton")]
+size = Vector2i(122, 228)
+wrap_controls = true
+content_scale_aspect = 4
+script = ExtResource("1_jec6c")
+TitleLabel = NodePath("VBoxContainer/TitleLabel")
+RegionLabel = NodePath("VBoxContainer/RegionLabel")
+TypeLabel = NodePath("VBoxContainer/TypeLabel")
+RewardLabel = NodePath("VBoxContainer/RewardLabel")
+TimeLabel = NodePath("VBoxContainer/TimeLabel")
+OptimalRolesLabel = NodePath("VBoxContainer/OptimalRolesLabel")
+DescriptionLabel = NodePath("VBoxContainer/DescriptionLabel")
+AcceptButton = NodePath("VBoxContainer/HBoxContainer/AcceptButton")
+CloseButton = NodePath("VBoxContainer/HBoxContainer/CloseButton")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -61.0
+offset_top = -114.0
+offset_right = 61.0
+offset_bottom = 114.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+uppercase = true
+
+[node name="DescriptionLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="RegionLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="TypeLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="RewardLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="TimeLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="OptimalRolesLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="AcceptButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Accept"
+
+[node name="CloseButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Close"
+
+[connection signal="close_requested" from="." to="." method="OnCloseRequested"]
