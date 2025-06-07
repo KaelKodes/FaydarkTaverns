@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3 uid="uid://ch7r0s51qa60a"]
+
+[ext_resource type="Script" uid="uid://ctgsvgv1is7jt" path="res://Scenes/UI/AdventurerCard.cs" id="1_0yjfg"]
+
+[node name="AdventurerCard" type="PanelContainer"]
+script = ExtResource("1_0yjfg")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="ClassLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="VitalsLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+horizontal_alignment = 1

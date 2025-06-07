@@ -1,0 +1,113 @@
+[gd_scene load_steps=7 format=3 uid="uid://bp53yv3ypaa5j"]
+
+[ext_resource type="Script" uid="uid://hacx1tuggxkp" path="res://Scenes/QuestBoardPanel.cs" id="1_7ljul"]
+[ext_resource type="Script" uid="uid://bw4esvijflh3" path="res://Scenes/TavernManager.cs" id="1_v6xsb"]
+[ext_resource type="PackedScene" uid="uid://w7he4xk8qe6k" path="res://Scenes/UI/QuestCard.tscn" id="2_6wg6o"]
+[ext_resource type="Script" uid="uid://bo03gb6exqxki" path="res://Scenes/AdventurerRosterPanel.cs" id="2_w3872"]
+[ext_resource type="PackedScene" uid="uid://ch7r0s51qa60a" path="res://Scenes/UI/AdventurerCard.tscn" id="5_6wg6o"]
+[ext_resource type="PackedScene" uid="uid://g7cdgtjmhjxt" path="res://Scenes/QuestDetailPopup.tscn" id="6_smfey"]
+
+[node name="TavernMain" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_right = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TopBar" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 412.0
+offset_right = 570.0
+offset_bottom = 40.0
+grow_horizontal = 2
+
+[node name="TimeLabel" type="Label" parent="TopBar"]
+layout_mode = 2
+text = "06:00"
+
+[node name="GoldLabel" type="Label" parent="TopBar"]
+layout_mode = 2
+text = "Gold: 0"
+
+[node name="PauseButton" type="Button" parent="TopBar"]
+layout_mode = 2
+text = "Pause"
+
+[node name="MainArea" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.00868056
+anchor_top = 0.0679012
+anchor_right = 0.59809
+anchor_bottom = 0.984568
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="QuestBoardPanel" type="PanelContainer" parent="MainArea" node_paths=PackedStringArray("questListContainer")]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("1_7ljul")
+QuestCardScene = ExtResource("2_6wg6o")
+questListContainer = NodePath("ScrollContainer/CardHolder")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MainArea/QuestBoardPanel"]
+layout_mode = 2
+
+[node name="CardHolder" type="VBoxContainer" parent="MainArea/QuestBoardPanel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 19
+
+[node name="AdventurerRosterPanel" type="PanelContainer" parent="MainArea"]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("2_w3872")
+AdventurerCardScene = ExtResource("5_6wg6o")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MainArea/AdventurerRosterPanel"]
+layout_mode = 2
+
+[node name="AdventurerListContainer" type="VBoxContainer" parent="MainArea/AdventurerRosterPanel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="LogPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 707.0
+offset_top = 345.0
+offset_right = -15.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LogText" type="RichTextLabel" parent="LogPanel"]
+layout_mode = 2
+
+[node name="TavernManager" type="Node" parent="." node_paths=PackedStringArray("TimeLabel", "GoldLabel", "PauseButton")]
+script = ExtResource("1_v6xsb")
+TimeLabel = NodePath("../TopBar/TimeLabel")
+GoldLabel = NodePath("../TopBar/GoldLabel")
+PauseButton = NodePath("../TopBar/PauseButton")
+AdventurerCardScene = ExtResource("5_6wg6o")
+AdventurerRosterPath = NodePath("../MainArea/AdventurerRosterPanel")
+
+[node name="QuestDetailPopup" parent="." instance=ExtResource("6_smfey")]
+position = Vector2i(750, 100)
+visible = false
+content_scale_mode = 1

@@ -1,0 +1,110 @@
+[gd_scene load_steps=4 format=3 uid="uid://w7he4xk8qe6k"]
+
+[ext_resource type="Script" uid="uid://xismybe4bros" path="res://Scenes/UI/QuestCard.cs" id="1_qf87x"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bn3cn"]
+bg_color = Color(0.274105, 0.586438, 0.811932, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qf87x"]
+bg_color = Color(0.364706, 0.513726, 0.780392, 1)
+
+[node name="QuestCard" type="Panel" node_paths=PackedStringArray("TitleLabel", "RegionLabel", "TypeLabel", "RewardLabel", "TimeLabel", "PartySlotNodes")]
+custom_minimum_size = Vector2(300, 130)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 5.0
+offset_right = -852.0
+offset_bottom = -464.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_bn3cn")
+script = ExtResource("1_qf87x")
+TitleLabel = NodePath("VBox/TitleLabel")
+RegionLabel = NodePath("VBox/RegionLabel")
+TypeLabel = NodePath("VBox/TypeLabel")
+RewardLabel = NodePath("VBox/RewardLabel")
+TimeLabel = NodePath("VBox/TimeLabel")
+PartySlotNodes = [NodePath("VBox/PartySlotContainer/PartySlot1"), NodePath("VBox/PartySlotContainer/PartySlot2"), NodePath("VBox/PartySlotContainer/PartySlot3")]
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 3.0
+offset_right = -2.0
+offset_bottom = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = -2
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="VBox"]
+custom_minimum_size = Vector2(0, 20)
+layout_direction = 2
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 2
+uppercase = true
+
+[node name="RegionLabel" type="Label" parent="VBox"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="TypeLabel" type="Label" parent="VBox"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="RewardLabel" type="Label" parent="VBox"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="TimeLabel" type="Label" parent="VBox"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="PartySlotContainer" type="HBoxContainer" parent="VBox"]
+z_index = 1
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="PartySlot1" type="Panel" parent="VBox/PartySlotContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_qf87x")
+
+[node name="AdventurerLabel" type="Label" parent="VBox/PartySlotContainer/PartySlot1"]
+layout_mode = 2
+offset_right = 98.0
+offset_bottom = 24.0
+text = "[ Empty ]"
+horizontal_alignment = 1
+
+[node name="PartySlot2" type="Panel" parent="VBox/PartySlotContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_qf87x")
+
+[node name="AdventurerLabel" type="Label" parent="VBox/PartySlotContainer/PartySlot2"]
+layout_mode = 2
+offset_right = 112.0
+offset_bottom = 24.0
+text = "[ Empty ]"
+horizontal_alignment = 1
+
+[node name="PartySlot3" type="Panel" parent="VBox/PartySlotContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_qf87x")
+
+[node name="AdventurerLabel" type="Label" parent="VBox/PartySlotContainer/PartySlot3"]
+layout_mode = 2
+offset_right = 131.0
+offset_bottom = 26.0
+text = "[ Empty ]"
+horizontal_alignment = 1
