@@ -171,4 +171,31 @@ foreach (var child in adventurerListUI.GetChildren())
 	{
 		return Mathf.FloorToInt(gameTime); // 1 TU = 1 in-game minute
 	}
+	public void RestoreAdventurerToRoster(Adventurer adventurer)
+{
+	if (adventurer == null || adventurerListUI == null || AdventurerCardScene == null)
+		return;
+
+	// Re-add adventurer to internal list
+	if (!adventurerList.Contains(adventurer))
+		adventurerList.Add(adventurer);
+
+	// Create card
+	var card = AdventurerCardScene.Instantiate<AdventurerCard>();
+	card.BoundAdventurer = adventurer;
+
+	// Populate visuals
+	var nameLabel = card.GetNode<Label>("VBoxContainer/NameLabel");
+	var classLabel = card.GetNode<Label>("VBoxContainer/ClassLabel");
+	var vitalsLabel = card.GetNode<Label>("VBoxContainer/VitalsLabel");
+
+	nameLabel.Text = adventurer.Name;
+	classLabel.Text = adventurer.ClassName;
+	vitalsLabel.Text = $"HP: {adventurer.GetHp()} | Mana: {adventurer.GetMana()}";
+
+	// Add to UI
+	adventurerListUI.AddChild(card);
+}
+
+	
 }

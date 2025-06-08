@@ -16,80 +16,86 @@ public partial class QuestCard : Panel
 	private Quest quest;
 
 	public override void _Ready()
-{
-	GD.Print("QuestCard: Running _Ready()");
-
-	try {
-		TitleLabel = GetNode<Label>("VBox/TitleLabel");
-		RegionLabel = GetNode<Label>("VBox/RegionLabel");
-		TypeLabel = GetNode<Label>("VBox/TypeLabel");
-		RewardLabel = GetNode<Label>("VBox/RewardLabel");
-		TimeLabel = GetNode<Label>("VBox/TimeLabel");
-
-		for (int i = 1; i <= 3; i++)
-		{
-			var panel = GetNode<Panel>($"VBox/PartySlotContainer/PartySlot{i}");
-			PartySlots.Add(panel);
-
-			var label = panel.GetNode<Label>("AdventurerLabel");
-			partySlotLabels.Add(label);
-		}
-
-		GD.Print("✅ All nodes assigned successfully");
-
-		// 🟩 FIX: If quest was already set before _Ready, display it now
-		if (quest != null)
-			UpdateDisplay();
-	}
-	catch (Exception e)
 	{
-		GD.PrintErr("❌ QuestCard _Ready() failed: ", e.Message);
+		GD.Print("QuestCard: Running _Ready()");
+
+		try
+		{
+			TitleLabel = GetNode<Label>("VBox/TitleLabel");
+			RegionLabel = GetNode<Label>("VBox/RegionLabel");
+			TypeLabel = GetNode<Label>("VBox/TypeLabel");
+			RewardLabel = GetNode<Label>("VBox/RewardLabel");
+			TimeLabel = GetNode<Label>("VBox/TimeLabel");
+
+			for (int i = 1; i <= 3; i++)
+			{
+				var panel = GetNode<Panel>($"VBox/PartySlotContainer/PartySlot{i}");
+				PartySlots.Add(panel);
+
+				var label = panel.GetNode<Label>("AdventurerLabel");
+				partySlotLabels.Add(label);
+			}
+
+			GD.Print("✅ All nodes assigned successfully");
+
+			// 🟩 FIX: If quest was already set before _Ready, display it now
+			if (quest != null)
+				UpdateDisplay();
+		}
+		catch (Exception e)
+		{
+			GD.PrintErr("❌ QuestCard _Ready() failed: ", e.Message);
+		}
+		SetMouseFilter(Control.MouseFilterEnum.Stop);
 	}
-}
 
 
 
 
 	public void SetQuestData(Quest q)
-{
-	quest = q;
-	if (IsInsideTree()) // Only update UI if node is fully initialized
-		UpdateDisplay();
-}
+	{
+		quest = q;
+		if (IsInsideTree()) // Only update UI if node is fully initialized
+			UpdateDisplay();
+	}
 
 
 	private void UpdateDisplay()
-{
-	if (quest == null)
 	{
-		GD.PrintErr("UpdateDisplay called with null quest.");
-		return;
-	}
-
-	// 🟩 Add these to fix the label population issue
-	TitleLabel.Text = quest.Title;
-	RegionLabel.Text = quest.Region.ToString();
-	TypeLabel.Text = quest.Type.ToString();
-	RewardLabel.Text = $"{quest.Reward}g";
-	TimeLabel.Text = $"{quest.GetTotalExpectedTU()} TU";
-
-	GD.Print($"Updating display for quest: {quest.Title}");
-	GD.Print($"Assigned Adventurers: {quest.AssignedAdventurers.Count}");
-
-	for (int i = 0; i < partySlotLabels.Count; i++)
-	{
-		if (i < quest.AssignedAdventurers.Count)
+		if (quest == null)
 		{
-			partySlotLabels[i].Text = quest.AssignedAdventurers[i].Name;
-			GD.Print($"  -> Slot {i}: {quest.AssignedAdventurers[i].Name}");
+			GD.PrintErr("UpdateDisplay called with null quest.");
+			return;
 		}
-		else
+
+		// 🟩 Add these to fix the label population issue
+		TitleLabel.Text = quest.Title;
+		RegionLabel.Text = quest.Region.ToString();
+		TypeLabel.Text = quest.Type.ToString();
+		RewardLabel.Text = $"{quest.Reward}g";
+		TimeLabel.Text = $"{quest.GetTotalExpectedTU()} TU";
+
+		GD.Print($"Updating display for quest: {quest.Title}");
+		GD.Print($"Assigned Adventurers: {quest.AssignedAdventurers.Count}");
+
+		for (int i = 0; i < partySlotLabels.Count; i++)
 		{
-			partySlotLabels[i].Text = "";
-			GD.Print($"  -> Slot {i}: (empty)");
+			if (i < quest.AssignedAdventurers.Count)
+			{
+				var fullName = quest.AssignedAdventurers[i].Name;
+				var firstName = fullName.Split(' ')[0];
+				partySlotLabels[i].Text = firstName;
+
+				GD.Print($"  -> Slot {i}: {firstName}");
+			}
+			else
+			{
+				partySlotLabels[i].Text = "";
+				GD.Print($"  -> Slot {i}: (empty)");
+			}
 		}
+
 	}
-}
 
 
 
@@ -138,34 +144,40 @@ public partial class QuestCard : Panel
 	{
 		if (index < quest.AssignedAdventurers.Count)
 		{
+			var adventurer = quest.AssignedAdventurers[index];
 			quest.AssignedAdventurers.RemoveAt(index);
 			UpdateDisplay();
+
+			// 👇 Restore card to roster
+			TavernManager.Instance?.RestoreAdventurerToRoster(adventurer);
 		}
 	}
 
+
 	public override void _GuiInput(InputEvent @event)
+{
+	if (@event is InputEventMouseButton mouseEvent && mouseEvent.Pressed)
 	{
-		if (@event is InputEventMouseButton mouseEvent && mouseEvent.Pressed)
+		if (mouseEvent.ButtonIndex == MouseButton.Left)
 		{
-			if (mouseEvent.ButtonIndex == MouseButton.Left)
+			var popup = GetTree().Root.GetNode<QuestDetailPopup>("TavernMain/QuestDetailPopup");
+			popup.SetQuest(quest);
+			popup.Show();
+		}
+		else if (mouseEvent.ButtonIndex == MouseButton.Right)
+		{
+			// ✅ Just remove the last adventurer from the party
+			for (int i = 0; i < partySlotLabels.Count; i++)
 			{
-				var popup = GetTree().Root.GetNode<QuestDetailPopup>("TavernMain/QuestDetailPopup");
-				popup.SetQuest(quest);
-				popup.Show();
-			}
-			else if (mouseEvent.ButtonIndex == MouseButton.Right)
-			{
-				Vector2 clickPos = GetLocalMousePosition();
-				for (int i = 0; i < partySlotLabels.Count; i++)
+				if (!string.IsNullOrEmpty(partySlotLabels[i].Text))
 				{
-					if (partySlotLabels[i].GetGlobalRect().HasPoint(GetGlobalMousePosition()) &&
-						!string.IsNullOrEmpty(partySlotLabels[i].Text))
-					{
-						UnassignFromSlot(i);
-						break;
-					}
+					UnassignFromSlot(i);
+					break;
 				}
 			}
 		}
 	}
+}
+
+
 }

@@ -76,6 +76,7 @@ alignment = 1
 [node name="PartySlot1" type="Panel" parent="VBox/PartySlotContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_qf87x")
 
 [node name="AdventurerLabel" type="Label" parent="VBox/PartySlotContainer/PartySlot1"]
@@ -88,6 +89,7 @@ horizontal_alignment = 1
 [node name="PartySlot2" type="Panel" parent="VBox/PartySlotContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_qf87x")
 
 [node name="AdventurerLabel" type="Label" parent="VBox/PartySlotContainer/PartySlot2"]
@@ -100,6 +102,7 @@ horizontal_alignment = 1
 [node name="PartySlot3" type="Panel" parent="VBox/PartySlotContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_qf87x")
 
 [node name="AdventurerLabel" type="Label" parent="VBox/PartySlotContainer/PartySlot3"]
