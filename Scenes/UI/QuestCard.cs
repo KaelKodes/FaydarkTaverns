@@ -16,83 +16,111 @@ public partial class QuestCard : Panel
 	private Quest quest;
 
 	public override void _Ready()
-	{
-		TitleLabel ??= GetNode<Label>("VBox/TitleLabel");
-		RegionLabel ??= GetNode<Label>("VBox/RegionLabel");
-		TypeLabel ??= GetNode<Label>("VBox/TypeLabel");
-		RewardLabel ??= GetNode<Label>("VBox/RewardLabel");
-		TimeLabel ??= GetNode<Label>("VBox/TimeLabel");
+{
+	GD.Print("QuestCard: Running _Ready()");
 
-		// Locate party slot panels and their corresponding labels
+	try {
+		TitleLabel = GetNode<Label>("VBox/TitleLabel");
+		RegionLabel = GetNode<Label>("VBox/RegionLabel");
+		TypeLabel = GetNode<Label>("VBox/TypeLabel");
+		RewardLabel = GetNode<Label>("VBox/RewardLabel");
+		TimeLabel = GetNode<Label>("VBox/TimeLabel");
+
 		for (int i = 1; i <= 3; i++)
 		{
-			var panel = GetNodeOrNull<Panel>($"PartySlotContainer/PartySlot{i}");
-			if (panel != null)
-			{
-				PartySlots.Add(panel);
-				var label = panel.GetNodeOrNull<Label>("AdventurerLabel");
-				if (label != null)
-					partySlotLabels.Add(label);
-			}
+			var panel = GetNode<Panel>($"VBox/PartySlotContainer/PartySlot{i}");
+			PartySlots.Add(panel);
+
+			var label = panel.GetNode<Label>("AdventurerLabel");
+			partySlotLabels.Add(label);
 		}
+
+		GD.Print("✅ All nodes assigned successfully");
+
+		// 🟩 FIX: If quest was already set before _Ready, display it now
+		if (quest != null)
+			UpdateDisplay();
 	}
+	catch (Exception e)
+	{
+		GD.PrintErr("❌ QuestCard _Ready() failed: ", e.Message);
+	}
+}
+
+
+
 
 	public void SetQuestData(Quest q)
-	{
-		quest = q;
+{
+	quest = q;
+	if (IsInsideTree()) // Only update UI if node is fully initialized
 		UpdateDisplay();
-	}
+}
+
 
 	private void UpdateDisplay()
-	{
-		if (quest == null) return;
-
-		TitleLabel.Text = quest.Title;
-		RegionLabel.Text = $"Region: {quest.Region}";
-		TypeLabel.Text = $"Type: {quest.Type}";
-		RewardLabel.Text = $"Reward: {quest.Reward}g";
-		TimeLabel.Text = $"Est: {quest.GetTotalExpectedTU()} TU / Due: {quest.DeadlineTU}";
-
-		Modulate = quest.IsOverdue ? new Color(1, 0.5f, 0.5f) :
-				   quest.Assigned ? new Color(0.8f, 0.8f, 0.8f) :
-				   new Color(1, 1, 1);
-
-		for (int i = 0; i < partySlotLabels.Count; i++)
 {
-	partySlotLabels[i].Text = i < quest.AssignedAdventurers.Count
-		? quest.AssignedAdventurers[i].Name
-		: "[ Empty ]"; // Optional placeholder for clarity
-}
-
+	if (quest == null)
+	{
+		GD.PrintErr("UpdateDisplay called with null quest.");
+		return;
 	}
 
-	public override bool _CanDropData(Vector2 atPosition, Variant data)
-{
-	// This must return TRUE if we are dragging an AdventurerCard
-	return data.AsGodotObject() is AdventurerCard && quest != null && quest.AssignedAdventurers.Count < 3;
+	// 🟩 Add these to fix the label population issue
+	TitleLabel.Text = quest.Title;
+	RegionLabel.Text = quest.Region.ToString();
+	TypeLabel.Text = quest.Type.ToString();
+	RewardLabel.Text = $"{quest.Reward}g";
+	TimeLabel.Text = $"{quest.GetTotalExpectedTU()} TU";
+
+	GD.Print($"Updating display for quest: {quest.Title}");
+	GD.Print($"Assigned Adventurers: {quest.AssignedAdventurers.Count}");
+
+	for (int i = 0; i < partySlotLabels.Count; i++)
+	{
+		if (i < quest.AssignedAdventurers.Count)
+		{
+			partySlotLabels[i].Text = quest.AssignedAdventurers[i].Name;
+			GD.Print($"  -> Slot {i}: {quest.AssignedAdventurers[i].Name}");
+		}
+		else
+		{
+			partySlotLabels[i].Text = "";
+			GD.Print($"  -> Slot {i}: (empty)");
+		}
+	}
 }
+
+
+
+
+	public override bool _CanDropData(Vector2 atPosition, Variant data)
+	{
+		// This must return TRUE if we are dragging an AdventurerCard
+		return data.AsGodotObject() is AdventurerCard && quest != null && quest.AssignedAdventurers.Count < 3;
+	}
 
 
 
 	public override void _DropData(Vector2 atPosition, Variant data)
-{
-	var card = data.AsGodotObject() as AdventurerCard;
-	if (card == null || quest == null)
-		return;
+	{
+		var card = data.AsGodotObject() as AdventurerCard;
+		if (card == null || quest == null)
+			return;
 
-	var adventurer = card.BoundAdventurer;
-	if (adventurer == null || quest.AssignedAdventurers.Contains(adventurer))
-		return;
+		var adventurer = card.BoundAdventurer;
+		if (adventurer == null || quest.AssignedAdventurers.Contains(adventurer))
+			return;
 
-	// Assign the adventurer
-	quest.AssignedAdventurers.Add(adventurer);
+		// Assign the adventurer
+		quest.AssignedAdventurers.Add(adventurer);
 
-	// Remove the visual card
-	card.QueueFree();
+		// Remove the visual card
+		card.QueueFree();
 
-	// ✅ Refresh the slot labels
-	UpdateDisplay();
-}
+		// ✅ Refresh the slot labels
+		UpdateDisplay();
+	}
 
 
 
