@@ -20,12 +20,12 @@ public class Quest
 	public Region Region;
 	public int Reward;
 
-
 	// Timing
 	public int TravelTimeTU;
 	public int TaskTimeTU;
 	public int DeadlineTU;      // Total time allowed
 	public int StartTimeTU;     // When assigned (gameTime in TUs)
+	public int ExpectedReturnTU;
 	public bool IsOverdue => Assigned && GetElapsedTU() > DeadlineTU;
 
 	// Party assignment
@@ -33,6 +33,11 @@ public class Quest
 	public bool Assigned => AssignedParty.Count > 0;
 	public List<Adventurer> AssignedAdventurers = new();
 
+	// Status
+	public bool IsAccepted = false;
+	public bool IsLocked = false;
+	public bool IsComplete = false;
+	public bool Failed = false;
 
 	// Synergy / Role guidance
 	public List<int> OptimalRoles = new(); // E.g. [1, 2, 4] for Tank/DPS/Healer
@@ -69,5 +74,15 @@ public class Quest
 			bonus += (int)(TaskTimeTU * 0.05); // 5% bonus for good synergy
 
 		return bonus;
+	}
+
+	public void Accept()
+	{
+		if (AssignedAdventurers.Count == 0) return;
+
+		IsAccepted = true;
+		IsLocked = true;
+		StartTimeTU = TavernManager.CurrentTU;
+		ExpectedReturnTU = StartTimeTU + GetTotalExpectedTU();
 	}
 }

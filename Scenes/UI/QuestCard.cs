@@ -109,24 +109,29 @@ public partial class QuestCard : Panel
 
 
 	public override void _DropData(Vector2 atPosition, Variant data)
-	{
-		var card = data.AsGodotObject() as AdventurerCard;
-		if (card == null || quest == null)
-			return;
+{
+	var card = data.AsGodotObject() as AdventurerCard;
+	if (card == null || quest == null)
+		return;
 
-		var adventurer = card.BoundAdventurer;
-		if (adventurer == null || quest.AssignedAdventurers.Contains(adventurer))
-			return;
+	// 🛑 Prevent dropping if quest is locked
+	if (quest.IsLocked)
+		return;
 
-		// Assign the adventurer
-		quest.AssignedAdventurers.Add(adventurer);
+	var adventurer = card.BoundAdventurer;
+	if (adventurer == null || quest.AssignedAdventurers.Contains(adventurer))
+		return;
 
-		// Remove the visual card
-		card.QueueFree();
+	// Assign the adventurer
+	quest.AssignedAdventurers.Add(adventurer);
 
-		// ✅ Refresh the slot labels
-		UpdateDisplay();
-	}
+	// Remove the visual card
+	card.QueueFree();
+
+	// ✅ Refresh the slot labels
+	UpdateDisplay();
+}
+
 
 
 

@@ -15,6 +15,8 @@ public partial class QuestDetailPopup : Window
 	[Export] public Button CloseButton;
 
 	private Quest quest;
+	private Quest boundQuest;
+
 
 	public override void _Ready()
 	{
@@ -58,11 +60,15 @@ OptimalRolesLabel.Text = roles.ToString().TrimEnd(',', ' ');
 	}
 
 	private void OnAcceptPressed()
-	{
-		GD.Print($"✅ Quest accepted: {quest.Title}");
-		// Eventually: assign adventurers or flag as 'in progress'
-		Hide();
-	}
+{
+	if (boundQuest == null) return;
+
+	boundQuest.Accept();
+	AcceptButton.Disabled = true; // Or Hide it if preferred
+	Hide(); // Optional: close popup after accept
+}
+
+	
 	private void OnCloseRequested()
 {
 	Hide(); // or QueueFree() if you want to destroy it
