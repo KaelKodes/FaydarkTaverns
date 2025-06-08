@@ -7,18 +7,18 @@ public Adventurer BoundAdventurer;
 
 	public override Variant _GetDragData(Vector2 atPosition)
 {
-	if (BoundAdventurer == null)
-		return new Variant(); // or: return default;
-
-	var preview = new Label
+	var label = new Label
 	{
 		Text = BoundAdventurer.Name,
 		Modulate = new Color(1, 1, 1, 0.8f)
 	};
-	SetDragPreview(preview);
+	SetDragPreview(label);
 
-	// Godot auto-boxes reference types into Variant
-	return BoundAdventurer;
+	// Return this node — the drag source
+	return this;
 }
+
+
+public Adventurer GetAdventurer() => BoundAdventurer;
 
 }
