@@ -27,40 +27,36 @@ public partial class TavernManager : Node
 	[Export] public NodePath AdventurerRosterPath;
 	private AdventurerRosterPanel adventurerRosterPanel;
 
-
 	public override void _Ready()
-{
-	Instance = this;
+	{
+		Instance = this;
 
-	// Wire up UI
-	TimeLabel ??= GetNode<Label>("../TopBar/TimeLabel");
-	GoldLabel ??= GetNode<Label>("../TopBar/GoldLabel");
-	PauseButton ??= GetNode<Button>("../TopBar/PauseButton");
-	PauseButton.Pressed += TogglePause;
+		// Wire up UI
+		TimeLabel ??= GetNode<Label>("../TopBar/TimeLabel");
+		GoldLabel ??= GetNode<Label>("../TopBar/GoldLabel");
+		PauseButton ??= GetNode<Button>("../TopBar/PauseButton");
+		PauseButton.Pressed += TogglePause;
 
-	// Locate UI container to hold adventurer cards
-	adventurerListUI = GetNode<VBoxContainer>("../MainArea/AdventurerRosterPanel/ScrollContainer/AdventurerListContainer");
-	AdventurerCardScene ??= GD.Load<PackedScene>("res://Scenes/UI/AdventurerCard.tscn");
+		// Locate UI container to hold adventurer cards
+		adventurerListUI = GetNode<VBoxContainer>("../MainArea/AdventurerRosterPanel/ScrollContainer/AdventurerListContainer");
+		AdventurerCardScene ??= GD.Load<PackedScene>("res://Scenes/UI/AdventurerCard.tscn");
 
-	// 👇 This line ensures the exported path works at runtime
-	if (!string.IsNullOrEmpty(AdventurerRosterPath))
-{
-	adventurerRosterPanel = GetNode<AdventurerRosterPanel>(AdventurerRosterPath);
-}
+		if (!string.IsNullOrEmpty(AdventurerRosterPath))
+		{
+			adventurerRosterPanel = GetNode<AdventurerRosterPanel>(AdventurerRosterPath);
+		}
 
+		UpdateTimeLabel();
+		GenerateAdventurers();
+		DisplayAdventurers();
+		CallDeferred(nameof(DelayedDayStart));
+	}
 
-	UpdateTimeLabel();
-	GenerateAdventurers();
-	DisplayAdventurers();
-	CallDeferred(nameof(DelayedDayStart));
-}
-private void DelayedDayStart()
-{
-	StartNewDay();
-	lastDay = 0; // Prevent double-start on first frame
-}
-
-
+	private void DelayedDayStart()
+	{
+		StartNewDay();
+		lastDay = 0;
+	}
 
 	public override void _Process(double delta)
 	{
@@ -81,6 +77,32 @@ private void DelayedDayStart()
 			lastDay = currentDay;
 			StartNewDay();
 		}
+
+		// 🔁 Check for quest resolution
+		foreach (var quest in QuestManager.Instance.GetAcceptedQuests())
+		{
+			if (!quest.IsComplete && CurrentTU >= quest.ExpectedReturnTU)
+			{
+				var result = QuestSimulator.Simulate(quest);
+				quest.IsComplete = true;
+				quest.Failed = !result.Success;
+
+				AddGold(result.GoldEarned);
+
+				foreach (var adventurer in quest.AssignedAdventurers)
+				{
+					adventurer.GainXP(result.ExpGained);
+					RestoreAdventurerToRoster(adventurer);
+				}
+
+				QuestManager.Instance.LogQuestResult(quest, result);
+			}
+		}
+		foreach (var q in QuestManager.Instance.GetAcceptedQuests())
+{
+	GD.Print($"🔍 Active Quest: {q.QuestId} | {q.Title} | Accepted: {q.IsAccepted}");
+}
+
 	}
 
 	private void UpdateTimeLabel()
@@ -111,15 +133,63 @@ private void DelayedDayStart()
 	}
 
 	private void DisplayAdventurers()
-{
-foreach (var child in adventurerListUI.GetChildren())
-{
-	child.QueueFree();
-}
-
-
-	foreach (var adventurer in adventurerList)
 	{
+		foreach (var child in adventurerListUI.GetChildren())
+		{
+			child.QueueFree();
+		}
+
+		foreach (var adventurer in adventurerList)
+		{
+			var card = AdventurerCardScene.Instantiate<AdventurerCard>();
+			card.BoundAdventurer = adventurer;
+
+			var nameLabel = card.GetNode<Label>("VBoxContainer/NameLabel");
+			var classLabel = card.GetNode<Label>("VBoxContainer/ClassLabel");
+			var vitalsLabel = card.GetNode<Label>("VBoxContainer/VitalsLabel");
+
+			nameLabel.Text = adventurer.Name;
+			classLabel.Text = adventurer.ClassName;
+			vitalsLabel.Text = $"HP: {adventurer.GetHp()} | Mana: {adventurer.GetMana()}";
+
+			adventurerListUI.AddChild(card);
+		}
+	}
+
+	private void StartNewDay()
+	{
+		GD.Print("☀️ New day begins! Clearing old data...");
+
+		QuestManager.Instance?.ClearUnclaimedQuests();
+		adventurerList.RemoveAll(a => a.AssignedQuestId == null);
+
+		adventurerList.Clear();
+		int idCounter = 1;
+		foreach (var kv in classTemplates)
+		{
+			var adventurer = AdventurerGenerator.GenerateAdventurer(idCounter++, kv.Value);
+			adventurerList.Add(adventurer);
+		}
+
+		DisplayAdventurers();
+		QuestManager.Instance?.GenerateDailyQuests();
+
+		GD.Print("✨ Day refreshed with new quests and adventurers.");
+	}
+
+	public int GetCurrentTU()
+	{
+		return Mathf.FloorToInt(gameTime);
+	}
+
+	public void RestoreAdventurerToRoster(Adventurer adventurer)
+	{
+		if (adventurer == null || adventurerListUI == null || AdventurerCardScene == null)
+			return;
+
+		if (!adventurerList.Contains(adventurer))
+			adventurerList.Add(adventurer);
+
 		var card = AdventurerCardScene.Instantiate<AdventurerCard>();
 		card.BoundAdventurer = adventurer;
 
@@ -133,69 +203,13 @@ foreach (var child in adventurerListUI.GetChildren())
 
 		adventurerListUI.AddChild(card);
 	}
-}
 
-
-
-
-
-	private void StartNewDay()
+	public void AddGold(int amount)
 	{
-		GD.Print("☀️ New day begins! Clearing old data...");
-
-		// Clear unclaimed quests
-		QuestManager.Instance?.ClearUnclaimedQuests();
-
-		// Clear idle adventurers
-		adventurerList.RemoveAll(a => a.AssignedQuestId == null);
-
-		// Generate new adventurers
-		adventurerList.Clear();
-		int idCounter = 1;
-		foreach (var kv in classTemplates)
+		if (int.TryParse(GoldLabel.Text.Replace("g", ""), out int currentGold))
 		{
-			var adventurer = AdventurerGenerator.GenerateAdventurer(idCounter++, kv.Value);
-			adventurerList.Add(adventurer);
+			currentGold += amount;
+			GoldLabel.Text = $"{currentGold}g";
 		}
-
-		// Display adventurers in UI
-		DisplayAdventurers();
-
-		// Generate quests
-		QuestManager.Instance?.GenerateDailyQuests();
-
-		GD.Print("✨ Day refreshed with new quests and adventurers.");
 	}
-
-	public int GetCurrentTU()
-	{
-		return Mathf.FloorToInt(gameTime); // 1 TU = 1 in-game minute
-	}
-	public void RestoreAdventurerToRoster(Adventurer adventurer)
-{
-	if (adventurer == null || adventurerListUI == null || AdventurerCardScene == null)
-		return;
-
-	// Re-add adventurer to internal list
-	if (!adventurerList.Contains(adventurer))
-		adventurerList.Add(adventurer);
-
-	// Create card
-	var card = AdventurerCardScene.Instantiate<AdventurerCard>();
-	card.BoundAdventurer = adventurer;
-
-	// Populate visuals
-	var nameLabel = card.GetNode<Label>("VBoxContainer/NameLabel");
-	var classLabel = card.GetNode<Label>("VBoxContainer/ClassLabel");
-	var vitalsLabel = card.GetNode<Label>("VBoxContainer/VitalsLabel");
-
-	nameLabel.Text = adventurer.Name;
-	classLabel.Text = adventurer.ClassName;
-	vitalsLabel.Text = $"HP: {adventurer.GetHp()} | Mana: {adventurer.GetMana()}";
-
-	// Add to UI
-	adventurerListUI.AddChild(card);
-}
-
-	
 }

@@ -23,8 +23,10 @@ public partial class Adventurer : RefCounted
 	public string Status = "Idle";
 	public int? AssignedQuestId { get; set; } = null;
 
+	public int XPToLevelUp => Level * 100;
+
 	public Adventurer(int id, string name, string className, int roleId, int str, int dex, int con, int intel,
-					  int aggression, int distance, int healingUse, int focus)
+				  int aggression, int distance, int healingUse, int focus)
 	{
 		Id = id;
 		Name = name;
@@ -47,4 +49,16 @@ public partial class Adventurer : RefCounted
 	public float GetMeleeDamage() => Strength * 1.5f;
 	public float GetMagicDamage() => Intelligence * 1.5f;
 	public float GetSpeed() => Dexterity * 0.75f;
-}
+
+	public void GainXP(int amount)
+	{
+		Xp += amount;
+		while (Xp >= XPToLevelUp)
+		{
+			Xp -= XPToLevelUp;
+			Level++;
+			GD.Print($"⭐ {Name} leveled up to Level {Level}!");
+			// Optional: Stat improvements or events
+		}
+	}
+} 

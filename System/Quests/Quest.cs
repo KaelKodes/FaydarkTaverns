@@ -1,3 +1,4 @@
+using Godot;
 using System;
 using System.Collections.Generic;
 
@@ -77,12 +78,21 @@ public class Quest
 	}
 
 	public void Accept()
+{
+	if (AssignedAdventurers.Count == 0)
 	{
-		if (AssignedAdventurers.Count == 0) return;
-
-		IsAccepted = true;
-		IsLocked = true;
-		StartTimeTU = TavernManager.CurrentTU;
-		ExpectedReturnTU = StartTimeTU + GetTotalExpectedTU();
+		GD.Print($"❌ Attempted to accept Quest {QuestId}, but has no adventurers.");
+		return;
 	}
+
+	IsAccepted = true;
+	IsLocked = true;
+	StartTimeTU = TavernManager.CurrentTU;
+	ExpectedReturnTU = StartTimeTU + GetTotalExpectedTU();
+
+	GD.Print($"✅ ACCEPTED Quest {QuestId} | {Title}");
+
+	QuestManager.Instance?.NotifyQuestStateChanged(this);
+}
+
 }

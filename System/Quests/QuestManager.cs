@@ -1,3 +1,4 @@
+using Godot;
 using System;
 using System.Collections.Generic;
 
@@ -9,6 +10,7 @@ public class QuestManager
 
 	private List<Quest> allQuests = new();
 	private int nextQuestId = 1;
+	private List<QuestReport> dailyReports = new();
 
 	private QuestManager()
 	{
@@ -41,4 +43,50 @@ public class QuestManager
 	{
 		allQuests.RemoveAll(q => !q.Assigned);
 	}
+	
+	public List<Quest> GetAcceptedQuests()
+{
+	return allQuests.FindAll(q => q.IsAccepted && !q.IsComplete);
+}
+
+public void LogQuestResult(Quest quest, QuestResult result)
+{
+	var report = new QuestReport
+	{
+		Title = quest.Title,
+		Success = result.Success,
+		Gold = result.GoldEarned,
+		ExpEach = result.ExpGained,
+		AdventurerNames = quest.AssignedAdventurers.ConvertAll(a => a.Name)
+	};
+
+	dailyReports.Add(report);
+
+	GD.Print($"📋 Logged Quest Report: {report.Title} | Success: {report.Success}");
+}
+public void NotifyQuestStateChanged(Quest quest)
+{
+	foreach (var node in TavernManager.Instance.GetTree().GetNodesInGroup("QuestCard"))
+	{
+		if (node is QuestCard qc && qc.HasQuest(quest))
+		{
+			qc.UpdateDisplay();
+			GD.Print($"🔄 Updated QuestCard for accepted quest: {quest.Title}");
+		}
+	}
+}
+
+
+
+	
+}
+
+
+public class QuestReport
+{
+	public string Title;
+	public bool Success;
+	public int Gold;
+	public int ExpEach;
+	public List<string> AdventurerNames;
 }

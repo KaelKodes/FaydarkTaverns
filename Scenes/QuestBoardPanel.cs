@@ -29,8 +29,10 @@ public partial class QuestBoardPanel : PanelContainer
 	foreach (var quest in QuestManager.Instance.GetAvailableQuests())
 	{
 		var card = QuestCardScene.Instantiate<QuestCard>();
-		card.SetQuestData(quest);
+		card.SetQuestData(quest); // ✅ Use real quest from QuestManager
 		questHolder.AddChild(card);
+		GD.Print($"Adding Quest ID: {quest.QuestId}");
+
 	}
 }
 
