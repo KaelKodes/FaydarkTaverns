@@ -1,6 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://w7he4xk8qe6k"]
+[gd_scene load_steps=6 format=3 uid="uid://w7he4xk8qe6k"]
 
 [ext_resource type="Script" uid="uid://xismybe4bros" path="res://Scenes/UI/QuestCard.cs" id="1_qf87x"]
+[ext_resource type="Texture2D" uid="uid://d10qmaad65cg2" path="res://Assets/UI/QuestStatus/SuccessBanner.png" id="2_aftnd"]
+[ext_resource type="Texture2D" uid="uid://uij7eyo5vuck" path="res://Assets/UI/QuestStatus/FailedBanner.png" id="3_bnagl"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bn3cn"]
 bg_color = Color(0.274105, 0.586438, 0.811932, 1)
@@ -10,12 +12,12 @@ bg_color = Color(0.364706, 0.513726, 0.780392, 1)
 
 [node name="QuestCard" type="Panel" node_paths=PackedStringArray("TitleLabel", "RegionLabel", "TypeLabel", "RewardLabel", "TimeLabel") groups=["QuestCard"]]
 custom_minimum_size = Vector2(300, 130)
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = -1
+anchor_right = 0.26
+anchor_bottom = 0.284
 offset_top = 5.0
-offset_right = -852.0
-offset_bottom = -464.0
+offset_right = 0.47998
+offset_bottom = -0.0320129
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -27,6 +29,29 @@ RegionLabel = NodePath("VBox/RegionLabel")
 TypeLabel = NodePath("VBox/TypeLabel")
 RewardLabel = NodePath("VBox/RewardLabel")
 TimeLabel = NodePath("VBox/TimeLabel")
+
+[node name="SuccessBanner" type="TextureRect" parent="."]
+visible = false
+z_index = 1
+layout_mode = 0
+offset_left = -21.0
+offset_top = -53.0
+offset_right = 359.0
+offset_bottom = 181.0
+size_flags_vertical = 3
+texture = ExtResource("2_aftnd")
+expand_mode = 3
+
+[node name="FailedBanner" type="TextureRect" parent="."]
+visible = false
+z_index = 1
+layout_mode = 0
+offset_left = -5.0
+offset_top = 2.0
+offset_right = 337.0
+offset_bottom = 156.0
+texture = ExtResource("3_bnagl")
+expand_mode = 3
 
 [node name="VBox" type="VBoxContainer" parent="."]
 layout_mode = 1

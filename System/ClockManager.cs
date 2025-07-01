@@ -8,7 +8,7 @@ public partial class ClockManager : Node
 	public DateTime CurrentTime { get; private set; } = new DateTime(2025, 1, 1, 6, 0, 0); // Start at Jan 1, 2025, 6:00 AM
 	public float TimeMultiplier { get; private set; } = 1f; // 0 = paused, 1 = normal, etc.
 	private const double GameSecondsPerRealSecond = 60.0; // 1s real = 60s game (1m)
-
+	public event Action<DateTime> OnTimeAdvanced;
 
 	private TimeSpan realTimeAccumulator = TimeSpan.Zero;
 	private const double SecondsPerTick = 1.0; // how often we simulate 1 second in game time
@@ -43,13 +43,14 @@ public partial class ClockManager : Node
 	}
 
 	private void AdvanceTime(TimeSpan amount)
-	{
-		CurrentTime += amount;
+{
+	CurrentTime += amount;
 
-		// Trigger New Day Event
-		if (CurrentTime.Day != lastDay)
-		{
-			lastDay = CurrentTime.Day;
+	OnTimeAdvanced?.Invoke(CurrentTime); // ✅ Notify subscribers like TimerManager
+
+	if (CurrentTime.Day != lastDay)
+	{
+		lastDay = CurrentTime.Day;
 			GameLog.Debug($"🌞 New Day: {CurrentTime:D}");
 			GameLog.Info($"🌞 New Day: {CurrentTime:D}");
 			OnNewDay?.Invoke(CurrentTime);

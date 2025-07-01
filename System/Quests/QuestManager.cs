@@ -71,14 +71,73 @@ public void NotifyQuestStateChanged(Quest quest)
 		if (node is QuestCard qc && qc.HasQuest(quest))
 		{
 			qc.UpdateDisplay();
-			GD.Print($"🔄 Updated QuestCard for accepted quest: {quest.Title}");
+			GameLog.Debug($"🔄 Updated QuestCard for accepted quest: {quest.Title}");
 		}
 	}
+
+	// ✅ Trigger reordering of the cards
+	TavernManager.Instance?.SortQuestCards();
 }
 
+public void CompleteQuest(Quest quest)
+{
+	if (quest.IsComplete)
+	{
+		GameLog.Debug($"⚠️ Tried to complete Quest {quest.QuestId}, but it's already complete.");
+		return;
+	}
 
+	var result = QuestSimulator.Simulate(quest);
+	quest.IsComplete = true;
+	quest.Failed = !result.Success;
 
-	
+	// ✅ Only reward player if quest succeeded
+	if (result.Success)
+	{
+		TavernManager.Instance.AddGold(result.GoldEarned);
+		GameLog.Info($"💰 Player earned {result.GoldEarned}g!");
+	}
+
+	// Adventurers always get XP and return
+	foreach (var adventurer in quest.AssignedAdventurers)
+	{
+		adventurer.GainXP(result.ExpGained);
+		TavernManager.Instance.RestoreAdventurerToRoster(adventurer);
+	}
+
+	LogQuestResult(quest, result);
+	NotifyQuestStateChanged(quest);
+	GameLog.Info($"🎉 Quest '{quest.Title}' completed. Success: {result.Success}");
+}
+
+public void EnforceDeadline(Quest quest)
+{
+	if (quest.IsComplete)
+	{
+		GameLog.Debug($"✅ Quest {quest.QuestId} completed before deadline. No action needed.");
+		return;
+	}
+
+	quest.IsComplete = true;
+	quest.Failed = true;
+
+	LogQuestResult(quest, new QuestResult
+	{
+		Success = false,
+		GoldEarned = 0,
+		ExpGained = 0,
+		ResolvedAt = ClockManager.Instance.CurrentTime
+	});
+
+	foreach (var adventurer in quest.AssignedAdventurers)
+	{
+		TavernManager.Instance.RestoreAdventurerToRoster(adventurer);
+	}
+
+	NotifyQuestStateChanged(quest);
+	GameLog.Info($"❌ Quest '{quest.Title}' failed due to missed deadline.");
+}
+
 }
 
 

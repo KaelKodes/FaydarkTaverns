@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://bp53yv3ypaa5j"]
+[gd_scene load_steps=9 format=3 uid="uid://bp53yv3ypaa5j"]
 
 [ext_resource type="Script" uid="uid://hacx1tuggxkp" path="res://Scenes/QuestBoardPanel.cs" id="1_7ljul"]
 [ext_resource type="Script" uid="uid://bw4esvijflh3" path="res://Scenes/TavernManager.cs" id="1_v6xsb"]
 [ext_resource type="PackedScene" uid="uid://w7he4xk8qe6k" path="res://Scenes/UI/QuestCard.tscn" id="2_6wg6o"]
+[ext_resource type="Script" uid="uid://x4id2gkwvhxq" path="res://System/TimerManager.cs" id="2_t546b"]
 [ext_resource type="Script" uid="uid://bo03gb6exqxki" path="res://Scenes/AdventurerRosterPanel.cs" id="2_w3872"]
 [ext_resource type="PackedScene" uid="uid://ch7r0s51qa60a" path="res://Scenes/UI/AdventurerCard.tscn" id="5_6wg6o"]
 [ext_resource type="PackedScene" uid="uid://g7cdgtjmhjxt" path="res://Scenes/QuestDetailPopup.tscn" id="6_smfey"]
@@ -22,6 +23,9 @@ size_flags_vertical = 3
 
 [node name="ClockManager" type="Node" parent="."]
 script = ExtResource("7_6462i")
+
+[node name="TimerManager" type="Node" parent="."]
+script = ExtResource("2_t546b")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -55,9 +59,12 @@ text = "2x"
 layout_mode = 2
 text = "4x"
 
+[node name="Button8x" type="Button" parent="VBoxContainer/TopBar"]
+layout_mode = 2
+text = "10x"
+
 [node name="GoldLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2
-text = "Gold: 0"
 horizontal_alignment = 1
 
 [node name="MainArea" type="HBoxContainer" parent="."]
@@ -109,7 +116,7 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 707.0
-offset_top = 345.0
+offset_top = 362.0
 offset_right = -15.0
 offset_bottom = -10.0
 grow_horizontal = 2
@@ -117,6 +124,7 @@ grow_vertical = 2
 
 [node name="LogText" type="RichTextLabel" parent="LogPanel"]
 layout_mode = 2
+scroll_following = true
 
 [node name="TavernManager" type="Node" parent="." node_paths=PackedStringArray("TimeLabel", "GoldLabel", "PauseButton")]
 script = ExtResource("1_v6xsb")
@@ -150,3 +158,4 @@ text = "Adventurers"
 [connection signal="pressed" from="VBoxContainer/TopBar/Button1x" to="MainArea/QuestBoardPanel" method="OnSpeed1xPressed"]
 [connection signal="pressed" from="VBoxContainer/TopBar/Button2x" to="MainArea/QuestBoardPanel" method="OnSpeed2xPressed"]
 [connection signal="pressed" from="VBoxContainer/TopBar/Button4x" to="MainArea/QuestBoardPanel" method="OnSpeed4xPressed"]
+[connection signal="pressed" from="VBoxContainer/TopBar/Button8x" to="ClockManager" method="OnSpeed8xPressed"]

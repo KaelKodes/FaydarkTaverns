@@ -85,7 +85,7 @@ public bool IsOverdue => Assigned && ClockManager.Instance.CurrentTime > Deadlin
 }
 
 
-	public void Accept()
+public void Accept()
 {
 	if (AssignedAdventurers.Count == 0)
 	{
@@ -96,18 +96,32 @@ public bool IsOverdue => Assigned && ClockManager.Instance.CurrentTime > Deadlin
 	IsAccepted = true;
 	IsLocked = true;
 	StartTime = ClockManager.Instance.CurrentTime;
-ExpectedReturn = StartTime.AddHours(GetTotalExpectedTU());
+	ExpectedReturn = StartTime.AddHours(GetTotalExpectedTU());
 
-int buffer = new Random().Next(2, 7); // Between 2–6 hours of slack
-Deadline = ExpectedReturn.AddHours(buffer);
+	int buffer = new Random().Next(2, 7); // Between 2–6 hours of slack
+	Deadline = ExpectedReturn.AddHours(buffer);
 
-GameLog.Info($"📜 Quest Accepted: {Title}");
-GameLog.Debug($"📜 Quest Accepted: {Title}");
-GameLog.Debug($"⏳ Estimated Return: {ExpectedReturn:MMM dd, HH:mm}");
-GameLog.Debug($"🛑 Deadline (with buffer): {Deadline:MMM dd, HH:mm}");
-
+	GameLog.Info($"📜 Quest Accepted: {Title}");
+	GameLog.Debug($"⏳ Estimated Return: {ExpectedReturn:MMM dd, HH:mm}");
+	GameLog.Debug($"🛑 Deadline (with buffer): {Deadline:MMM dd, HH:mm}");
 
 	QuestManager.Instance?.NotifyQuestStateChanged(this);
-}
 
+	// ✅ Schedule Quest Completion
+	TimerManager.Instance.ScheduleEvent(ExpectedReturn, () =>
+	{
+		GameLog.Info($"🏁 Quest Completed: {Title}");
+		QuestManager.Instance.CompleteQuest(this);
+	});
+
+	// ✅ Schedule Deadline Enforcement
+	TimerManager.Instance.ScheduleEvent(Deadline, () =>
+	{
+		if (!IsComplete)
+		{
+			GameLog.Info($"⏳ Quest Deadline Missed: {Title}");
+			QuestManager.Instance.EnforceDeadline(this);
+		}
+	});
+}
 }

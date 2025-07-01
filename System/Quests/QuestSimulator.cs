@@ -23,8 +23,26 @@ public static class QuestSimulator
 		bool success = matchScore >= 0.5f;
 
 		int baseReward = quest.Reward;
-		int reward = success ? baseReward : (int)(baseReward * 0.5f);
-		int xp = success ? 100 : 40;
+int baseXP = success ? 100 : 40;
+
+// 🎯 Risk-Reward Bonus: +10% per adventurer not sent
+int expected = quest.OptimalRoles.Count;
+int actual = quest.AssignedAdventurers.Count;
+int missing = Mathf.Clamp(expected - actual, 0, expected);
+
+float bonusFactor = 1f + (missing * 0.10f);
+
+int reward = success
+	? Mathf.RoundToInt(baseReward * bonusFactor)
+	: Mathf.RoundToInt(baseReward * 0.5f);
+
+int xp = Mathf.RoundToInt(baseXP * bonusFactor);
+
+if (missing > 0)
+{
+	GameLog.Info($"🎲 Risk bonus applied: {missing} adventurer(s) under optimal. Bonus x{bonusFactor:F2}");
+}
+
 
 		GD.Print($"🎲 Simulating quest '{quest.Title}' | Match Score: {matchScore:F2} | Success: {success}");
 

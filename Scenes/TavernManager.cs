@@ -14,6 +14,9 @@ public partial class TavernManager : Node
 	[Export] public Button Button1x;
 	[Export] public Button Button2x;
 	[Export] public Button Button4x;
+	[Export] public Button Button8x;
+	[Export] public NodePath QuestBoardPath;
+
 	
 	private bool isPaused = false;
 	public static int TimeMultiplier { get; private set; } = 1; // 0 = paused, 1 = normal, 2 = double, etc.
@@ -49,6 +52,11 @@ public partial class TavernManager : Node
 
 		Button4x ??= GetNode<Button>("../VBoxContainer/TopBar/Button4x");
 		Button4x.Pressed += OnSpeed4xPressed;
+		
+		Button8x ??= GetNode<Button>("../VBoxContainer/TopBar/Button8x");
+		Button8x.Pressed += OnSpeed8xPressed;
+		
+		var board = GetNode<QuestBoardPanel>("../MainArea/QuestBoardPanel");
 
 
 		// Locate UI container to hold adventurer cards
@@ -63,6 +71,7 @@ public partial class TavernManager : Node
 		UpdateTimeLabel();
 		GenerateAdventurers();
 		DisplayAdventurers();
+		UpdateGoldLabel();
 	}
 
 public override void _Process(double delta)
@@ -147,7 +156,7 @@ PauseButton.Text = paused ? "Pause" : "Play";
 			var vitalsLabel = card.GetNode<Label>("VBoxContainer/VitalsLabel");
 
 			nameLabel.Text = adventurer.Name;
-			classLabel.Text = adventurer.ClassName;
+			classLabel.Text = $"{adventurer.Level} {adventurer.ClassName}";
 			vitalsLabel.Text = $"HP: {adventurer.GetHp()} | Mana: {adventurer.GetMana()}";
 
 			adventurerListUI.AddChild(card);
@@ -193,20 +202,37 @@ PauseButton.Text = paused ? "Pause" : "Play";
 		var vitalsLabel = card.GetNode<Label>("VBoxContainer/VitalsLabel");
 
 		nameLabel.Text = adventurer.Name;
-		classLabel.Text = adventurer.ClassName;
+		classLabel.Text = $"{adventurer.Level} {adventurer.ClassName}";
 		vitalsLabel.Text = $"HP: {adventurer.GetHp()} | Mana: {adventurer.GetMana()}";
 
 		adventurerListUI.AddChild(card);
 	}
+	
+	public void SortQuestCards()
+{
+	var board = GetNode<QuestBoardPanel>("../MainArea/QuestBoardPanel");
+	board.SortQuestCards();
+}
 
-	public void AddGold(int amount)
-	{
-		if (int.TryParse(GoldLabel.Text.Replace("g", ""), out int currentGold))
-		{
-			currentGold += amount;
-			GoldLabel.Text = $"{currentGold}g";
-		}
-	}
+
+
+
+	private int currentGold = 0;
+
+public void AddGold(int amount)
+{
+	currentGold += amount;
+	UpdateGoldLabel();
+	GameLog.Debug($"[Gold Update] Player now has {currentGold}g");
+}
+
+private void UpdateGoldLabel()
+{
+	if (GoldLabel != null)
+		GoldLabel.Text = $"{currentGold}g";
+}
+
+
 
 public static void SetTimeMultiplier(int multiplier)
 {
@@ -220,22 +246,21 @@ public static void SetTimeMultiplier(int multiplier)
 private void OnSpeed1xPressed()
 {
 	TavernManager.SetTimeMultiplier(1);
-	GD.Print("⏱️ Time speed set to 1x");
-	GameLog.Info("⏱️ Time speed set to 1x");
 }
 
 private void OnSpeed2xPressed()
 {
 	TavernManager.SetTimeMultiplier(2);
-	GD.Print("⏩ Time speed set to 2x");
-	GameLog.Info("⏱️ Time speed set to 2x");
 }
 
 private void OnSpeed4xPressed()
 {
 	TavernManager.SetTimeMultiplier(4);
-	GD.Print("⏩⏩ Time speed set to 4x");
-	GameLog.Info("⏱️ Time speed set to 4x");
+}
+
+private void OnSpeed8xPressed()
+{
+	TavernManager.SetTimeMultiplier(16);
 }
 
 }
