@@ -26,7 +26,7 @@ public partial class QuestCard : Panel
 
 	public override void _Ready()
 {
-	GD.Print("QuestCard: Running _Ready()");
+	GameLog.Debug("QuestCard: Running _Ready()");
 
 	try
 	{
@@ -70,8 +70,8 @@ public override void _ExitTree()
 	public void SetQuestData(Quest q)
 {
 	quest = q;
-	GD.Print($"Card bound to Quest ID: {quest.QuestId}");
-	GD.Print($"[CARD] Card node: {Name} | Bound quest ref: {q.GetHashCode()} | Title: {q.Title} | QuestId: {q.QuestId}");
+	GameLog.Debug($"Card bound to Quest ID: {quest.QuestId}");
+	GameLog.Debug($"[CARD] Card node: {Name} | Bound quest ref: {q.GetHashCode()} | Title: {q.Title} | QuestId: {q.QuestId}");
 	if (IsInsideTree()) UpdateDisplay();
 }
 
@@ -84,17 +84,17 @@ public override void _ExitTree()
 		GD.PrintErr("UpdateDisplay called with null quest.");
 		return;
 	}
-	GD.Print($"[UpdateDisplay] Quest {quest.QuestId} | {quest.Title} | IsAccepted: {quest.IsAccepted} | IsLocked: {quest.IsLocked}");
+	GameLog.Debug($"[UpdateDisplay] Quest {quest.QuestId} | {quest.Title} | IsAccepted: {quest.IsAccepted} | IsLocked: {quest.IsLocked}");
 
 	// 🟩 Update label values
 	TitleLabel.Text = quest.Title;
 	RegionLabel.Text = quest.Region.ToString();
 	TypeLabel.Text = quest.Type.ToString();
 	RewardLabel.Text = $"{quest.Reward}g";
-	TimeLabel.Text = $"{quest.GetTotalExpectedTU()} TU";
+	TimeLabel.Text = $"{quest.GetTotalExpectedTU()} Hours";
 
-	GD.Print($"Updating display for quest: {quest.Title}");
-	GD.Print($"Assigned Adventurers: {quest.AssignedAdventurers.Count}");
+	GameLog.Debug($"Updating display for quest: {quest.Title}");
+	GameLog.Debug($"Assigned Adventurers: {quest.AssignedAdventurers.Count}");
 
 	for (int i = 0; i < partySlotLabels.Count; i++)
 	{
@@ -104,12 +104,12 @@ public override void _ExitTree()
 			var firstName = fullName.Split(' ')[0];
 			partySlotLabels[i].Text = firstName;
 
-			GD.Print($"  -> Slot {i}: {firstName}");
+			GameLog.Debug($"  -> Slot {i}: {firstName}");
 		}
 		else
 		{
 			partySlotLabels[i].Text = "";
-			GD.Print($"  -> Slot {i}: (empty)");
+			GameLog.Debug($"  -> Slot {i}: (empty)");
 		}
 	}
 
@@ -125,7 +125,7 @@ if (quest.IsComplete && quest.Failed)
 
 else if (quest.IsAccepted && quest.IsLocked)
 {
-	GD.Print($"[STYLE] Quest {quest.QuestId} | IsAccepted: {quest.IsAccepted} | IsLocked: {quest.IsLocked}");
+	GameLog.Debug($"[STYLE] Quest {quest.QuestId} | IsAccepted: {quest.IsAccepted} | IsLocked: {quest.IsLocked}");
 
 	float progress = (float)quest.GetElapsedTU() / quest.GetTotalExpectedTU();
 
@@ -147,16 +147,11 @@ AddThemeStyleboxOverride("panel", styleBox);
 }
 
 
-
-
-
 	public override bool _CanDropData(Vector2 atPosition, Variant data)
 	{
 		// This must return TRUE if we are dragging an AdventurerCard
 		return data.AsGodotObject() is AdventurerCard && quest != null && quest.AssignedAdventurers.Count < 3;
 	}
-
-
 
 	public override void _DropData(Vector2 atPosition, Variant data)
 {
@@ -199,7 +194,7 @@ AddThemeStyleboxOverride("panel", styleBox);
 {
 	if (quest.IsLocked)
 	{
-		GD.Print("⛔ Cannot unassign adventurers — quest is locked.");
+		GameLog.Info("⛔ Cannot unassign adventurers — quest is locked.");
 		return;
 	}
 

@@ -56,3 +56,11 @@ text = "Settings"
 layout_mode = 2
 size_flags_vertical = 4
 text = "Exit"
+
+[node name="DebugToggle" type="CheckBox" parent="."]
+layout_mode = 0
+offset_left = -523.0
+offset_top = 274.0
+offset_right = -440.0
+offset_bottom = 305.0
+text = "DEBUG"

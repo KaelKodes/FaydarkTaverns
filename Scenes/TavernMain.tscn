@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bp53yv3ypaa5j"]
+[gd_scene load_steps=8 format=3 uid="uid://bp53yv3ypaa5j"]
 
 [ext_resource type="Script" uid="uid://hacx1tuggxkp" path="res://Scenes/QuestBoardPanel.cs" id="1_7ljul"]
 [ext_resource type="Script" uid="uid://bw4esvijflh3" path="res://Scenes/TavernManager.cs" id="1_v6xsb"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://bo03gb6exqxki" path="res://Scenes/AdventurerRosterPanel.cs" id="2_w3872"]
 [ext_resource type="PackedScene" uid="uid://ch7r0s51qa60a" path="res://Scenes/UI/AdventurerCard.tscn" id="5_6wg6o"]
 [ext_resource type="PackedScene" uid="uid://g7cdgtjmhjxt" path="res://Scenes/QuestDetailPopup.tscn" id="6_smfey"]
+[ext_resource type="Script" uid="uid://i7n3efuy43nr" path="res://System/ClockManager.cs" id="7_6462i"]
 
 [node name="TavernMain" type="Control"]
 layout_mode = 3
@@ -19,12 +20,15 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="ClockManager" type="Node" parent="."]
+script = ExtResource("7_6462i")
+
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
-offset_left = 942.0
+offset_left = 821.0
 offset_top = 8.0
-offset_right = 1132.0
-offset_bottom = 66.0
+offset_right = 1011.0
+offset_bottom = 93.0
 
 [node name="TimeLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2

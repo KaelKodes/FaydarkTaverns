@@ -38,19 +38,18 @@ public static class QuestGenerator
 	List<int> optimalRoles = GetOptimalRoles(type);
 
 	return new Quest
-	{
-		QuestId = id,
-		Title = GenerateQuestTitle(type, region),
-		Type = type,
-		Region = region,
-		TravelTimeTU = travelTime,
-		TaskTimeTU = taskTime,
-		DeadlineTU = deadline,
-		Description = SampleDescriptions[rng.Next(SampleDescriptions.Count)],
-		Quirk = rng.NextDouble() < 0.3 ? SampleQuirks[rng.Next(SampleQuirks.Count)] : null,
-		OptimalRoles = optimalRoles,
-		Reward = rng.Next(30, 80) // ✅ Add this line
-	};
+{
+	QuestId = id,
+	Title = GenerateQuestTitle(type, region),
+	Type = type,
+	Region = region,
+	TravelHours = travelTime,
+	TaskHours = taskTime / 60, // Convert minutes to hours if taskTime is in minutes
+	Description = SampleDescriptions[rng.Next(SampleDescriptions.Count)],
+	Quirk = rng.NextDouble() < 0.3 ? SampleQuirks[rng.Next(SampleQuirks.Count)] : null,
+	OptimalRoles = optimalRoles,
+	Reward = rng.Next(30, 80)
+};
 }
 
 
@@ -96,16 +95,16 @@ public static class QuestGenerator
 	{
 		return region switch
 		{
-			Region.Frostmere => 360,
-			Region.Ironhold => 240,
-			Region.Willowbank => 180,
-			Region.Mossvale => 180,
-			Region.Brinemarsh => 240,
-			Region.Ravenmoor => 240,
-			Region.Sundrift => 360,
-			Region.AshenRuins => 360,
-			Region.HowlingPlains => 600,
-			_ => 240
+			Region.Frostmere => 6,
+			Region.Ironhold => 4,
+			Region.Willowbank => 2,
+			Region.Mossvale => 2,
+			Region.Brinemarsh => 4,
+			Region.Ravenmoor => 4,
+			Region.Sundrift => 6,
+			Region.AshenRuins => 6,
+			Region.HowlingPlains => 10,
+			_ => 4
 		};
 	}
 }

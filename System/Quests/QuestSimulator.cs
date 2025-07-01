@@ -7,10 +7,17 @@ public static class QuestSimulator
 	public static QuestResult Simulate(Quest quest)
 	{
 		if (quest == null || quest.AssignedAdventurers.Count == 0)
-		{
-			GD.PrintErr("⚠️ QuestSimulator.Simulate called with null or empty quest.");
-			return new QuestResult { Success = false, GoldEarned = 0, ExpGained = 0, ResolvedAtTU = TavernManager.CurrentTU };
-		}
+{
+	GD.PrintErr("⚠️ QuestSimulator.Simulate called with null or empty quest.");
+	return new QuestResult
+	{
+		Success = false,
+		GoldEarned = 0,
+		ExpGained = 0,
+		ResolvedAt = ClockManager.Instance.CurrentTime
+	};
+}
+
 
 		float matchScore = CalculatePartyMatch(quest);
 		bool success = matchScore >= 0.5f;
@@ -26,7 +33,7 @@ public static class QuestSimulator
 			Success = success,
 			GoldEarned = reward,
 			ExpGained = xp,
-			ResolvedAtTU = TavernManager.CurrentTU
+			ResolvedAt = ClockManager.Instance.CurrentTime
 		};
 	}
 
@@ -56,5 +63,5 @@ public class QuestResult
 	public bool Success;
 	public int GoldEarned;
 	public int ExpGained;
-	public int ResolvedAtTU;
+	public DateTime ResolvedAt;
 }

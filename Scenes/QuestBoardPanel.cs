@@ -31,7 +31,7 @@ public partial class QuestBoardPanel : PanelContainer
 		var card = QuestCardScene.Instantiate<QuestCard>();
 		card.SetQuestData(quest); // ✅ Use real quest from QuestManager
 		questHolder.AddChild(card);
-		GD.Print($"Adding Quest ID: {quest.QuestId}");
+		GameLog.Debug($"Adding Quest ID: {quest.QuestId}");
 
 	}
 }

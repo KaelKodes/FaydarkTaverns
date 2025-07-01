@@ -51,7 +51,11 @@ public partial class QuestDetailPopup : Window
 	RegionLabel.Text = $"Region: {q.Region}";
 	TypeLabel.Text = $"Type: {q.Type}";
 	RewardLabel.Text = $"Reward: {q.Reward}g";
-	TimeLabel.Text = $"Est: {q.GetTotalExpectedTU()} TU / Due: {q.DeadlineTU}";
+	if (q.IsAccepted)
+	TimeLabel.Text = $"Est: {q.GetTotalExpectedTU()} hrs / Due: {q.Deadline:MMM dd, HH:mm}";
+else
+	TimeLabel.Text = $"Est: {q.GetTotalExpectedTU()} hrs";
+
 
 	var roles = new StringBuilder("Optimal Roles: ");
 	foreach (var role in q.OptimalRoles)

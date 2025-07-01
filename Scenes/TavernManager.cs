@@ -6,7 +6,6 @@ public partial class TavernManager : Node
 {
 	// --- Static Reference ---
 	public static TavernManager Instance;
-	public static int CurrentTU => Instance != null ? Instance.GetCurrentTU() : 0;
 
 	// --- Game Time ---
 	[Export] public Label TimeLabel;
@@ -16,11 +15,7 @@ public partial class TavernManager : Node
 	[Export] public Button Button2x;
 	[Export] public Button Button4x;
 	
-
-	private float gameTime = 6 * 60;
 	private bool isPaused = false;
-	private int lastDay = -1;
-	private const int DayStartHour = 6;
 	public static int TimeMultiplier { get; private set; } = 1; // 0 = paused, 1 = normal, 2 = double, etc.
 
 	// --- Adventurers ---
@@ -37,6 +32,10 @@ public partial class TavernManager : Node
 		Instance = this;
 
 		// Wire up UI
+		var logText = GetNode<RichTextLabel>("../LogPanel/LogText");
+		GameLog.BindLogText(logText);
+
+		ClockManager.Instance.OnNewDay += StartNewDay;
 		TimeLabel ??= GetNode<Label>("../TopBar/TimeLabel");
 		GoldLabel ??= GetNode<Label>("../TopBar/GoldLabel");
 		PauseButton ??= GetNode<Button>("../TopBar/PauseButton");
@@ -64,42 +63,19 @@ public partial class TavernManager : Node
 		UpdateTimeLabel();
 		GenerateAdventurers();
 		DisplayAdventurers();
-		CallDeferred(nameof(DelayedDayStart));
-	}
-
-	private void DelayedDayStart()
-	{
-		StartNewDay();
-		lastDay = 0;
 	}
 
 public override void _Process(double delta)
 {
 	if (isPaused || TimeMultiplier == 0)
 		return;
-
-	gameTime += (float)(delta * TimeMultiplier);
-	GD.Print($"⏳ Delta: {delta:F3} | Multiplier: {TimeMultiplier} | GameTime: {gameTime}");
-
-
-	if (gameTime >= 24 * 60)
-		gameTime = 6 * 60;
-
 	UpdateTimeLabel();
 
-	int currentDay = Mathf.FloorToInt(gameTime / (24 * 60));
-	int currentHour = Mathf.FloorToInt(gameTime / 60f) % 24;
-
-	if (currentHour == DayStartHour && currentDay != lastDay)
-	{
-		lastDay = currentDay;
-		StartNewDay();
-	}
 
 	// 🔁 Check for quest resolution
 	foreach (var quest in QuestManager.Instance.GetAcceptedQuests())
 	{
-		if (!quest.IsComplete && CurrentTU >= quest.ExpectedReturnTU)
+		if (!quest.IsComplete && ClockManager.Instance.CurrentTime >= quest.ExpectedReturn)
 		{
 			var result = QuestSimulator.Simulate(quest);
 			quest.IsComplete = true;
@@ -125,16 +101,19 @@ public override void _Process(double delta)
 
 
 	private void UpdateTimeLabel()
+{
+	if (ClockManager.Instance != null)
 	{
-		int hours = Mathf.FloorToInt(gameTime / 60f);
-		int minutes = Mathf.FloorToInt(gameTime % 60f);
-		TimeLabel.Text = $"{hours:D2}:{minutes:D2}";
+		TimeLabel.Text = ClockManager.Instance.GetFormattedTime();
 	}
+}
 
 	private void TogglePause()
 	{
-		isPaused = !isPaused;
-		PauseButton.Text = isPaused ? "Play" : "Pause";
+		bool paused = ClockManager.Instance.TimeMultiplier == 0;
+ClockManager.Instance.SetTimeMultiplier(paused ? 1 : 0);
+PauseButton.Text = paused ? "Pause" : "Play";
+
 	}
 
 	private void GenerateAdventurers()
@@ -147,7 +126,7 @@ public override void _Process(double delta)
 		{
 			var adventurer = AdventurerGenerator.GenerateAdventurer(idCounter++, kv.Value);
 			adventurerList.Add(adventurer);
-			GD.Print($"{adventurer.Name} the {adventurer.ClassName} [Role {adventurer.RoleId}] | HP: {adventurer.GetHp()} Mana: {adventurer.GetMana()}");
+			GameLog.Debug($"{adventurer.Name} the {adventurer.ClassName} [Role {adventurer.RoleId}] | HP: {adventurer.GetHp()} Mana: {adventurer.GetMana()}");
 		}
 	}
 
@@ -175,31 +154,28 @@ public override void _Process(double delta)
 		}
 	}
 
-	private void StartNewDay()
+	private void StartNewDay(DateTime currentDate)
+{
+	GD.Print($"🌅 New day triggered by ClockManager: {currentDate:D}");
+	
+	QuestManager.Instance?.ClearUnclaimedQuests();
+	adventurerList.RemoveAll(a => a.AssignedQuestId == null);
+
+	adventurerList.Clear();
+	int idCounter = 1;
+	foreach (var kv in classTemplates)
 	{
-		GD.Print("☀️ New day begins! Clearing old data...");
-
-		QuestManager.Instance?.ClearUnclaimedQuests();
-		adventurerList.RemoveAll(a => a.AssignedQuestId == null);
-
-		adventurerList.Clear();
-		int idCounter = 1;
-		foreach (var kv in classTemplates)
-		{
-			var adventurer = AdventurerGenerator.GenerateAdventurer(idCounter++, kv.Value);
-			adventurerList.Add(adventurer);
-		}
-
-		DisplayAdventurers();
-		QuestManager.Instance?.GenerateDailyQuests();
-
-		GD.Print("✨ Day refreshed with new quests and adventurers.");
+		var adventurer = AdventurerGenerator.GenerateAdventurer(idCounter++, kv.Value);
+		adventurerList.Add(adventurer);
 	}
 
-	public int GetCurrentTU()
-	{
-		return Mathf.FloorToInt(gameTime);
-	}
+	DisplayAdventurers();
+	QuestManager.Instance?.GenerateDailyQuests();
+
+	GD.Print("✨ Day refreshed with new quests and adventurers.");
+}
+
+
 
 	public void RestoreAdventurerToRoster(Adventurer adventurer)
 	{
@@ -234,25 +210,32 @@ public override void _Process(double delta)
 
 public static void SetTimeMultiplier(int multiplier)
 {
-	TimeMultiplier = Mathf.Clamp(multiplier, 0, 8);
+	if (ClockManager.Instance != null)
+	{
+		ClockManager.Instance.SetTimeMultiplier(multiplier);
+	}
 }
+
 
 private void OnSpeed1xPressed()
 {
 	TavernManager.SetTimeMultiplier(1);
 	GD.Print("⏱️ Time speed set to 1x");
+	GameLog.Info("⏱️ Time speed set to 1x");
 }
 
 private void OnSpeed2xPressed()
 {
 	TavernManager.SetTimeMultiplier(2);
 	GD.Print("⏩ Time speed set to 2x");
+	GameLog.Info("⏱️ Time speed set to 2x");
 }
 
 private void OnSpeed4xPressed()
 {
 	TavernManager.SetTimeMultiplier(4);
 	GD.Print("⏩⏩ Time speed set to 4x");
+	GameLog.Info("⏱️ Time speed set to 4x");
 }
 
 }

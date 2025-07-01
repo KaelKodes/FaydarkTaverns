@@ -57,7 +57,8 @@ public partial class Adventurer : RefCounted
 		{
 			Xp -= XPToLevelUp;
 			Level++;
-			GD.Print($"⭐ {Name} leveled up to Level {Level}!");
+			GameLog.Debug($"⭐ {Name} leveled up to Level {Level}!");
+			GameLog.Info($"⭐ {Name} leveled up to Level {Level}!");
 			// Optional: Stat improvements or events
 		}
 	}
