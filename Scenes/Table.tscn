@@ -1,0 +1,34 @@
+[gd_scene load_steps=3 format=3 uid="uid://d3oajmvwpchgg"]
+
+[ext_resource type="Script" uid="uid://c7agctueh4ibl" path="res://Scenes/Table.cs" id="1_5ervl"]
+[ext_resource type="PackedScene" uid="uid://b6jxyk4habuh1" path="res://Scenes/SeatSlot.tscn" id="2_ab3gw"]
+
+[node name="Table" type="Panel"]
+offset_right = 132.0
+offset_bottom = 27.0
+script = ExtResource("1_5ervl")
+SeatSlotScene = ExtResource("2_ab3gw")
+SeatRowPath = NodePath("HBoxContainer/SeatRow")
+NameLabelPath = NodePath("HBoxContainer/NameLabel")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 1.0
+offset_right = 100.0
+offset_bottom = 54.0
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="NameLabel" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+text = "Name"
+vertical_alignment = 1
+
+[node name="SeatRow" type="HBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 33
+alignment = 1

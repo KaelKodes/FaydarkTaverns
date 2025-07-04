@@ -1,0 +1,15 @@
+using Godot;
+using System;
+
+public class Guest
+{
+	public string Name;
+	public bool IsAdventurer;
+	public int VisitDay;
+	public int VisitHour;
+	public int WaitDuration;   // How long they'll wait outside
+	public int StayDuration;   // How long they stay once inside
+	public bool IsInside = false;
+	public int? SeatIndex { get; set; } = null;
+	public Table AssignedTable { get; set; } = null;
+}

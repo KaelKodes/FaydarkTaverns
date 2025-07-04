@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=3 uid="uid://b6jxyk4habuh1"]
+
+[ext_resource type="Script" uid="uid://244lf0oa1uw0" path="res://Scenes/SeatSlot.cs" id="1_f8ht6"]
+
+[node name="SeatSlot" type="Panel"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_f8ht6")
+EmptyColor = Color(0.122252, 0.122252, 0.122252, 1)
+
+[node name="Background" type="ColorRect" parent="."]
+z_index = 1
+custom_minimum_size = Vector2(25, 12)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -12.5
+offset_top = -12.5
+offset_right = 12.5
+offset_bottom = 12.5
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.298039, 0.298039, 0.298039, 1)

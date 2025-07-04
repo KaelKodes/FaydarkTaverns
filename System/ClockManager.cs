@@ -4,16 +4,17 @@ using System;
 public partial class ClockManager : Node
 {
 	public static ClockManager Instance { get; private set; }
-
 	public DateTime CurrentTime { get; private set; } = new DateTime(2025, 1, 1, 6, 0, 0); // Start at Jan 1, 2025, 6:00 AM
 	public float TimeMultiplier { get; private set; } = 1f; // 0 = paused, 1 = normal, etc.
 	private const double GameSecondsPerRealSecond = 60.0; // 1s real = 60s game (1m)
 	public event Action<DateTime> OnTimeAdvanced;
-
 	private TimeSpan realTimeAccumulator = TimeSpan.Zero;
 	private const double SecondsPerTick = 1.0; // how often we simulate 1 second in game time
-
 	private int lastDay = -1;
+	public DateTime GameStartTime { get; private set; }
+	public int CurrentDay => (CurrentTime - GameStartTime).Days;
+
+
 
 	public override void _Ready()
 	{
@@ -46,18 +47,17 @@ public partial class ClockManager : Node
 {
 	CurrentTime += amount;
 
-	OnTimeAdvanced?.Invoke(CurrentTime); // ✅ Notify subscribers like TimerManager
+	OnTimeAdvanced?.Invoke(CurrentTime); // For C# event subscribers
 
 	if (CurrentTime.Day != lastDay)
 	{
 		lastDay = CurrentTime.Day;
-			GameLog.Debug($"🌞 New Day: {CurrentTime:D}");
-			GameLog.Info($"🌞 New Day: {CurrentTime:D}");
-			OnNewDay?.Invoke(CurrentTime);
-		}
-
-		// Later: Add event for batching timers here
+		GameLog.Debug($"🌞 New Day: {CurrentTime:D}");
+		GameLog.Info($"🌞 New Day: {CurrentTime:D}");
+		OnNewDay?.Invoke(CurrentTime);
 	}
+}
+
 
 	public event Action<DateTime> OnNewDay;
 
