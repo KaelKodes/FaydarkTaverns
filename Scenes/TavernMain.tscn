@@ -31,7 +31,7 @@ script = ExtResource("7_6462i")
 [node name="TimerManager" type="Node" parent="."]
 script = ExtResource("2_t546b")
 
-[node name="TavernManager" type="Node" parent="." node_paths=PackedStringArray("TimeLabel", "GoldLabel", "PauseButton", "Button1x", "Button2x", "Button4x", "Button8x", "ShopButton")]
+[node name="TavernManager" type="Node" parent="." node_paths=PackedStringArray("TimeLabel", "GoldLabel", "PauseButton", "Button1x", "Button2x", "Button4x", "Button8x", "ShopButton", "TavernRenownDisplay", "TavernLevelDisplay", "TavernLevelLabel", "floorLabel", "AdventurerListContainer", "TavernFloorPanel", "FloorSlots")]
 script = ExtResource("1_v6xsb")
 TimeLabel = NodePath("../ControlPanel/TimeLabel")
 GoldLabel = NodePath("../ControlPanel/GoldLabel")
@@ -42,7 +42,13 @@ Button4x = NodePath("../ControlPanel/TopBar/Button4x")
 Button8x = NodePath("../ControlPanel/TopBar/Button8x")
 ShopButton = NodePath("../ControlPanel/ShopButton")
 QuestBoardPath = NodePath("../GuestPanels/QuestBoardPanel/ScrollContainer/CardHolder")
-AdventurerCardScene = ExtResource("5_6wg6o")
+TavernRenownDisplay = NodePath("../TavernRenown/VBoxContainer/TavernRenownDisplay")
+TavernLevelDisplay = NodePath("../TavernLevelControl/VBoxContainer/TavernLevelDisplay")
+TavernLevelLabel = NodePath("../TavernLevelControl/VBoxContainer/TavernLevelLabel")
+floorLabel = NodePath("../GuestPanels/AdventurerRosterPanel/ScrollContainer/AdventurerListContainer/TavernFloorPanel/TavernFloorLabel")
+AdventurerListContainer = NodePath("../GuestPanels/AdventurerRosterPanel/ScrollContainer/AdventurerListContainer")
+TavernFloorPanel = NodePath("../GuestPanels/AdventurerRosterPanel/ScrollContainer/AdventurerListContainer/TavernFloorPanel")
+FloorSlots = NodePath("../GuestPanels/AdventurerRosterPanel/ScrollContainer/AdventurerListContainer/TavernFloorPanel/FloorSlots")
 AdventurerRosterPath = NodePath("../GuestPanels/AdventurerRosterPanel")
 ShopPanelScene = ExtResource("5_icuts")
 FurniturePanelPath = NodePath("../FurnitureContainer/FurniturePanel")
@@ -105,12 +111,11 @@ grow_vertical = 2
 theme_override_constants/separation = 2
 metadata/_edit_use_anchors_ = true
 
-[node name="QuestBoardPanel" type="PanelContainer" parent="GuestPanels" node_paths=PackedStringArray("questListContainer")]
+[node name="QuestBoardPanel" type="PanelContainer" parent="GuestPanels"]
 layout_mode = 2
 size_flags_horizontal = 3
 script = ExtResource("1_7ljul")
 QuestCardScene = ExtResource("2_6wg6o")
-questListContainer = NodePath("ScrollContainer/CardHolder")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="GuestPanels/QuestBoardPanel"]
 layout_mode = 2
@@ -135,6 +140,17 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 alignment = 1
+
+[node name="TavernFloorPanel" type="VBoxContainer" parent="GuestPanels/AdventurerRosterPanel/ScrollContainer/AdventurerListContainer"]
+layout_mode = 2
+
+[node name="TavernFloorLabel" type="Label" parent="GuestPanels/AdventurerRosterPanel/ScrollContainer/AdventurerListContainer/TavernFloorPanel"]
+layout_mode = 2
+text = "x"
+horizontal_alignment = 1
+
+[node name="FloorSlots" type="VBoxContainer" parent="GuestPanels/AdventurerRosterPanel/ScrollContainer/AdventurerListContainer/TavernFloorPanel"]
+layout_mode = 2
 
 [node name="LogPanel" type="PanelContainer" parent="."]
 layout_mode = 1
@@ -191,6 +207,65 @@ script = ExtResource("9_wnxq3")
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
+
+[node name="TavernLevelControl" type="Control" parent="."]
+anchors_preset = 0
+offset_left = 1403.0
+offset_top = 3.0
+offset_right = 1510.0
+offset_bottom = 93.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TavernLevelControl"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -5.0
+offset_top = 1.0
+offset_right = -5.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="TavernLevelLabel" type="Label" parent="TavernLevelControl/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "Test"
+mouse_filter = 1
+text = "Tavern Level"
+horizontal_alignment = 1
+
+[node name="TavernLevelDisplay" type="Label" parent="TavernLevelControl/VBoxContainer"]
+layout_mode = 2
+text = "0"
+horizontal_alignment = 1
+
+[node name="TavernRenown" type="Control" parent="."]
+anchors_preset = 0
+offset_left = 1367.0
+offset_top = 90.0
+offset_right = 1536.0
+offset_bottom = 181.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TavernRenown"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 11.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TavernRenownLabel" type="Label" parent="TavernRenown/VBoxContainer"]
+layout_mode = 2
+text = "Tavern Renown"
+horizontal_alignment = 1
+
+[node name="TavernRenownDisplay" type="Label" parent="TavernRenown/VBoxContainer"]
+layout_mode = 2
+text = "0"
+horizontal_alignment = 1
 
 [connection signal="pressed" from="ControlPanel/TopBar/Button1x" to="GuestPanels/QuestBoardPanel" method="OnSpeed1xPressed"]
 [connection signal="pressed" from="ControlPanel/TopBar/Button2x" to="GuestPanels/QuestBoardPanel" method="OnSpeed2xPressed"]

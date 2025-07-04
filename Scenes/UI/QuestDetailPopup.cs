@@ -1,6 +1,8 @@
 using Godot;
 using System;
 using System.Text;
+using System.Linq;
+
 
 public partial class QuestDetailPopup : Window
 {
@@ -70,23 +72,42 @@ else
 
 
 
-	private void OnAcceptPressed()
+private void OnAcceptPressed()
 {
 	if (boundQuest == null) return;
+
 	GD.Print($"[ACCEPT] Accepting quest ref: {boundQuest.GetHashCode()} | QuestId: {boundQuest.QuestId} | Title: {boundQuest.Title}");
 
 	boundQuest.Accept();
 	AcceptButton.Disabled = true; // Or Hide it if preferred
 	Hide(); // Optional: close popup after accept
-	
+
 	// Refresh all quest cards
-foreach (var card in GetTree().GetNodesInGroup("QuestCard"))
-{
-	if (card is QuestCard qc && qc.HasQuest(boundQuest))
-		qc.UpdateDisplay();
+	foreach (var card in GetTree().GetNodesInGroup("QuestCard"))
+	{
+		if (card is QuestCard qc && qc.HasQuest(boundQuest))
+			qc.UpdateDisplay();
+	}
+
+	// 🚶 Remove assigned adventurers from the tavern floor
+	foreach (var adventurer in boundQuest.AssignedAdventurers)
+	{
+		var guest = TavernManager.Instance
+			.GetGuestsInside()
+			.FirstOrDefault(g => g.BoundAdventurer == adventurer);
+
+		if (guest != null)
+		{
+			TavernManager.Instance.OnGuestRemoved(guest);
+			GameLog.Debug($"📦 {guest.Name} left to go on a quest.");
+		}
+		else
+		{
+			GD.Print($"⚠️ Could not find guest for adventurer {adventurer.Name}");
+		}
+	}
 }
 
-}
 
 	
 	private void OnCloseRequested()

@@ -6,6 +6,7 @@
 title = "Tavern Shop"
 initial_position = 1
 size = Vector2i(325, 335)
+visible = false
 min_size = Vector2i(275, 335)
 content_scale_mode = 2
 script = ExtResource("1_yqe7u")

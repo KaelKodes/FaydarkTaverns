@@ -38,34 +38,35 @@ public partial class ShopPanel : Window
 	}
 
 	private void RefreshShop()
+{
+	foreach (var child in ItemListContainer.GetChildren())
+		child.QueueFree();
+
+	foreach (var item in ShopDatabase.AllItems.Where(i => i.Category == activeCategory))
 	{
-		foreach (var child in ItemListContainer.GetChildren())
-			child.QueueFree();
+		var label = new Label();
+		label.Text = $"{item.Name} - {item.Cost}g (Lv {item.LevelRequirement})";
 
-		foreach (var item in ShopDatabase.AllItems.Where(i => i.Category == activeCategory))
+		if (TavernManager.TavernLevel >= item.LevelRequirement && item.PurchasedQuantity < item.MaxOwned)
 		{
-			var label = new Label();
-			label.Text = $"{item.Name} - {item.Cost}g (Lv {item.LevelRequirement})";
-
-			if (TavernManager.Instance.TavernLevel >= item.LevelRequirement && item.PurchasedQuantity < item.MaxOwned)
+			label.MouseFilter = Control.MouseFilterEnum.Stop;
+			label.GuiInput += @event =>
 			{
-				label.MouseFilter = Control.MouseFilterEnum.Stop;
-				label.GuiInput += @event =>
-				{
-					if (@event is InputEventMouseButton mouse && mouse.Pressed && mouse.ButtonIndex == MouseButton.Left)
-						AddToCart(item);
-				};
-			}
-			else
-			{
-				label.Modulate = new Color(0.5f, 0.5f, 0.5f);
-			}
-
-			ItemListContainer.AddChild(label);
+				if (@event is InputEventMouseButton mouse && mouse.Pressed && mouse.ButtonIndex == MouseButton.Left)
+					AddToCart(item);
+			};
+		}
+		else
+		{
+			label.Modulate = new Color(0.5f, 0.5f, 0.5f);
 		}
 
-		RefreshCartDisplay();
+		ItemListContainer.AddChild(label);
 	}
+
+	RefreshCartDisplay();
+}
+
 
 	private void AddToCart(ShopItem item)
 	{
@@ -160,5 +161,6 @@ public partial class ShopPanel : Window
 		GameLog.Info("❌ Not enough gold!");
 	}
 }
+
 
 }

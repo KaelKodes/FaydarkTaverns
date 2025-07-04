@@ -179,15 +179,8 @@ AddThemeStyleboxOverride("panel", styleBox);
 
 		// ✅ Refresh the slot labels
 		UpdateDisplay();
-	}
-
-	private void AssignToSlot(Adventurer adventurer)
-	{
-		if (quest.AssignedAdventurers.Contains(adventurer) || quest.AssignedAdventurers.Count >= 3)
-			return;
-
-		quest.AssignedAdventurers.Add(adventurer);
-		UpdateDisplay();
+		TavernManager.Instance?.DisplayAdventurers();
+		TavernManager.Instance?.UpdateFloorLabel();
 	}
 
 	private void UnassignFromSlot(int index)
@@ -203,7 +196,7 @@ AddThemeStyleboxOverride("panel", styleBox);
 			var adventurer = quest.AssignedAdventurers[index];
 			quest.AssignedAdventurers.RemoveAt(index);
 			UpdateDisplay();
-			TavernManager.Instance?.RestoreAdventurerToRoster(adventurer);
+			TavernManager.Instance.DisplayAdventurers();
 		}
 	}
 

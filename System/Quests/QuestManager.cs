@@ -76,7 +76,7 @@ public void NotifyQuestStateChanged(Quest quest)
 	}
 
 	// ✅ Trigger reordering of the cards
-	TavernManager.Instance?.SortQuestCards();
+	TavernManager.Instance.SortQuestCards();
 }
 
 public void CompleteQuest(Quest quest)
@@ -91,23 +91,44 @@ public void CompleteQuest(Quest quest)
 	quest.IsComplete = true;
 	quest.Failed = !result.Success;
 
-	// ✅ Only reward player if quest succeeded
 	if (result.Success)
 	{
 		TavernManager.Instance.AddGold(result.GoldEarned);
+
+		// ✅ Combo bonus!
+		TavernManager.Instance.IncrementSuccessCombo();
+		int tavernExp = CalculateTavernExp(quest, result);
+		TavernManager.Instance.GainTavernExp(tavernExp);
+
 		GameLog.Info($"💰 Player earned {result.GoldEarned}g!");
+		GameLog.Info($"✨ Success Combo: {TavernManager.Instance.SuccessComboCount} → +{TavernManager.Instance.SuccessComboCount} EXP bonus");
+	}
+	else
+	{
+		TavernManager.Instance.ResetSuccessCombo();
 	}
 
-	// Adventurers always get XP and return
 	foreach (var adventurer in quest.AssignedAdventurers)
 	{
 		adventurer.GainXP(result.ExpGained);
-		TavernManager.Instance.RestoreAdventurerToRoster(adventurer);
+		TavernManager.Instance.DisplayAdventurers();
 	}
 
 	LogQuestResult(quest, result);
 	NotifyQuestStateChanged(quest);
 	GameLog.Info($"🎉 Quest '{quest.Title}' completed. Success: {result.Success}");
+}
+
+
+
+// 💡 You can define this however you like — basic example:
+private int CalculateTavernExp(Quest quest, QuestResult result)
+{
+	int baseExp = 10;
+	int adventurerCount = quest.AssignedAdventurers.Count;
+	int comboBonus = TavernManager.Instance.SuccessComboCount;
+
+	return baseExp + (2 * adventurerCount) + comboBonus;
 }
 
 public void EnforceDeadline(Quest quest)
@@ -126,12 +147,12 @@ public void EnforceDeadline(Quest quest)
 		Success = false,
 		GoldEarned = 0,
 		ExpGained = 0,
-		ResolvedAt = ClockManager.Instance.CurrentTime
+		ResolvedAt = ClockManager.CurrentTime
 	});
 
 	foreach (var adventurer in quest.AssignedAdventurers)
 	{
-		TavernManager.Instance.RestoreAdventurerToRoster(adventurer);
+		TavernManager.Instance.DisplayAdventurers();
 	}
 
 	NotifyQuestStateChanged(quest);

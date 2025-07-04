@@ -9,19 +9,22 @@ public partial class TimerManager : Node
 	private List<ScheduledEvent> eventQueue = new();
 
 	public override void _Ready()
+{
+	if (Instance != null)
 	{
-		if (Instance != null)
-		{
-			GD.PrintErr("❌ Duplicate TimerManager instance!");
-			QueueFree();
-			return;
-		}
-
-		Instance = this;
-
-		// Subscribe to time ticks
-		ClockManager.Instance.OnTimeAdvanced += CheckEvents;
+		GD.PrintErr("❌ Duplicate TimerManager instance!");
+		QueueFree();
+		return;
 	}
+
+	Instance = this;
+
+	// ✅ Cast the ClockManager autoload properly
+	var clock = GetNode<ClockManager>("/root/ClockManager");
+	clock.OnTimeAdvanced += CheckEvents;
+}
+
+
 
 	public void ScheduleEvent(DateTime triggerTime, Action callback)
 	{

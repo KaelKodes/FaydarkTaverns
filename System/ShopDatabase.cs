@@ -16,18 +16,26 @@ public class ShopItem
 	public ShopCategory Category;
 	public string Description;
 	public int PurchasedQuantity = 0;
+	public int RenownValue;
 
 	public ShopItem(string name, int cost, int levelReq, int maxOwned, ShopCategory category, string description)
-	{
-		Name = name;
-		Cost = cost;
-		LevelRequirement = levelReq;
-		MaxOwned = maxOwned;
-		Category = category;
-		Description = description;
-	}
-}
+{
+	Name = name;
+	Cost = cost;
+	LevelRequirement = levelReq;
+	MaxOwned = maxOwned;
+	Category = category;
+	Description = description;
 
+	// 💡 Renown Scaling
+	RenownValue = levelReq;
+
+	if (MaxOwned == 1)
+		RenownValue += 2;
+	else if (MaxOwned > 0 && MaxOwned <= 8)
+		RenownValue += 1;
+}
+}
 public static class ShopDatabase
 {
 	public static List<ShopItem> AllItems = new()

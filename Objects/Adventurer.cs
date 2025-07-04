@@ -3,6 +3,8 @@ using System;
 
 public partial class Adventurer : RefCounted
 {
+	public ClassTemplate Template { get; set; }
+
 	public int Id;
 	public string Name;
 	public string ClassName;
@@ -24,6 +26,7 @@ public partial class Adventurer : RefCounted
 	public int? AssignedQuestId { get; set; } = null;
 
 	public int XPToLevelUp => Level * 100;
+
 
 	public Adventurer(int id, string name, string className, int roleId, int str, int dex, int con, int intel,
 				  int aggression, int distance, int healingUse, int focus)
@@ -51,15 +54,26 @@ public partial class Adventurer : RefCounted
 	public float GetSpeed() => Dexterity * 0.75f;
 
 	public void GainXP(int amount)
+{
+	Xp += amount;
+
+	while (Xp >= XPToLevelUp)
 	{
-		Xp += amount;
-		while (Xp >= XPToLevelUp)
+		Xp -= XPToLevelUp;
+		Level++;
+
+		// ✅ Apply class-based stat growth
+		if (Template != null)
 		{
-			Xp -= XPToLevelUp;
-			Level++;
-			GameLog.Debug($"⭐ {Name} leveled up to Level {Level}!");
-			GameLog.Info($"⭐ {Name} leveled up to Level {Level}!");
-			// Optional: Stat improvements or events
+			Strength     += Template.StrengthPerLevel;
+			Dexterity    += Template.DexterityPerLevel;
+			Constitution += Template.ConstitutionPerLevel;
+			Intelligence += Template.IntelligencePerLevel;
 		}
+
+		GameLog.Debug($"⭐ {Name} leveled up to Level {Level}!");
+		GameLog.Info($"⭐ {Name} leveled up to Level {Level}!");
 	}
+}
+
 } 

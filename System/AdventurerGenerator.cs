@@ -48,20 +48,25 @@ public partial class AdventurerGenerator : RefCounted
 	public static int RandomTrait() => random.Next(-50, 51);
 
 	public static Adventurer GenerateAdventurer(int id, ClassTemplate template)
-	{
-		return new Adventurer(
-			id,
-			GenerateName(),
-			template.ClassName,
-			template.RoleId,
-			RandomizeStat(template.Strength),
-			RandomizeStat(template.Dexterity),
-			RandomizeStat(template.Constitution),
-			RandomizeStat(template.Intelligence),
-			RandomTrait(),
-			RandomTrait(),
-			RandomTrait(),
-			RandomTrait()
-		);
-	}
+{
+	var adventurer = new Adventurer(
+		id,
+		GenerateName(),
+		template.ClassName,
+		template.RoleId,
+		RandomizeStat(template.Strength),
+		RandomizeStat(template.Dexterity),
+		RandomizeStat(template.Constitution),
+		RandomizeStat(template.Intelligence),
+		RandomTrait(),
+		RandomTrait(),
+		RandomTrait(),
+		RandomTrait()
+	);
+
+	adventurer.Template = template; // ✅ Proper assignment
+
+	return adventurer;
+}
+
 }

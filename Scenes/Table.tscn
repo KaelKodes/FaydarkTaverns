@@ -22,8 +22,10 @@ alignment = 1
 
 [node name="NameLabel" type="Label" parent="HBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 1
 text = "Name"
+horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="SeatRow" type="HBoxContainer" parent="HBoxContainer"]

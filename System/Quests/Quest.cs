@@ -28,14 +28,15 @@ public DateTime StartTime;
 public DateTime ExpectedReturn;
 public DateTime Deadline;
 
-public TimeSpan Elapsed => ClockManager.Instance.CurrentTime - StartTime;
-public bool IsOverdue => Assigned && ClockManager.Instance.CurrentTime > Deadline;
+public TimeSpan Elapsed => ClockManager.CurrentTime - StartTime;
+public bool IsOverdue => Assigned && ClockManager.CurrentTime > Deadline;
+public DateTime LastSeatCheck = DateTime.MinValue;
+
 
 
 
 	// Party assignment
-	public List<Adventurer> AssignedParty = new();
-	public bool Assigned => AssignedParty.Count > 0;
+	public bool Assigned => AssignedAdventurers.Count > 0;
 	public List<Adventurer> AssignedAdventurers = new();
 
 	// Status
@@ -71,11 +72,11 @@ public bool IsOverdue => Assigned && ClockManager.Instance.CurrentTime > Deadlin
 {
 	int bonus = 0;
 
-	if (AssignedParty.Exists(a => a.ClassName == "Bard"))
+	if (AssignedAdventurers.Exists(a => a.ClassName == "Bard"))
 		bonus += (int)(TravelHours * 0.1); // 10% faster travel
 
 	var uniqueRoles = new HashSet<int>();
-	foreach (var a in AssignedParty)
+	foreach (var a in AssignedAdventurers)
 		uniqueRoles.Add(a.RoleId);
 
 	if (uniqueRoles.Count >= 3)
@@ -95,7 +96,7 @@ public void Accept()
 
 	IsAccepted = true;
 	IsLocked = true;
-	StartTime = ClockManager.Instance.CurrentTime;
+	StartTime = ClockManager.CurrentTime;
 	ExpectedReturn = StartTime.AddHours(GetTotalExpectedTU());
 
 	int buffer = new Random().Next(2, 7); // Between 2–6 hours of slack

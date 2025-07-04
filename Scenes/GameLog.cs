@@ -23,14 +23,14 @@ public static class GameLog
 	}
 
 	private static void AddMessage(string message, bool showInConsole)
-	{
-		string timestamp = ClockManager.Instance?.CurrentTime.ToString("HH:mm") ?? "--:--";
-		string formatted = $"[{timestamp}] {message}";
+{
+	string timestamp = ClockManager.CurrentTime.ToString("HH:mm");
+	string formatted = $"[{timestamp}] {message}";
 
-		if (showInConsole)
-			GD.Print(formatted);
+	if (showInConsole)
+		GD.Print(formatted);
 
-		if (_logText != null)
-			_logText.AppendText(formatted + "\n");
-	}
+	if (_logText != null)
+		_logText.AppendText(formatted + "\n");
+}
 }

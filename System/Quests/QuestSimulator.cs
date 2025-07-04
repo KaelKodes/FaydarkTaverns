@@ -14,7 +14,7 @@ public static class QuestSimulator
 		Success = false,
 		GoldEarned = 0,
 		ExpGained = 0,
-		ResolvedAt = ClockManager.Instance.CurrentTime
+		ResolvedAt = ClockManager.CurrentTime
 	};
 }
 
@@ -51,7 +51,7 @@ if (missing > 0)
 			Success = success,
 			GoldEarned = reward,
 			ExpGained = xp,
-			ResolvedAt = ClockManager.Instance.CurrentTime
+			ResolvedAt = ClockManager.CurrentTime
 		};
 	}
 

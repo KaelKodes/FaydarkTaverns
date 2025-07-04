@@ -4,101 +4,114 @@ using System.Collections.Generic;
 
 public partial class GuestManager : Node
 {
-	public static GuestManager Instance;
+	private static List<Guest> guestsOutside = new();
+	private static List<Guest> guestsInside = new();
+	public int CurrentDay => (ClockManager.CurrentTime - ClockManager.GameStartTime).Days + 1;
 
-	private List<Guest> guestsOutside = new();
-	private List<Guest> guestsInside = new();
-	public int CurrentDay => (ClockManager.Instance.CurrentTime - ClockManager.Instance.GameStartTime).Days + 1;
-
-	private int MaxSeats => TavernManager.Instance.TotalAvailableSeats();
+	private int MaxSeats => TavernManager.TotalAvailableSeats();
 
 	public override void _Ready()
 {
-	Instance = this;
 
 	var timer = new Timer
 	{
-		WaitTime = 5.0f,
+		WaitTime = 3.0f,
 		Autostart = true,
 		OneShot = false
 	};
 	AddChild(timer);
-	timer.Timeout += () => TickGuests(ClockManager.Instance.CurrentTime);
+	timer.Timeout += () => TickGuests(ClockManager.CurrentTime);
 }
 
 
-	public void QueueGuest(Guest guest)
-	{
-		guestsOutside.Add(guest);
-		GameLog.Debug($"🚶 Guest queued: {guest.Name} ({(guest.IsAdventurer ? "Adventurer" : "QuestGiver")})");
-	}
+	public static void QueueGuest(Guest guest, TavernManager tavern)
+{
+	guestsOutside.Add(guest);
+	guest.IsInside = false;
+}
+
 
 	public void TickGuests(DateTime currentTime)
-	{
-		// Try to admit guests
-		for (int i = guestsOutside.Count - 1; i >= 0; i--)
-		{
-			var guest = guestsOutside[i];
-
-			if (guest.VisitDay <= ClockManager.Instance.CurrentDay &&
-				guest.VisitHour <= ClockManager.Instance.CurrentTime.Hour &&
-				guestsInside.Count < MaxSeats)
-			{
-				AdmitGuest(guest);
-				var tables = TavernManager.Instance.GetAvailableTables();
-
-foreach (var table in tables)
 {
-	if (table.HasFreeSeat())
+	// ⛔ Prevent logic if game is paused
+	if (ClockManager.TimeMultiplier == 0f)
+		return;
+		
+	// ✅ Try to admit guests
+	for (int i = guestsOutside.Count - 1; i >= 0; i--)
 	{
-		table.AssignGuest(guest);
-		break;
+		var guest = guestsOutside[i];
+
+		// ✅ Guest is ready to enter
+		bool itIsTheirDay = guest.VisitDay <= ClockManager.CurrentDay;
+bool itIsTimeToEnter = ClockManager.CurrentTime.Hour >= guest.VisitHour;
+bool theyHaveWaitedTooLong = ClockManager.CurrentTime.Hour > guest.VisitHour + guest.WaitDuration;
+
+if (itIsTheirDay && itIsTimeToEnter &&
+	guestsInside.Count < TavernManager.Instance.MaxFloorGuests)
+{
+	AdmitGuest(guest);
+	TavernManager.Instance.AdmitGuestToTavern(guest);
+	guestsOutside.RemoveAt(i);
+}
+else if (itIsTheirDay && theyHaveWaitedTooLong)
+{
+	guestsOutside.RemoveAt(i);
+	GameLog.Info($"😞 {guest.Name} left after waiting.");
+}
+
+	}
+
+	// ✅ Remove guests who overstayed
+	for (int i = guestsInside.Count - 1; i >= 0; i--)
+	{
+		var guest = guestsInside[i];
+		
+
+		if (guest.DepartureTime.HasValue && ClockManager.CurrentTime >= guest.DepartureTime.Value)
+{
+	RemoveGuest(guest);
+}
+
 	}
 }
 
-				guestsOutside.RemoveAt(i);
-			}
-			else if (guest.VisitHour + guest.WaitDuration < ClockManager.Instance.CurrentTime.Hour)
-			{
-				guestsOutside.RemoveAt(i);
-				GameLog.Info($"😞 {guest.Name} left after waiting.");
-			}
-		}
 
-		// Remove inside guests who overstayed
-		for (int i = guestsInside.Count - 1; i >= 0; i--)
-		{
-			var guest = guestsInside[i];
-			guest.StayDuration--;
+	public static void AdmitGuest(Guest guest)
+{
+	guestsInside.Add(guest);
+	guest.Admit(); // Use the built-in method that triggers OnAdmitted
 
-			if (guest.StayDuration <= 0)
-			{
-				RemoveGuest(guest);
-			}
-		}
-	}
+	GameLog.Info($"🍺 {guest.Name} has entered the tavern!");
+}
 
-	private void AdmitGuest(Guest guest)
-	{
-		guestsInside.Add(guest);
-		guest.IsInside = true;
-		GameLog.Info($"🍺 {guest.Name} has entered the tavern!");
-		// TODO: Assign to table slot
-	}
+
+
+
 
 	private void RemoveGuest(Guest guest)
 {
 	guestsInside.Remove(guest);
 	GameLog.Info($"👋 {guest.Name} has left the tavern.");
 
-	// ✅ Free their table seat
 	if (guest.AssignedTable != null)
 	{
 		guest.AssignedTable.RemoveGuest(guest);
 	}
+
+	// Remove from floor list
+	TavernManager.Instance?.OnGuestRemoved(guest);
 }
+
+
 
 
 	public int GuestsInsideCount() => guestsInside.Count;
 	public int GuestsOutsideCount() => guestsOutside.Count;
+	
+	public static List<Guest> GetGuestsInside()
+{
+	return guestsInside;
+}
+
 }
