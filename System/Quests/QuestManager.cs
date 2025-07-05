@@ -9,24 +9,54 @@ public class QuestManager
 	public static QuestManager Instance => _instance ??= new QuestManager();
 
 	private List<Quest> allQuests = new();
+	private List<Quest> activeQuests = new();
+	public List<Quest> ActiveQuests => activeQuests;
+	
+	public event Action OnQuestsUpdated;
+
+
+	public int MaxQuestSlots { get; private set; } = 2; // Can be increased via shop later
 	private int nextQuestId = 1;
 	private List<QuestReport> dailyReports = new();
 
-	private QuestManager()
+	//private QuestManager()  - Remove after Quest Board is working
+	//{
+	//	GenerateDailyQuests(); // Optionally preload quests here
+	//}
+
+	//public void GenerateDailyQuests()
+	//{
+	//	allQuests.Clear();
+
+	//	for (int i = 0; i < 16; i++)
+	//	{
+	//		var quest = QuestGenerator.GenerateQuest(nextQuestId++);
+	//		allQuests.Add(quest);
+	//	}
+	//}
+	
+	public bool CanAddQuest() => ActiveQuests.Count < MaxQuestSlots;
+
+public void AddQuest(Quest quest)
+{
+	if (quest == null) return;
+
+	if (activeQuests.Count >= MaxQuestSlots)
 	{
-		GenerateDailyQuests(); // Optionally preload quests here
+		GameLog.Debug("⚠️ Quest Board is full. Cannot add quest.");
+		return;
 	}
 
-	public void GenerateDailyQuests()
-	{
-		allQuests.Clear();
+	activeQuests.Add(quest);
+	GameLog.Debug($"📋 Quest added. Board now has {activeQuests.Count}/{MaxQuestSlots} quests.");
 
-		for (int i = 0; i < 16; i++)
-		{
-			var quest = QuestGenerator.GenerateQuest(nextQuestId++);
-			allQuests.Add(quest);
-		}
-	}
+	OnQuestsUpdated?.Invoke(); // 🔁 Signal to refresh Quest UI
+}
+public List<Quest> GetActiveQuests()
+{
+	return activeQuests;
+}
+
 
 	public List<Quest> GetAvailableQuests()
 	{
@@ -77,6 +107,10 @@ public void NotifyQuestStateChanged(Quest quest)
 
 	// ✅ Trigger reordering of the cards
 	TavernManager.Instance.SortQuestCards();
+}
+public int GetNextQuestId()
+{
+	return nextQuestId++;
 }
 
 public void CompleteQuest(Quest quest)

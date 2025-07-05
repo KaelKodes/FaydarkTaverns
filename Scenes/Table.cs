@@ -7,91 +7,96 @@ public partial class Table : Panel
 {
 	[Export] public int SeatCount = 4;
 	private PackedScene seatSlotScene = GD.Load<PackedScene>("res://Scenes/SeatSlot.tscn");
-	[Export] public PackedScene SeatSlotScene;
-	[Export] public NodePath SeatRowPath;
-	[Export] public NodePath NameLabelPath;
+
 	private Label nameLabel;
-	public string TableName = "Starting Table";
 	private HBoxContainer seatRow;
+
+	public string TableName = "Starting Table";
 	public TablePanel LinkedPanel;
 
-	public List<Guest> SeatedGuests = new();
-	public List<Guest> AssignedGuests = new();
+	public List<Guest> SeatedGuests { get; private set; } = new();
+	public List<Guest> AssignedGuests { get; private set; } = new();
 
 	public override void _Ready()
-{
-	seatRow = GetNode<HBoxContainer>("HBoxContainer/SeatRow");
-	nameLabel = GetNode<Label>("HBoxContainer/NameLabel");
+	{
+		seatRow = GetNode<HBoxContainer>("HBoxContainer/SeatRow");
+		nameLabel = GetNode<Label>("HBoxContainer/NameLabel");
 
-	nameLabel.Text = TableName;
+		nameLabel.Text = TableName;
 
-	seatRow.ClearChildren();
+		seatRow.ClearChildren();
 
-	for (int i = 0; i < SeatCount; i++)
-{
-	var slot = seatSlotScene.Instantiate<SeatSlot>();
-	seatRow.AddChild(slot);
-	SeatedGuests.Add(null); // ✅ Add this line
-	AssignedGuests.Add(null);
-}
-
-}
-
-
-	
+		for (int i = 0; i < SeatCount; i++)
+		{
+			var slot = seatSlotScene.Instantiate<SeatSlot>();
+			seatRow.AddChild(slot);
+			SeatedGuests.Add(null);
+			AssignedGuests.Add(null);
+		}
+	}
 
 	public bool HasFreeSeat() => GetFreeSeatCount() > 0;
 
 	public int GetFreeSeatCount() => AssignedGuests.Count(g => g == null);
 
-	public int AssignGuest(Guest guest)
-{
-	for (int i = 0; i < SeatedGuests.Count; i++)
+	public int GetFreeSeatIndex()
 	{
-		if (SeatedGuests[i] == null)
+		for (int i = 0; i < SeatedGuests.Count; i++)
 		{
-			SeatedGuests[i] = guest;
-			guest.SeatIndex = i;
-			guest.AssignedTable = this;
+			if (SeatedGuests[i] == null)
+				return i;
+		}
+		return -1;
+	}
 
-			UpdateSeatVisual(i, guest); // ✅ optional visual
+	public int AssignGuest(Guest guest)
+	{
+		for (int i = 0; i < SeatedGuests.Count; i++)
+		{
+			if (SeatedGuests[i] == null)
+			{
+				SeatedGuests[i] = guest;
+				guest.SeatIndex = i;
+				guest.AssignedTable = this;
 
-			// 🔁 NEW: Update TablePanel immediately
-			if (LinkedPanel != null)
-				LinkedPanel.UpdateSeats(TavernManager.Instance.GetGuestsInside());
-				
+				UpdateSeatVisual(i, guest);
+
+				if (LinkedPanel != null)
+					LinkedPanel?.UpdateSeatSlots();
+
 				TavernManager.Instance.DisplayAdventurers();
 				TavernManager.Instance.UpdateFloorLabel();
 
-			return i;
+				return i;
+			}
 		}
+		return -1;
 	}
-	return -1;
-}
-
 
 	public void RemoveGuest(Guest guest)
 {
-	if (guest.SeatIndex != null && guest.SeatIndex >= 0 && guest.SeatIndex < SeatedGuests.Count)
+	int index = SeatedGuests.IndexOf(guest);
+	if (index >= 0)
 	{
-		SeatedGuests[(int)guest.SeatIndex] = null;
-		GD.Print($"🪑 Removed {guest.Name} from seat {guest.SeatIndex}");
-	}
-	else
-	{
-		GD.PrintErr($"❌ Tried to remove guest from invalid seat index: {guest.SeatIndex}");
-	}
+		SeatedGuests[index] = null;
+		guest.AssignedTable = null;
+		guest.SeatIndex = -1;
 
-	guest.AssignedTable = null;
-	guest.SeatIndex = null;
+		UpdateSeatVisual(index, null);
+		
+		LinkedPanel?.UpdateSeatSlots();
+	}
 }
+
+
 
 
 	private void UpdateSeatVisual(int index, Guest guest)
 	{
-		// Find the seat node by linear index
-		var allSeats = new List<SeatSlot>();
-		allSeats.AddRange(GetNode<HBoxContainer>("HBoxContainer/SeatRow").GetChildren().OfType<SeatSlot>());
+		var allSeats = GetNode<HBoxContainer>("HBoxContainer/SeatRow")
+			.GetChildren()
+			.OfType<SeatSlot>()
+			.ToList();
 
 		if (index >= 0 && index < allSeats.Count)
 		{
@@ -104,16 +109,4 @@ public partial class Table : Panel
 				seat.SetQuestGiver();
 		}
 	}
-	public int GetFreeSeatIndex()
-{
-	for (int i = 0; i < SeatedGuests.Count; i++)
-	{
-		if (SeatedGuests[i] == null)
-			return i;
-	}
-	return -1;
-}
-
-
-	
 }

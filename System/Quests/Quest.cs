@@ -31,6 +31,8 @@ public DateTime Deadline;
 public TimeSpan Elapsed => ClockManager.CurrentTime - StartTime;
 public bool IsOverdue => Assigned && ClockManager.CurrentTime > Deadline;
 public DateTime LastSeatCheck = DateTime.MinValue;
+public QuestGiver PostedBy { get; set; }
+
 
 
 

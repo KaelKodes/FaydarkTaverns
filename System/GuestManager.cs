@@ -23,6 +23,29 @@ public partial class GuestManager : Node
 	timer.Timeout += () => TickGuests(ClockManager.CurrentTime);
 }
 
+private Guest GenerateQuestGiverGuest()
+{
+	string name = AdventurerGenerator.GenerateName();
+
+	var guest = new Guest
+	{
+		Name = name,
+		IsAdventurer = false,
+		VisitDay = ClockManager.CurrentDay,
+		VisitHour = GD.RandRange(6, 12),  // morning arrivals
+		WaitDuration = 2,
+		StayDuration = GD.RandRange(4, 6)
+	};
+
+	guest.BoundGiver = new QuestGiver(name, guest);
+
+	GameLog.Debug($"🧓 Quest Giver '{name}' generated.");
+
+	return guest;
+}
+
+
+
 
 	public static void QueueGuest(Guest guest, TavernManager tavern)
 {

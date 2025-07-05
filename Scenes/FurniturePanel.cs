@@ -5,19 +5,19 @@ public partial class FurniturePanel : Panel
 {
 	private bool _dragging = false;
 	private Vector2 _dragOffset;
-	public VBoxContainer FurnitureVBox => GetNode<VBoxContainer>("FurnitureVBox");
 
+	public VBoxContainer FurnitureVBox => GetNode<VBoxContainer>("FurnitureVBox");
 
 	public override void _GuiInput(InputEvent @event)
 	{
-		if (@event is InputEventMouseButton mouseEvent)
+		if (@event is InputEventMouseButton mouseEvent && mouseEvent.ButtonIndex == MouseButton.Left)
 		{
-			if (mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Left)
+			if (mouseEvent.Pressed)
 			{
 				_dragging = true;
 				_dragOffset = GetGlobalMousePosition() - GlobalPosition;
 			}
-			else if (!mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Left)
+			else
 			{
 				_dragging = false;
 			}

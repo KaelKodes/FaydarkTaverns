@@ -21,7 +21,6 @@ offset_bottom = -0.0320129
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_bn3cn")
 script = ExtResource("1_qf87x")
 TitleLabel = NodePath("VBox/TitleLabel")

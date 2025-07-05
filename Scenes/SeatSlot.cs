@@ -8,16 +8,34 @@ public partial class SeatSlot : Panel
 	[Export] public Color QuestGiverColor = new Color(0.9f, 0.8f, 0.2f);   // Yellow
 
 	private ColorRect background;
+	private bool hasBackground = false;
 
 	public override void _Ready()
 	{
-		background = GetNode<ColorRect>("Background");
-		SetEmpty(); // Default state
+		background = GetNodeOrNull<ColorRect>("Background");
+		hasBackground = background != null;
+
+		if (!hasBackground)
+			GD.Print($"ℹ️ SeatSlot at {GetPath()} has no Background. Skipping color updates.");
+		else
+			SetEmpty();
 	}
 
-	public void SetEmpty() => background.Color = EmptyColor;
+	public void SetEmpty()
+	{
+		if (hasBackground)
+			background.Color = EmptyColor;
+	}
 
-	public void SetAdventurer() => background.Color = AdventurerColor;
+	public void SetAdventurer()
+	{
+		if (hasBackground)
+			background.Color = AdventurerColor;
+	}
 
-	public void SetQuestGiver() => background.Color = QuestGiverColor;
+	public void SetQuestGiver()
+	{
+		if (hasBackground)
+			background.Color = QuestGiverColor;
+	}
 }

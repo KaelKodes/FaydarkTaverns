@@ -3,13 +3,11 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-
 public partial class TablePanel : VBoxContainer
 {
 	[Export] public Label TableNameLabel;
 	[Export] public VBoxContainer SeatSlotContainer;
 	[Export] public PackedScene AdventurerCardScene;
-
 
 	public Table LinkedTable;
 
@@ -19,68 +17,93 @@ public partial class TablePanel : VBoxContainer
 		{
 			TableNameLabel.Text = LinkedTable.TableName;
 			GenerateSeats(LinkedTable.SeatCount);
-			UpdateSeats(LinkedTable.SeatedGuests);
+			UpdateSeatSlots();
 		}
 	}
 
 	public void GenerateSeats(int count)
-{
-	// Clear existing slots
-	foreach (Node child in SeatSlotContainer.GetChildren())
 	{
-		child.QueueFree();
+		// 🔁 Clear existing
+		foreach (Node child in SeatSlotContainer.GetChildren())
+			child.QueueFree();
+
+		// ➕ Add empty SeatSlot nodes
+		for (int i = 0; i < count; i++)
+		{
+			var seatSlot = new SeatSlot(); // Custom control
+			seatSlot.Name = $"SeatSlot{i + 1}";
+			seatSlot.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+			seatSlot.MouseFilter = Control.MouseFilterEnum.Stop;
+
+			SeatSlotContainer.AddChild(seatSlot);
+		}
 	}
 
-	// Create new slots
-	for (int i = 0; i < count; i++)
-	{
-		var seatSlot = new Panel(); // Replace with a custom scene if needed
-		seatSlot.Name = $"SeatSlot{i + 1}";
-		seatSlot.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
-		seatSlot.MouseFilter = Control.MouseFilterEnum.Stop;
-
-		SeatSlotContainer.AddChild(seatSlot);
-	}
-}
-public void UpdateSeats(List<Guest> seatedGuests)
+	public void UpdateSeatSlots()
 {
-	if (SeatSlotContainer == null || LinkedTable == null)
+	if (LinkedTable == null || SeatSlotContainer == null)
 		return;
 
-	// Clear all UI slots
-	foreach (var child in SeatSlotContainer.GetChildren())
-		child.QueueFree();
+	SeatSlotContainer.ClearChildren();
 
 	for (int i = 0; i < LinkedTable.SeatCount; i++)
 	{
-		Guest guest = (i < seatedGuests.Count) ? seatedGuests[i] : null;
+		var guest = LinkedTable.SeatedGuests[i];
 
-		if (guest != null && guest.BoundAdventurer != null)
+		// 🪑 Furniture Panel: simplified display
+		if (Owner is FurniturePanel)
 		{
-			var card = AdventurerCardScene.Instantiate<AdventurerCard>();
-			card.BoundAdventurer = guest.BoundAdventurer;
+			var slot = new SeatSlot();
 
-			var nameLabel = card.GetNode<Label>("VBoxContainer/NameLabel");
-			var classLabel = card.GetNode<Label>("VBoxContainer/ClassLabel");
-			var vitalsLabel = card.GetNode<Label>("VBoxContainer/VitalsLabel");
+			if (guest == null)
+				slot.SetEmpty();
+			else if (guest.IsAdventurer)
+				slot.SetAdventurer();
+			else
+				slot.SetQuestGiver();
 
-			nameLabel.Text = guest.BoundAdventurer.Name;
-			classLabel.Text = $"{guest.BoundAdventurer.Level} {guest.BoundAdventurer.ClassName}";
-			vitalsLabel.Text = $"HP: {guest.BoundAdventurer.GetHp()} | Mana: {guest.BoundAdventurer.GetMana()}";
-
-			SeatSlotContainer.AddChild(card);
+			SeatSlotContainer.AddChild(slot);
 		}
-		else
+		else // 🎴 ALC TablePanel: full draggable card display
 		{
-			var emptySlot = new Panel();
-			emptySlot.CustomMinimumSize = new Vector2(250, 50);
-			emptySlot.AddThemeColorOverride("bg_color", new Color(0.15f, 0.15f, 0.15f));
-			SeatSlotContainer.AddChild(emptySlot);
+			if (guest != null && !guest.IsOnQuest)
+			{
+				var card = AdventurerCardScene.Instantiate<AdventurerCard>();
+
+				// ✅ Bind the exact guest and adventurer
+				card.BoundGuest = guest;
+				card.BoundAdventurer = guest.BoundAdventurer;
+
+				// ✅ Required to receive input events for drag
+				card.SetMouseFilter(Control.MouseFilterEnum.Stop);
+
+				// ✅ Populate display
+				if (guest.BoundAdventurer != null)
+				{
+					card.GetNode<Label>("VBoxContainer/NameLabel").Text = guest.BoundAdventurer.Name;
+					card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"{guest.BoundAdventurer.Level} {guest.BoundAdventurer.ClassName}";
+					card.GetNode<Label>("VBoxContainer/VitalsLabel").Text = $"HP: {guest.BoundAdventurer.GetHp()} | Mana: {guest.BoundAdventurer.GetMana()}";
+				}
+				else if (guest.BoundGiver != null)
+				{
+					card.GetNode<Label>("VBoxContainer/NameLabel").Text = guest.BoundGiver.Name;
+					card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"Lv {guest.BoundGiver.Level} Informant";
+					card.GetNode<Label>("VBoxContainer/VitalsLabel").Text = $"Happiness: {Mathf.RoundToInt(guest.BoundGiver.Happiness * 100)}%";
+				}
+
+				SeatSlotContainer.AddChild(card);
+			}
+			else
+			{
+				// 🕳️ Empty or quest-assigned slot
+				var emptyPanel = new Panel();
+				emptyPanel.CustomMinimumSize = new Vector2(250, 50);
+				emptyPanel.AddThemeColorOverride("bg_color", new Color(0.15f, 0.15f, 0.15f));
+				SeatSlotContainer.AddChild(emptyPanel);
+			}
 		}
 	}
 }
-
-
 
 
 }

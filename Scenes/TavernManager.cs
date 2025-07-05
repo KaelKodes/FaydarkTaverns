@@ -30,7 +30,7 @@ public partial class TavernManager : Node
 	[Export] public VBoxContainer FloorSlots;
 
 
-	private List<Guest> floorGuests = new();
+	public List<Guest> floorGuests = new();
 	[Export] public int Renown = 0;
 	public static TavernManager Instance { get; private set; }
 	private ClockManager Clock => GetNode<ClockManager>("/root/ClockManager");
@@ -207,10 +207,9 @@ public partial class TavernManager : Node
 
 	private void StartNewDay(DateTime currentDate)
 	{
-		// ✅ Remove old .Instance null check — these are now autoloads
 		GD.Print($"🌅 New day triggered by ClockManager: {currentDate:D}");
 
-		QuestManager.Instance?.ClearUnclaimedQuests(); // ✅ Still uses .Instance since QuestManager is not autoloaded (yet)
+		QuestManager.Instance?.ClearUnclaimedQuests();
 		classTemplates = ClassTemplate.GetDefaultClassTemplates();
 
 		int idCounter = 1;
@@ -219,33 +218,59 @@ public partial class TavernManager : Node
 			var adventurer = AdventurerGenerator.GenerateAdventurer(idCounter++, kv.Value);
 
 			int visitHour = GD.RandRange(6, 18);
-int wait = GD.RandRange(1, 2);
-int stay = GD.RandRange(4, 8);
+			int wait = GD.RandRange(1, 2);
+			int stay = GD.RandRange(4, 8);
 
-var guest = new Guest
-{
-	Name = adventurer.Name,
-	IsAdventurer = true,
-	VisitDay = ClockManager.CurrentDay,
-	VisitHour = visitHour,
-	WaitDuration = wait,
-	StayDuration = stay,
-	AssignedTable = null,
-	SeatIndex = null,
-	BoundAdventurer = adventurer
-};
+			var guest = new Guest
+			{
+				Name = adventurer.Name,
+				IsAdventurer = true,
+				VisitDay = ClockManager.CurrentDay,
+				VisitHour = visitHour,
+				WaitDuration = wait,
+				StayDuration = stay,
+				AssignedTable = null,
+				SeatIndex = null,
+				BoundAdventurer = adventurer
+			};
 
 			GameLog.Debug($"🕐 {guest.Name} plans to visit at {visitHour}:00, wait {wait}h, stay {stay}h.");
-			GuestManager.QueueGuest(guest, this); // from inside TavernManager
-
+			GuestManager.QueueGuest(guest, this);
 		}
 
-		QuestManager.Instance?.GenerateDailyQuests();
-		GD.Print("✨ Day refreshed with new quests and adventurers.");
-		DisplayAdventurers(); // ✅ show empty slots even before anyone arrives
-		UpdateFloorLabel();   // ✅ show 0 / MaxFloorGuests
+		// 🧓 Spawn Quest Givers
+		int questGiverCount = 2; // Adjust as needed or scale with renown
+		for (int i = 0; i < questGiverCount; i++)
+		{
+			string name = AdventurerGenerator.GenerateName();
+			int visitHour = GD.RandRange(6, 18);
+			int wait = GD.RandRange(1, 2);
+			int stay = GD.RandRange(4, 8);
 
+			var guest = new Guest
+			{
+				Name = name,
+				IsAdventurer = false,
+				VisitDay = ClockManager.CurrentDay,
+				VisitHour = visitHour,
+				WaitDuration = wait,
+				StayDuration = stay,
+				AssignedTable = null,
+				SeatIndex = null
+			};
+
+			var giver = new QuestGiver(name, guest);
+			guest.BoundGiver = giver;
+
+			GameLog.Debug($"🕐 {guest.Name} (Quest Giver) plans to visit at {visitHour}:00, wait {wait}h, stay {stay}h.");
+			GuestManager.QueueGuest(guest, this);
+		}
+
+		GD.Print("✨ A new day dawns...");
+		DisplayAdventurers();
+		UpdateFloorLabel();
 	}
+
 
 
 
@@ -258,62 +283,76 @@ var guest = new Guest
 
 	#region Guests
 	public void DisplayAdventurers()
-{
-	if (FloorSlots == null || !IsInstanceValid(FloorSlots))
 	{
-		GD.PrintErr("❌ FloorSlots container is null or invalid.");
-		return;
+		if (FloorSlots == null || !IsInstanceValid(FloorSlots))
+		{
+			GD.PrintErr("❌ FloorSlots container is null or invalid.");
+			return;
+		}
+
+		// Clear all floor slot contents
+		foreach (var child in FloorSlots.GetChildren())
+			child.QueueFree();
+
+		// Render exactly MaxFloorGuests number of slots
+		for (int i = 0; i < MaxFloorGuests; i++)
+		{
+			// 🧼 Only unseated guests should show here
+			var guest = floorGuests
+				.Where(g => g.AssignedTable == null && !g.IsOnQuest)
+				.ElementAtOrDefault(i);
+
+			if (guest != null)
+			{
+				var card = AdventurerCardScene.Instantiate<AdventurerCard>();
+				card.BoundGuest = guest;
+				card.BoundAdventurer = guest.BoundAdventurer;
+
+				card.SetMouseFilter(Control.MouseFilterEnum.Stop);
+
+				// 🧙‍♂️ Adventurer
+				if (guest.BoundAdventurer != null)
+				{
+					card.GetNode<Label>("VBoxContainer/NameLabel").Text = guest.BoundAdventurer.Name;
+					card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"{guest.BoundAdventurer.Level} {guest.BoundAdventurer.ClassName}";
+					card.GetNode<Label>("VBoxContainer/VitalsLabel").Text = $"HP: {guest.BoundAdventurer.GetHp()} | Mana: {guest.BoundAdventurer.GetMana()}";
+				}
+				// 🧓 Quest Giver
+				else if (guest.BoundGiver != null)
+				{
+					var giver = guest.BoundGiver;
+					card.BoundAdventurer = null;
+					card.GetNode<Label>("VBoxContainer/NameLabel").Text = giver.Name;
+					card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"Lv {giver.Level} Informant";
+					card.GetNode<Label>("VBoxContainer/VitalsLabel").Text = $"Happiness: {Mathf.RoundToInt(giver.Happiness * 100)}%";
+				}
+
+				FloorSlots.AddChild(card);
+			}
+			else
+			{
+				var emptySlot = new Panel();
+				emptySlot.CustomMinimumSize = new Vector2(250, 50);
+				emptySlot.AddThemeColorOverride("bg_color", new Color(0.2f, 0.2f, 0.2f));
+				FloorSlots.AddChild(emptySlot);
+			}
+		}
+
+		// Update all table panels to reflect current seating
+		foreach (var table in tables)
+		{
+			table.LinkedPanel?.UpdateSeatSlots();
+		}
 	}
 
-	// Clear all floor slot contents
-	foreach (var child in FloorSlots.GetChildren())
-		child.QueueFree();
-
-	// Render exactly MaxFloorGuests number of slots
-	for (int i = 0; i < MaxFloorGuests; i++)
+	public void OnGuestSeated(Guest guest)
 	{
-		// Try to find an unseated guest for this slot
-		var guest = floorGuests
-			.Where(g => g.AssignedTable == null)
-			.ElementAtOrDefault(i);
+		if (floorGuests.Contains(guest))
+			floorGuests.Remove(guest);
 
-		if (guest != null)
-		{
-			var card = AdventurerCardScene.Instantiate<AdventurerCard>();
-			card.BoundAdventurer = guest.BoundAdventurer;
-
-			var nameLabel = card.GetNode<Label>("VBoxContainer/NameLabel");
-			var classLabel = card.GetNode<Label>("VBoxContainer/ClassLabel");
-			var vitalsLabel = card.GetNode<Label>("VBoxContainer/VitalsLabel");
-
-			nameLabel.Text = guest.BoundAdventurer.Name;
-			classLabel.Text = $"{guest.BoundAdventurer.Level} {guest.BoundAdventurer.ClassName}";
-			vitalsLabel.Text = $"HP: {guest.BoundAdventurer.GetHp()} | Mana: {guest.BoundAdventurer.GetMana()}";
-
-			FloorSlots.AddChild(card);
-		}
-		else
-		{
-			var emptySlot = new Panel(); // or a custom placeholder
-			emptySlot.CustomMinimumSize = new Vector2(250, 50); // adjust as needed
-			emptySlot.AddThemeColorOverride("bg_color", new Color(0.2f, 0.2f, 0.2f)); // make it visibly "empty"
-			FloorSlots.AddChild(emptySlot);
-		}
+		UpdateFloorLabel();
+		DisplayAdventurers();
 	}
-	// Update all table panels to reflect seated guests
-foreach (var table in tables)
-{
-	if (table.LinkedPanel != null)
-		table.LinkedPanel.UpdateSeats(floorGuests); // pass the full list
-}
-
-}
-
-
-
-
-	
-
 
 
 	#endregion
@@ -447,35 +486,35 @@ foreach (var table in tables)
 
 
 	public void AddTable(string name)
-{
-	// 🔢 Generate a unique name like "Tiny Table 1"
-	if (!tableCounters.ContainsKey(name))
-		tableCounters[name] = 1;
-	else
-		tableCounters[name]++;
+	{
+		// 🔢 Generate a unique name like "Tiny Table 1"
+		if (!tableCounters.ContainsKey(name))
+			tableCounters[name] = 1;
+		else
+			tableCounters[name]++;
 
-	string uniqueName = $"{name} {tableCounters[name]}";
+		string uniqueName = $"{name} {tableCounters[name]}";
 
-	// 🪑 Instantiate table
-	var tableScene = GD.Load<PackedScene>("res://Scenes/Table.tscn");
-	var tableInstance = tableScene.Instantiate<Table>();
-	tableInstance.SeatCount = 4;
-	tableInstance.TableName = uniqueName; // ✅ Assign the name
+		// 🪑 Instantiate table
+		var tableScene = GD.Load<PackedScene>("res://Scenes/Table.tscn");
+		var tableInstance = tableScene.Instantiate<Table>();
+		tableInstance.SeatCount = 4;
+		tableInstance.TableName = uniqueName; // ✅ Assign the name
 
-	furniturePanel.FurnitureVBox.AddChild(tableInstance);
-	tables.Add(tableInstance);
+		furniturePanel.FurnitureVBox.AddChild(tableInstance);
+		tables.Add(tableInstance);
 
-	// 🪑 Instantiate matching TablePanel
-	var panelScene = GD.Load<PackedScene>("res://Scenes/UI/TablePanel.tscn");
-	var panelInstance = panelScene.Instantiate<TablePanel>();
+		// 🪑 Instantiate matching TablePanel
+		var panelScene = GD.Load<PackedScene>("res://Scenes/UI/TablePanel.tscn");
+		var panelInstance = panelScene.Instantiate<TablePanel>();
 
-	panelInstance.LinkedTable = tableInstance;
-	AdventurerListContainer.AddChild(panelInstance);
+		panelInstance.LinkedTable = tableInstance;
+		AdventurerListContainer.AddChild(panelInstance);
 
-	tableInstance.LinkedPanel = panelInstance;
+		tableInstance.LinkedPanel = panelInstance;
 
-	GameLog.Info($"🪑 Table added: {uniqueName}");
-}
+		GameLog.Info($"🪑 Table added: {uniqueName}");
+	}
 
 
 	private void AddDecoration(string name)
@@ -519,13 +558,13 @@ foreach (var table in tables)
 	}
 
 	public void UpdateFloorLabel()
-{
-	if (floorLabel == null || !IsInstanceValid(floorLabel))
-		return;
+	{
+		if (floorLabel == null || !IsInstanceValid(floorLabel))
+			return;
 
-	int onFloor = floorGuests.Count(g => g.AssignedTable == null);
-	floorLabel.Text = $"Tavern Floor: {onFloor} / {MaxFloorGuests}";
-}
+		int onFloor = floorGuests.Count(g => g.AssignedTable == null);
+		floorLabel.Text = $"Tavern Floor: {onFloor} / {MaxFloorGuests}";
+	}
 
 
 	public void OnGuestEntered(Guest guest)
@@ -542,29 +581,59 @@ foreach (var table in tables)
 	}
 
 	public void AdmitGuestToTavern(Guest guest)
-{
-	if (floorGuests.Contains(guest))
-		return; // ✅ already inside
-
-	if (floorGuests.Count >= MaxFloorGuests)
 	{
-		GameLog.Debug($"🚫 {guest.Name} couldn't enter — floor full.");
-		return;
+		if (floorGuests.Contains(guest))
+			return; // ✅ already inside
+
+		if (floorGuests.Count >= MaxFloorGuests)
+		{
+			GameLog.Debug($"🚫 {guest.Name} couldn't enter — floor full.");
+			return;
+		}
+
+		floorGuests.Add(guest);
+		UpdateFloorLabel();
+		DisplayAdventurers();
+
+		if (TrySeatGuest(guest))
+		{
+			GameLog.Info($"🪑 {guest.Name} found a seat.");
+		}
+		else
+		{
+			GameLog.Debug($"🚶 {guest.Name} is standing (no seat yet).");
+		}
+
+		// 🧓 QUEST GIVER LOGIC
+		if (guest.BoundGiver != null)
+		{
+			var giver = guest.BoundGiver;
+
+			GameLog.Debug($"📜 {guest.Name} is a Quest Giver entering the tavern.");
+
+			if (giver.ActiveQuest == null)
+			{
+				var questId = QuestManager.Instance.GetNextQuestId();
+				var quest = QuestGenerator.GenerateQuest(questId);
+
+				giver.ActiveQuest = quest;
+				quest.PostedBy = giver;
+			}
+
+			if (QuestManager.Instance.CanAddQuest())
+			{
+				QuestManager.Instance.AddQuest(giver.ActiveQuest);
+				GameLog.Info($"📜 {guest.Name} posted a quest to the board.");
+				giver.QuestsPosted++;
+				giver.ActiveQuest = null;
+			}
+			else
+			{
+				GameLog.Info($"📋 Quest Board is full. {guest.Name} could not post a quest.");
+			}
+		}
 	}
 
-	floorGuests.Add(guest);
-	UpdateFloorLabel();
-	DisplayAdventurers();
-
-	if (TrySeatGuest(guest))
-	{
-		GameLog.Info($"🪑 {guest.Name} found a seat.");
-	}
-	else
-	{
-		GameLog.Debug($"🚶 {guest.Name} is standing (no seat yet).");
-	}
-}
 
 	public void NotifyGuestLeft(Guest guest)
 	{
@@ -572,8 +641,16 @@ foreach (var table in tables)
 		{
 			floorGuests.Remove(guest);
 			UpdateFloorLabel();
+
+			// ✅ Clear seat properly
+			if (guest.AssignedTable != null)
+				guest.AssignedTable.RemoveGuest(guest);
+
+			DisplayAdventurers();
 		}
 	}
+
+
 	public void RecheckSeating()
 	{
 		foreach (var guest in floorGuests)
@@ -593,10 +670,10 @@ foreach (var table in tables)
 		}
 	}
 
-public List<Guest> GetGuestsInside()
-{
-	return floorGuests;
-}
+	public List<Guest> GetGuestsInside()
+	{
+		return floorGuests;
+	}
 
 
 

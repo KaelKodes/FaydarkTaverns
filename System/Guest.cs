@@ -12,10 +12,13 @@ public class Guest
 	public int StayDuration;   // How long they stay once inside
 
 	public bool IsInside = false;
+	public bool IsOnQuest { get; set; } = false;
 	public int? SeatIndex { get; set; } = null;
 	public Table AssignedTable { get; set; } = null;
 
 	public Adventurer BoundAdventurer { get; set; }
+	public QuestGiver BoundGiver { get; set; } = null;
+
 	public DateTime LastSeatCheck = DateTime.MinValue;
 	public DateTime? DepartureTime { get; set; } // Nullable
 
@@ -29,4 +32,9 @@ public class Guest
 		DepartureTime = ClockManager.CurrentTime.AddHours(StayDuration);
 		OnAdmitted?.Invoke();
 	}
+	public override string ToString()
+{
+	return $"[GUEST:{Name}@{GetHashCode()}]";
+}
+
 }

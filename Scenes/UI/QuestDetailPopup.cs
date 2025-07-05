@@ -79,8 +79,8 @@ private void OnAcceptPressed()
 	GD.Print($"[ACCEPT] Accepting quest ref: {boundQuest.GetHashCode()} | QuestId: {boundQuest.QuestId} | Title: {boundQuest.Title}");
 
 	boundQuest.Accept();
-	AcceptButton.Disabled = true; // Or Hide it if preferred
-	Hide(); // Optional: close popup after accept
+	AcceptButton.Disabled = true;
+	Hide();
 
 	// Refresh all quest cards
 	foreach (var card in GetTree().GetNodesInGroup("QuestCard"))
@@ -98,8 +98,18 @@ private void OnAcceptPressed()
 
 		if (guest != null)
 		{
+			var table = guest.AssignedTable;
+
+			// ✅ Remove from the actual table data
+			table?.RemoveGuest(guest);
+
+			// ✅ Remove from tavern floor
 			TavernManager.Instance.OnGuestRemoved(guest);
 			GameLog.Debug($"📦 {guest.Name} left to go on a quest.");
+
+			// ✅ Update the table UI
+			table.LinkedPanel.UpdateSeatSlots();
+
 		}
 		else
 		{
@@ -107,6 +117,8 @@ private void OnAcceptPressed()
 		}
 	}
 }
+
+
 
 
 	

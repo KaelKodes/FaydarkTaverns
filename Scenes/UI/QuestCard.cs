@@ -1,6 +1,8 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+
 
 public partial class QuestCard : Panel
 {
@@ -15,6 +17,7 @@ public partial class QuestCard : Panel
 	private List<Label> partySlotLabels = new();
 	private Quest quest;
 	public Quest Quest => quest;
+
 	public bool HasQuest(Quest q)
 	{
 		return ReferenceEquals(quest, q);
@@ -55,6 +58,12 @@ public partial class QuestCard : Panel
 
 		SetMouseFilter(Control.MouseFilterEnum.Stop);
 	}
+	public void Bind(Quest quest)
+{
+	this.quest = quest;
+	UpdateDisplay();
+}
+
 
 	public override void _ExitTree()
 	{
@@ -158,30 +167,45 @@ AddThemeStyleboxOverride("panel", styleBox);
 	}
 
 	public override void _DropData(Vector2 atPosition, Variant data)
+{
+	var card = data.AsGodotObject() as AdventurerCard;
+	if (card == null || quest == null)
+		return;
+
+	if (quest.IsLocked)
+		return;
+
+	var adventurer = card.BoundAdventurer;
+	if (adventurer == null || quest.AssignedAdventurers.Contains(adventurer))
+		return;
+
+	var guest = card.BoundGuest;
+
+	if (guest != null)
 	{
-		var card = data.AsGodotObject() as AdventurerCard;
-		if (card == null || quest == null)
-			return;
+		if (guest.AssignedTable != null)
+			guest.AssignedTable.RemoveGuest(guest);
 
-		// 🛑 Prevent dropping if quest is locked
-		if (quest.IsLocked)
-			return;
-
-		var adventurer = card.BoundAdventurer;
-		if (adventurer == null || quest.AssignedAdventurers.Contains(adventurer))
-			return;
-
-		// Assign the adventurer
-		quest.AssignedAdventurers.Add(adventurer);
-
-		// Remove the visual card
-		card.QueueFree();
-
-		// ✅ Refresh the slot labels
-		UpdateDisplay();
-		TavernManager.Instance?.DisplayAdventurers();
-		TavernManager.Instance?.UpdateFloorLabel();
+		TavernManager.Instance.OnGuestRemoved(guest);
 	}
+	else
+	{
+		GameLog.Debug($"❌ Card missing BoundGuest — cannot remove adventurer {adventurer.Name}");
+	}
+
+	quest.AssignedAdventurers.Add(adventurer);
+	card.QueueFree();
+
+	UpdateDisplay();
+	TavernManager.Instance?.DisplayAdventurers();
+	TavernManager.Instance?.UpdateFloorLabel();
+}
+
+
+
+
+
+
 
 	private void UnassignFromSlot(int index)
 	{

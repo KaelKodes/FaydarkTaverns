@@ -75,5 +75,10 @@ public partial class Adventurer : RefCounted
 		GameLog.Info($"⭐ {Name} leveled up to Level {Level}!");
 	}
 }
+public override string ToString()
+{
+	return $"[ADV:{Name}@{GetHashCode()}]";
+}
+
 
 } 
