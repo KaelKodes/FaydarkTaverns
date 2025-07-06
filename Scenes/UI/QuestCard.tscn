@@ -35,20 +35,19 @@ z_index = 1
 layout_mode = 0
 offset_left = -21.0
 offset_top = -53.0
-offset_right = 359.0
+offset_right = 321.0
 offset_bottom = 181.0
 size_flags_vertical = 3
 texture = ExtResource("2_aftnd")
 expand_mode = 3
 
 [node name="FailedBanner" type="TextureRect" parent="."]
-visible = false
 z_index = 1
 layout_mode = 0
 offset_left = -5.0
-offset_top = 2.0
-offset_right = 337.0
-offset_bottom = 156.0
+offset_top = -18.0
+offset_right = 310.0
+offset_bottom = 136.0
 texture = ExtResource("3_bnagl")
 expand_mode = 3
 

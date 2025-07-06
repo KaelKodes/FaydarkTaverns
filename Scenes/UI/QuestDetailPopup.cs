@@ -15,6 +15,8 @@ public partial class QuestDetailPopup : Window
 	[Export] public Label DescriptionLabel;
 	[Export] public Button AcceptButton;
 	[Export] public Button CloseButton;
+	[Export] public Button DismissButton;
+
 
 	private Quest quest;
 	private Quest boundQuest;
@@ -26,7 +28,10 @@ public partial class QuestDetailPopup : Window
 	CloseRequested += OnCloseRequested;
 	CloseButton.Pressed += Hide;
 	AcceptButton.Pressed += OnAcceptPressed;
+	DismissButton.Pressed += OnDismissPressed;
+
 	}
+	
 	private string GetRoleName(int roleId)
 {
 	return roleId switch
@@ -78,9 +83,18 @@ private void OnAcceptPressed()
 
 	GD.Print($"[ACCEPT] Accepting quest ref: {boundQuest.GetHashCode()} | QuestId: {boundQuest.QuestId} | Title: {boundQuest.Title}");
 
+	if (boundQuest.Failed && boundQuest.IsComplete)
+{
+	QuestManager.Instance.RetryQuest(boundQuest);
+}
+else
+{
 	boundQuest.Accept();
 	AcceptButton.Disabled = true;
-	Hide();
+}
+
+Hide();
+
 
 	// Refresh all quest cards
 	foreach (var card in GetTree().GetNodesInGroup("QuestCard"))
@@ -117,14 +131,42 @@ private void OnAcceptPressed()
 		}
 	}
 }
+private void OnDismissPressed()
+{
+	if (boundQuest == null) return;
 
+	QuestManager.Instance.DismissQuest(boundQuest);
+	Hide();
+}
 
-
-
-	
 	private void OnCloseRequested()
 {
 	Hide(); // or QueueFree() if you want to destroy it
 }
+
+public void SetQuestDetails(Quest quest)
+{
+	this.quest = quest;
+	this.boundQuest = quest;
+
+	bool showRetry = quest.IsComplete && quest.Failed;
+
+	DismissButton.Visible = showRetry;
+
+	if (showRetry)
+	{
+		AcceptButton.Text = "Retry";
+		AcceptButton.TooltipText = "Pay 15% of reward to try again.";
+	}
+	else
+	{
+		AcceptButton.Text = "Accept";
+		AcceptButton.TooltipText = "Send adventurers on this quest.";
+	}
+}
+
+
+
+
 
 }

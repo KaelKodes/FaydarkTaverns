@@ -14,7 +14,7 @@ public class QuestGiver
 	public int Xp = 0;
 	public int XpToNext => Level * 100;
 
-	public float Happiness = 1.0f; // ranges 0.0–2.0 for now
+	public float Happiness = 0.0f;
 	public Quest ActiveQuest { get; set; } = null;
 
 

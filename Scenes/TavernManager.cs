@@ -96,7 +96,7 @@ public partial class TavernManager : Node
 		Instance = this;
 
 		// Wire up UI
-		var logText = GetNode<RichTextLabel>("../LogPanel/LogText");
+		var logText = GetNode<RichTextLabel>("../LogControl/LogPanel/LogText");
 		GameLog.BindLogText(logText);
 
 		ClockManager.OnNewDay += StartNewDay;
@@ -120,11 +120,14 @@ public partial class TavernManager : Node
 
 		var board = GetNode<QuestBoardPanel>("../GuestPanels/QuestBoardPanel");
 
-		ShopButton = GetNode<Button>("../ControlPanel/ShopButton");
+		ShopButton = GetNode<Button>("../TavernDisplay/ControlPanel/ShopButton");
 		ShopButton.Pressed += ToggleShop;
-		TavernLevelDisplay = GetNode<Label>("../TavernLevelControl/VBoxContainer/TavernLevelDisplay");
-		TavernLevelLabel = GetNode<Label>("../TavernLevelControl/VBoxContainer/TavernLevelLabel");
-		TavernRenownDisplay = GetNode<Label>("../TavernRenown/VBoxContainer/TavernRenownDisplay");
+		TavernLevelDisplay = GetNode<Label>("../TavernDisplay/TavernLevelControl/VBoxContainer/TavernLevelDisplay");
+		TavernLevelLabel = GetNode<Label>("../TavernDisplay/TavernLevelControl/VBoxContainer/TavernLevelLabel");
+		TavernRenownDisplay = GetNode<Label>("../TavernDisplay/TavernRenown/VBoxContainer/TavernRenownDisplay");
+		
+		QuestManager.Instance.OnQuestsUpdated += UpdateQuestCapacityLabel;
+		UpdateQuestCapacityLabel();
 
 
 		// Locate UI container to hold adventurer cards
@@ -270,17 +273,22 @@ public partial class TavernManager : Node
 		DisplayAdventurers();
 		UpdateFloorLabel();
 	}
-
-
-
-
-
-	public void SortQuestCards()
+	
+	private void UpdateQuestCapacityLabel()
+{
+	var questCapacityLabel = GetNodeOrNull<Label>("../QuestCapacity");
+	if (questCapacityLabel != null)
 	{
-		var board = GetNode<QuestBoardPanel>("../GuestPanels/QuestBoardPanel");
-		board.SortQuestCards();
+		questCapacityLabel.Text = QuestManager.Instance.GetQuestBoardStatusLabel();
 	}
+	else
+	{
+		GD.PrintErr("❌ Could not find QuestCapacity label. Check node path.");
+	}
+}
 
+	
+	
 	#region Guests
 	public void DisplayAdventurers()
 	{
@@ -324,7 +332,7 @@ public partial class TavernManager : Node
 					card.BoundAdventurer = null;
 					card.GetNode<Label>("VBoxContainer/NameLabel").Text = giver.Name;
 					card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"Lv {giver.Level} Informant";
-					card.GetNode<Label>("VBoxContainer/VitalsLabel").Text = $"Happiness: {Mathf.RoundToInt(giver.Happiness * 100)}%";
+					card.GetNode<Label>("VBoxContainer/VitalsLabel").Text = $"Mood: {(giver.Happiness == 0 ? "Neutral" : giver.Happiness > 0 ? "+" : "")}{(giver.Happiness == 0 ? "" : giver.Happiness.ToString())}";
 				}
 
 				FloorSlots.AddChild(card);
@@ -383,7 +391,7 @@ public partial class TavernManager : Node
 	}
 	private void UpdateGoldUI()
 	{
-		var label = GetNode<Label>("../ControlPanel/GoldLabel");
+		var label = GetNode<Label>("../TavernDisplay/ControlPanel/GoldLabel");
 		label.Text = $"{currentGold}g";
 	}
 

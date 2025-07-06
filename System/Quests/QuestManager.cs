@@ -11,6 +11,8 @@ public class QuestManager
 	private List<Quest> allQuests = new();
 	private List<Quest> activeQuests = new();
 	public List<Quest> ActiveQuests => activeQuests;
+	private List<Quest> completedQuests = new();
+
 	
 	public event Action OnQuestsUpdated;
 
@@ -18,24 +20,9 @@ public class QuestManager
 	public int MaxQuestSlots { get; private set; } = 2; // Can be increased via shop later
 	private int nextQuestId = 1;
 	private List<QuestReport> dailyReports = new();
-
-	//private QuestManager()  - Remove after Quest Board is working
-	//{
-	//	GenerateDailyQuests(); // Optionally preload quests here
-	//}
-
-	//public void GenerateDailyQuests()
-	//{
-	//	allQuests.Clear();
-
-	//	for (int i = 0; i < 16; i++)
-	//	{
-	//		var quest = QuestGenerator.GenerateQuest(nextQuestId++);
-	//		allQuests.Add(quest);
-	//	}
-	//}
 	
-	public bool CanAddQuest() => ActiveQuests.Count < MaxQuestSlots;
+	public bool CanAddQuest() => GetActiveQuestCount() < MaxQuestSlots;
+
 
 public void AddQuest(Quest quest)
 {
@@ -52,9 +39,19 @@ public void AddQuest(Quest quest)
 
 	OnQuestsUpdated?.Invoke(); // 🔁 Signal to refresh Quest UI
 }
-public List<Quest> GetActiveQuests()
+public List<Quest> GetDisplayableQuests()
 {
-	return activeQuests;
+	return activeQuests.FindAll(q =>
+		!q.IsComplete || (q.IsComplete && q.Failed));
+}
+public List<Quest> GetSuccessfulQuests()
+{
+	return activeQuests.FindAll(q => q.IsComplete && !q.Failed);
+}
+
+public string GetQuestBoardStatusLabel()
+{
+	return $"Questboard: {GetActiveQuestCount()} / {MaxQuestSlots}";
 }
 
 
@@ -79,6 +76,35 @@ public List<Quest> GetActiveQuests()
 	return allQuests.FindAll(q => q.IsAccepted && !q.IsComplete);
 }
 
+public void RetryQuest(Quest quest)
+{
+	if (!quest.Failed || !quest.IsComplete) return;
+
+	int retryCost = (int)Math.Floor(quest.Reward * 0.15f);
+	if (!TavernManager.Instance.SpendGold(retryCost)) return;
+
+	quest.IsComplete = false;
+	quest.Failed = false;
+	quest.AssignedAdventurers.Clear(); // Let the player re-assign
+
+	GameLog.Info($"🔁 Quest '{quest.Title}' retried for {retryCost}g.");
+	NotifyQuestStateChanged(quest);
+	OnQuestsUpdated?.Invoke();
+}
+public void DismissQuest(Quest quest)
+{
+	if (!quest.Failed || !quest.IsComplete) return;
+
+	activeQuests.Remove(quest);
+	InformantManager.Instance.LowerHappiness(5);
+
+
+	GameLog.Info($"🗑️ Quest '{quest.Title}' dismissed. Informant less happy.");
+	OnQuestsUpdated?.Invoke();
+}
+
+
+
 public void LogQuestResult(Quest quest, QuestResult result)
 {
 	var report = new QuestReport
@@ -96,18 +122,12 @@ public void LogQuestResult(Quest quest, QuestResult result)
 }
 public void NotifyQuestStateChanged(Quest quest)
 {
-	foreach (var node in TavernManager.Instance.GetTree().GetNodesInGroup("QuestCard"))
-	{
-		if (node is QuestCard qc && qc.HasQuest(quest))
-		{
-			qc.UpdateDisplay();
-			GameLog.Debug($"🔄 Updated QuestCard for accepted quest: {quest.Title}");
-		}
-	}
+	GameLog.Debug($"🔁 Quest state changed: {quest.Title}");
 
-	// ✅ Trigger reordering of the cards
-	TavernManager.Instance.SortQuestCards();
+	// Full refresh to relocate quest card
+	OnQuestsUpdated?.Invoke();
 }
+
 public int GetNextQuestId()
 {
 	return nextQuestId++;
@@ -126,17 +146,19 @@ public void CompleteQuest(Quest quest)
 	quest.Failed = !result.Success;
 
 	if (result.Success)
-	{
-		TavernManager.Instance.AddGold(result.GoldEarned);
+{
+	TavernManager.Instance.AddGold(result.GoldEarned);
+	TavernManager.Instance.IncrementSuccessCombo();
+	int tavernExp = CalculateTavernExp(quest, result);
+	TavernManager.Instance.GainTavernExp(tavernExp);
 
-		// ✅ Combo bonus!
-		TavernManager.Instance.IncrementSuccessCombo();
-		int tavernExp = CalculateTavernExp(quest, result);
-		TavernManager.Instance.GainTavernExp(tavernExp);
+	activeQuests.Remove(quest);
+	completedQuests.Add(quest); // ✅ add here
 
-		GameLog.Info($"💰 Player earned {result.GoldEarned}g!");
-		GameLog.Info($"✨ Success Combo: {TavernManager.Instance.SuccessComboCount} → +{TavernManager.Instance.SuccessComboCount} EXP bonus");
-	}
+	GameLog.Info($"💰 Player earned {result.GoldEarned}g!");
+	GameLog.Info($"✨ Success Combo: {TavernManager.Instance.SuccessComboCount} → +{TavernManager.Instance.SuccessComboCount} EXP bonus");
+}
+
 	else
 	{
 		TavernManager.Instance.ResetSuccessCombo();
@@ -152,6 +174,7 @@ public void CompleteQuest(Quest quest)
 	NotifyQuestStateChanged(quest);
 	GameLog.Info($"🎉 Quest '{quest.Title}' completed. Success: {result.Success}");
 }
+
 
 
 
@@ -191,6 +214,20 @@ public void EnforceDeadline(Quest quest)
 
 	NotifyQuestStateChanged(quest);
 	GameLog.Info($"❌ Quest '{quest.Title}' failed due to missed deadline.");
+}
+
+	public int GetActiveQuestCount()
+{
+	return activeQuests.FindAll(q => !q.IsComplete || (q.IsComplete && q.Failed)).Count;
+}
+public List<Quest> GetDisplayableBoardQuests()
+{
+	return activeQuests.FindAll(q => !q.IsComplete || (q.IsComplete && q.Failed));
+}
+
+public List<Quest> GetCompletedQuests()
+{
+	return completedQuests;
 }
 
 }

@@ -7,9 +7,10 @@ public partial class GuestManager : Node
 	private static List<Guest> guestsOutside = new();
 	private static List<Guest> guestsInside = new();
 	public int CurrentDay => (ClockManager.CurrentTime - ClockManager.GameStartTime).Days + 1;
-
 	private int MaxSeats => TavernManager.TotalAvailableSeats();
-
+	public int GuestsInsideCount() => guestsInside.Count;
+	public int GuestsOutsideCount() => guestsOutside.Count;
+	
 	public override void _Ready()
 {
 
@@ -43,9 +44,6 @@ private Guest GenerateQuestGiverGuest()
 
 	return guest;
 }
-
-
-
 
 	public static void QueueGuest(Guest guest, TavernManager tavern)
 {
@@ -108,10 +106,6 @@ else if (itIsTheirDay && theyHaveWaitedTooLong)
 	GameLog.Info($"🍺 {guest.Name} has entered the tavern!");
 }
 
-
-
-
-
 	private void RemoveGuest(Guest guest)
 {
 	guestsInside.Remove(guest);
@@ -125,16 +119,11 @@ else if (itIsTheirDay && theyHaveWaitedTooLong)
 	// Remove from floor list
 	TavernManager.Instance?.OnGuestRemoved(guest);
 }
-
-
-
-
-	public int GuestsInsideCount() => guestsInside.Count;
-	public int GuestsOutsideCount() => guestsOutside.Count;
 	
 	public static List<Guest> GetGuestsInside()
 {
 	return guestsInside;
 }
+
 
 }

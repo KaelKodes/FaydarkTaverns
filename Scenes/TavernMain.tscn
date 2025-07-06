@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bp53yv3ypaa5j"]
+[gd_scene load_steps=18 format=3 uid="uid://bp53yv3ypaa5j"]
 
 [ext_resource type="Script" uid="uid://hacx1tuggxkp" path="res://Scenes/QuestBoardPanel.cs" id="1_7ljul"]
 [ext_resource type="Script" uid="uid://bw4esvijflh3" path="res://Scenes/TavernManager.cs" id="1_v6xsb"]
@@ -9,9 +9,17 @@
 [ext_resource type="PackedScene" uid="uid://bg6we31odfnlk" path="res://Scenes/ShopPanel.tscn" id="5_icuts"]
 [ext_resource type="PackedScene" uid="uid://g7cdgtjmhjxt" path="res://Scenes/QuestDetailPopup.tscn" id="6_smfey"]
 [ext_resource type="Script" uid="uid://i7n3efuy43nr" path="res://System/ClockManager.cs" id="7_6462i"]
+[ext_resource type="Texture2D" uid="uid://dq375fefrr82l" path="res://Assets/UI/Bkg/ClearPanel.png" id="8_3yx2a"]
 [ext_resource type="Script" uid="uid://b77bsiakfj8qa" path="res://Scenes/FurniturePanel.cs" id="9_wnxq3"]
+[ext_resource type="Texture2D" uid="uid://du5bi4nrmosy8" path="res://Assets/UI/Bkg/TavernView.png" id="11_20rui"]
+[ext_resource type="Texture2D" uid="uid://bdfjo5q8ltm3j" path="res://Assets/UI/Bkg/Panel.png" id="12_slrnj"]
+[ext_resource type="Texture2D" uid="uid://b3o0xw4hwlcru" path="res://Assets/UI/Bkg/Candle.png" id="13_wlqhj"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wnxq3"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3yx2a"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_esg4o"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_slrnj"]
 
 [node name="TavernMain" type="Control"]
 layout_mode = 3
@@ -24,6 +32,17 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+metadata/_edit_horizontal_guides_ = [75.0]
+metadata/_edit_vertical_guides_ = [1627.0]
+
+[node name="MainBkg" type="TextureRect" parent="."]
+z_index = -1
+layout_mode = 0
+offset_left = 3.0
+offset_top = 1.0
+offset_right = 1912.0
+offset_bottom = 1080.0
+texture = ExtResource("11_20rui")
 
 [node name="ClockManager" type="Node" parent="."]
 script = ExtResource("7_6462i")
@@ -33,18 +52,18 @@ script = ExtResource("2_t546b")
 
 [node name="TavernManager" type="Node" parent="." node_paths=PackedStringArray("TimeLabel", "GoldLabel", "PauseButton", "Button1x", "Button2x", "Button4x", "Button8x", "ShopButton", "TavernRenownDisplay", "TavernLevelDisplay", "TavernLevelLabel", "floorLabel", "AdventurerListContainer", "TavernFloorPanel", "FloorSlots")]
 script = ExtResource("1_v6xsb")
-TimeLabel = NodePath("../ControlPanel/TimeLabel")
-GoldLabel = NodePath("../ControlPanel/GoldLabel")
-PauseButton = NodePath("../ControlPanel/TopBar/PauseButton")
-Button1x = NodePath("../ControlPanel/TopBar/Button1x")
-Button2x = NodePath("../ControlPanel/TopBar/Button2x")
-Button4x = NodePath("../ControlPanel/TopBar/Button4x")
-Button8x = NodePath("../ControlPanel/TopBar/Button8x")
-ShopButton = NodePath("../ControlPanel/ShopButton")
-QuestBoardPath = NodePath("../GuestPanels/QuestBoardPanel/ScrollContainer/CardHolder")
-TavernRenownDisplay = NodePath("../TavernRenown/VBoxContainer/TavernRenownDisplay")
-TavernLevelDisplay = NodePath("../TavernLevelControl/VBoxContainer/TavernLevelDisplay")
-TavernLevelLabel = NodePath("../TavernLevelControl/VBoxContainer/TavernLevelLabel")
+TimeLabel = NodePath("../TavernDisplay/ControlPanel/TimeLabel")
+GoldLabel = NodePath("../TavernDisplay/ControlPanel/GoldLabel")
+PauseButton = NodePath("../TavernDisplay/ControlPanel/TopBar/PauseButton")
+Button1x = NodePath("../TavernDisplay/ControlPanel/TopBar/Button1x")
+Button2x = NodePath("../TavernDisplay/ControlPanel/TopBar/Button2x")
+Button4x = NodePath("../TavernDisplay/ControlPanel/TopBar/Button4x")
+Button8x = NodePath("../TavernDisplay/ControlPanel/TopBar/Button8x")
+ShopButton = NodePath("../TavernDisplay/ControlPanel/ShopButton")
+QuestBoardPath = NodePath("../GuestPanels/QuestBoardPanel/ScrollContainer/QuestBoard")
+TavernRenownDisplay = NodePath("../TavernDisplay/TavernRenown/VBoxContainer/TavernRenownDisplay")
+TavernLevelDisplay = NodePath("../TavernDisplay/TavernLevelControl/VBoxContainer/TavernLevelDisplay")
+TavernLevelLabel = NodePath("../TavernDisplay/TavernLevelControl/VBoxContainer/TavernLevelLabel")
 floorLabel = NodePath("../GuestPanels/AdventurerRosterPanel/ScrollContainer/AdventurerListContainer/TavernFloorPanel/TavernFloorLabel")
 AdventurerListContainer = NodePath("../GuestPanels/AdventurerRosterPanel/ScrollContainer/AdventurerListContainer")
 TavernFloorPanel = NodePath("../GuestPanels/AdventurerRosterPanel/ScrollContainer/AdventurerListContainer/TavernFloorPanel")
@@ -53,82 +72,52 @@ AdventurerRosterPath = NodePath("../GuestPanels/AdventurerRosterPanel")
 ShopPanelScene = ExtResource("5_icuts")
 FurniturePanelPath = NodePath("../FurnitureContainer/FurniturePanel")
 
-[node name="ControlPanel" type="VBoxContainer" parent="."]
-layout_mode = 2
-offset_left = 1544.0
-offset_top = 24.0
-offset_right = 1734.0
-offset_bottom = 165.0
-theme_override_constants/separation = 11
-
-[node name="TimeLabel" type="Label" parent="ControlPanel"]
-layout_mode = 2
-text = "06:00"
-horizontal_alignment = 1
-
-[node name="TopBar" type="HBoxContainer" parent="ControlPanel"]
-layout_mode = 2
-alignment = 1
-
-[node name="PauseButton" type="Button" parent="ControlPanel/TopBar"]
-layout_mode = 2
-text = "Pause"
-
-[node name="Button1x" type="Button" parent="ControlPanel/TopBar"]
-layout_mode = 2
-text = "1x"
-
-[node name="Button2x" type="Button" parent="ControlPanel/TopBar"]
-layout_mode = 2
-text = "2x"
-
-[node name="Button4x" type="Button" parent="ControlPanel/TopBar"]
-layout_mode = 2
-text = "4x"
-
-[node name="Button8x" type="Button" parent="ControlPanel/TopBar"]
-layout_mode = 2
-text = "10x"
-
-[node name="GoldLabel" type="Label" parent="ControlPanel"]
-layout_mode = 2
-horizontal_alignment = 1
-
-[node name="ShopButton" type="Button" parent="ControlPanel"]
-layout_mode = 2
-size_flags_vertical = 3
-text = "Shop"
-
 [node name="GuestPanels" type="HBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.00882658
-anchor_top = 0.0678277
-anchor_right = 0.341121
-anchor_bottom = 0.984418
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 2
-metadata/_edit_use_anchors_ = true
+layout_mode = 0
+offset_left = 56.0
+offset_top = 72.0
+offset_right = 664.0
+offset_bottom = 1017.0
+theme_override_constants/separation = 8
 
 [node name="QuestBoardPanel" type="PanelContainer" parent="GuestPanels"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_3yx2a")
 script = ExtResource("1_7ljul")
+CardHolderPath = NodePath("ScrollContainer/QuestBoard/ActiveQuestPanel/ActiveQuestContainer")
 QuestCardScene = ExtResource("2_6wg6o")
+ActiveQuestContainerPath = NodePath("ScrollContainer/QuestBoard/ActiveQuestPanel/ActiveQuestContainer")
+CompletedQuestContainerPath = NodePath("ScrollContainer/QuestBoard/CompletedQuestPanel/CompletedQuestContainer")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="GuestPanels/QuestBoardPanel"]
 layout_mode = 2
 
-[node name="CardHolder" type="VBoxContainer" parent="GuestPanels/QuestBoardPanel/ScrollContainer"]
+[node name="QuestBoard" type="VBoxContainer" parent="GuestPanels/QuestBoardPanel/ScrollContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="ActiveQuestPanel" type="PanelContainer" parent="GuestPanels/QuestBoardPanel/ScrollContainer/QuestBoard"]
+layout_mode = 2
+
+[node name="ActiveQuestContainer" type="VBoxContainer" parent="GuestPanels/QuestBoardPanel/ScrollContainer/QuestBoard/ActiveQuestPanel"]
+layout_mode = 2
+alignment = 1
+
+[node name="CompletedQuestPanel" type="PanelContainer" parent="GuestPanels/QuestBoardPanel/ScrollContainer/QuestBoard"]
+layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 19
+
+[node name="CompletedQuestContainer" type="VBoxContainer" parent="GuestPanels/QuestBoardPanel/ScrollContainer/QuestBoard/CompletedQuestPanel"]
+z_index = 3
+layout_mode = 2
+alignment = 1
 
 [node name="AdventurerRosterPanel" type="PanelContainer" parent="GuestPanels"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_esg4o")
 script = ExtResource("2_w3872")
 AdventurerCardScene = ExtResource("5_6wg6o")
 
@@ -138,136 +127,250 @@ layout_mode = 2
 [node name="AdventurerListContainer" type="VBoxContainer" parent="GuestPanels/AdventurerRosterPanel/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
-alignment = 1
 
 [node name="TavernFloorPanel" type="VBoxContainer" parent="GuestPanels/AdventurerRosterPanel/ScrollContainer/AdventurerListContainer"]
 layout_mode = 2
 
 [node name="TavernFloorLabel" type="Label" parent="GuestPanels/AdventurerRosterPanel/ScrollContainer/AdventurerListContainer/TavernFloorPanel"]
 layout_mode = 2
-text = "x"
 horizontal_alignment = 1
 
 [node name="FloorSlots" type="VBoxContainer" parent="GuestPanels/AdventurerRosterPanel/ScrollContainer/AdventurerListContainer/TavernFloorPanel"]
 layout_mode = 2
-
-[node name="LogPanel" type="PanelContainer" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 1372.0
-offset_top = 641.0
-offset_right = -17.0
-offset_bottom = -18.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="LogText" type="RichTextLabel" parent="LogPanel"]
-layout_mode = 2
-scroll_following = true
 
 [node name="QuestDetailPopup" parent="." instance=ExtResource("6_smfey")]
 position = Vector2i(750, 100)
 visible = false
 content_scale_mode = 1
 
-[node name="QuestLabel" type="Label" parent="."]
+[node name="QuestCapacity" type="Label" parent="."]
 layout_mode = 2
-offset_left = 144.0
-offset_top = 39.0
-offset_right = 198.0
-offset_bottom = 62.0
-text = "Quests"
+offset_left = 132.0
+offset_top = 43.0
+offset_right = 186.0
+offset_bottom = 66.0
+text = "Questboard #/#"
 
 [node name="AdventurerLabel" type="Label" parent="."]
 layout_mode = 2
-offset_left = 447.0
-offset_top = 41.0
-offset_right = 543.0
-offset_bottom = 64.0
-text = "Adventurers"
+offset_left = 446.0
+offset_top = 45.0
+offset_right = 542.0
+offset_bottom = 68.0
 
-[node name="FurnitureContainer" type="PanelContainer" parent="."]
+[node name="FurnitureContainer" type="Control" parent="."]
 z_index = 1
-layout_mode = 0
-offset_left = 1374.0
-offset_top = 185.0
-offset_right = 1906.0
-offset_bottom = 634.0
-theme_override_styles/panel = SubResource("StyleBoxEmpty_wnxq3")
+anchors_preset = 0
+offset_left = 1419.0
+offset_top = 211.0
+offset_right = 1829.0
+offset_bottom = 605.0
+
+[node name="TextureRect" type="TextureRect" parent="FurnitureContainer"]
+layout_mode = 2
+offset_right = 410.0
+offset_bottom = 394.0
+texture = ExtResource("8_3yx2a")
+expand_mode = 1
 
 [node name="FurniturePanel" type="Panel" parent="FurnitureContainer"]
 z_index = 2
+custom_minimum_size = Vector2(25, 25)
 layout_mode = 2
+offset_left = 14.0
+offset_top = 23.0
+offset_right = 395.0
+offset_bottom = 374.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
 script = ExtResource("9_wnxq3")
 
 [node name="FurnitureVBox" type="VBoxContainer" parent="FurnitureContainer/FurniturePanel"]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 3.0
+offset_right = 381.0
+offset_bottom = 353.0
 
-[node name="TavernLevelControl" type="Control" parent="."]
-anchors_preset = 0
-offset_left = 1403.0
-offset_top = 3.0
-offset_right = 1510.0
-offset_bottom = 93.0
+[node name="TavernDisplay" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 1380.0
+offset_top = 6.0
+offset_right = 1869.0
+offset_bottom = 182.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TavernLevelControl"]
+[node name="TextureRect" type="TextureRect" parent="TavernDisplay"]
+layout_mode = 2
+offset_left = -5.0
+offset_top = -4.0
+offset_right = 503.0
+offset_bottom = 188.0
+texture = ExtResource("12_slrnj")
+expand_mode = 1
+
+[node name="ControlPanel" type="VBoxContainer" parent="TavernDisplay"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -5.0
-offset_top = 1.0
-offset_right = -5.0
-offset_bottom = 1.0
+offset_left = 11.0
+offset_top = 7.0
+offset_right = -2.0
+offset_bottom = -7.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 17
+
+[node name="TimeLabel" type="Label" parent="TavernDisplay/ControlPanel"]
+layout_mode = 2
+text = "06:00"
+horizontal_alignment = 1
+
+[node name="TopBar" type="HBoxContainer" parent="TavernDisplay/ControlPanel"]
+layout_mode = 2
+alignment = 1
+
+[node name="PauseButton" type="Button" parent="TavernDisplay/ControlPanel/TopBar"]
+layout_mode = 2
+text = "Pause"
+
+[node name="Button1x" type="Button" parent="TavernDisplay/ControlPanel/TopBar"]
+layout_mode = 2
+text = "1x"
+
+[node name="Button2x" type="Button" parent="TavernDisplay/ControlPanel/TopBar"]
+layout_mode = 2
+text = "2x"
+
+[node name="Button4x" type="Button" parent="TavernDisplay/ControlPanel/TopBar"]
+layout_mode = 2
+text = "4x"
+
+[node name="Button8x" type="Button" parent="TavernDisplay/ControlPanel/TopBar"]
+layout_mode = 2
+text = "10x"
+
+[node name="GoldLabel" type="Label" parent="TavernDisplay/ControlPanel"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="ShopButton" type="Button" parent="TavernDisplay/ControlPanel"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Shop"
+
+[node name="TavernRenown" type="Control" parent="TavernDisplay"]
+anchors_preset = 0
+offset_left = 354.0
+offset_top = 43.0
+offset_right = 470.0
+offset_bottom = 134.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TavernDisplay/TavernRenown"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_top = -3.0
+offset_right = 3.0
+offset_bottom = -3.0
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="TavernLevelLabel" type="Label" parent="TavernLevelControl/VBoxContainer"]
+[node name="TavernRenownLabel" type="Label" parent="TavernDisplay/TavernRenown/VBoxContainer"]
+layout_mode = 2
+text = "Tavern Renown"
+horizontal_alignment = 1
+
+[node name="TavernRenownDisplay" type="Label" parent="TavernDisplay/TavernRenown/VBoxContainer"]
+layout_mode = 2
+text = "0"
+horizontal_alignment = 1
+
+[node name="TavernLevelControl" type="Control" parent="TavernDisplay"]
+anchors_preset = 0
+offset_left = 22.0
+offset_top = 40.0
+offset_right = 139.0
+offset_bottom = 130.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TavernDisplay/TavernLevelControl"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_right = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="TavernLevelLabel" type="Label" parent="TavernDisplay/TavernLevelControl/VBoxContainer"]
 layout_mode = 2
 tooltip_text = "Test"
 mouse_filter = 1
 text = "Tavern Level"
 horizontal_alignment = 1
 
-[node name="TavernLevelDisplay" type="Label" parent="TavernLevelControl/VBoxContainer"]
+[node name="TavernLevelDisplay" type="Label" parent="TavernDisplay/TavernLevelControl/VBoxContainer"]
 layout_mode = 2
 text = "0"
 horizontal_alignment = 1
 
-[node name="TavernRenown" type="Control" parent="."]
+[node name="LogControl" type="Control" parent="."]
+layout_mode = 2
 anchors_preset = 0
-offset_left = 1367.0
-offset_top = 90.0
-offset_right = 1536.0
-offset_bottom = 181.0
+offset_left = 1369.0
+offset_top = 622.0
+offset_right = 1890.0
+offset_bottom = 1062.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TavernRenown"]
+[node name="TextureRect" type="TextureRect" parent="LogControl"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 11.0
-offset_bottom = -10.0
+offset_top = 68.0
+offset_right = 4.0
+offset_bottom = 2.0
 grow_horizontal = 2
 grow_vertical = 2
+texture = ExtResource("12_slrnj")
+expand_mode = 1
 
-[node name="TavernRenownLabel" type="Label" parent="TavernRenown/VBoxContainer"]
+[node name="TextureRect2" type="TextureRect" parent="LogControl"]
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 452.0
+offset_top = 308.0
+offset_right = -30.0
+offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("13_wlqhj")
+
+[node name="LogPanel" type="PanelContainer" parent="LogControl"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = 91.0
+offset_right = -21.0
+offset_bottom = -26.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_slrnj")
+
+[node name="LogText" type="RichTextLabel" parent="LogControl/LogPanel"]
 layout_mode = 2
-text = "Tavern Renown"
-horizontal_alignment = 1
+scroll_following = true
 
-[node name="TavernRenownDisplay" type="Label" parent="TavernRenown/VBoxContainer"]
-layout_mode = 2
-text = "0"
-horizontal_alignment = 1
-
-[connection signal="pressed" from="ControlPanel/TopBar/Button1x" to="GuestPanels/QuestBoardPanel" method="OnSpeed1xPressed"]
-[connection signal="pressed" from="ControlPanel/TopBar/Button2x" to="GuestPanels/QuestBoardPanel" method="OnSpeed2xPressed"]
-[connection signal="pressed" from="ControlPanel/TopBar/Button4x" to="GuestPanels/QuestBoardPanel" method="OnSpeed4xPressed"]
-[connection signal="pressed" from="ControlPanel/TopBar/Button8x" to="ClockManager" method="OnSpeed8xPressed"]
+[connection signal="pressed" from="TavernDisplay/ControlPanel/TopBar/Button1x" to="GuestPanels/QuestBoardPanel" method="OnSpeed1xPressed"]
+[connection signal="pressed" from="TavernDisplay/ControlPanel/TopBar/Button2x" to="GuestPanels/QuestBoardPanel" method="OnSpeed2xPressed"]
+[connection signal="pressed" from="TavernDisplay/ControlPanel/TopBar/Button4x" to="GuestPanels/QuestBoardPanel" method="OnSpeed4xPressed"]
+[connection signal="pressed" from="TavernDisplay/ControlPanel/TopBar/Button8x" to="ClockManager" method="OnSpeed8xPressed"]
