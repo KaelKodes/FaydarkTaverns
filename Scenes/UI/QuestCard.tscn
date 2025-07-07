@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://w7he4xk8qe6k"]
+[gd_scene load_steps=5 format=3 uid="uid://w7he4xk8qe6k"]
 
 [ext_resource type="Script" uid="uid://xismybe4bros" path="res://Scenes/UI/QuestCard.cs" id="1_qf87x"]
 [ext_resource type="Texture2D" uid="uid://d10qmaad65cg2" path="res://Assets/UI/QuestStatus/SuccessBanner.png" id="2_aftnd"]
@@ -6,9 +6,6 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bn3cn"]
 bg_color = Color(0.274105, 0.586438, 0.811932, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qf87x"]
-bg_color = Color(0.364706, 0.513726, 0.780392, 1)
 
 [node name="QuestCard" type="Panel" node_paths=PackedStringArray("TitleLabel", "RegionLabel", "TypeLabel", "RewardLabel", "TimeLabel") groups=["QuestCard"]]
 custom_minimum_size = Vector2(300, 130)
@@ -93,44 +90,50 @@ horizontal_alignment = 1
 z_index = 1
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 0
+theme_override_constants/separation = 3
 alignment = 1
 
-[node name="PartySlot1" type="Panel" parent="VBox/PartySlotContainer"]
+[node name="PartySlot1" type="HBoxContainer" parent="VBox/PartySlotContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_qf87x")
+alignment = 1
 
 [node name="AdventurerLabel" type="Label" parent="VBox/PartySlotContainer/PartySlot1"]
 layout_mode = 2
-offset_right = 98.0
-offset_bottom = 24.0
 text = "[ Empty ]"
 horizontal_alignment = 1
 
-[node name="PartySlot2" type="Panel" parent="VBox/PartySlotContainer"]
+[node name="RemoveButton" type="Button" parent="VBox/PartySlotContainer/PartySlot1"]
+layout_mode = 2
+mouse_filter = 1
+
+[node name="PartySlot2" type="HBoxContainer" parent="VBox/PartySlotContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_qf87x")
+alignment = 1
 
 [node name="AdventurerLabel" type="Label" parent="VBox/PartySlotContainer/PartySlot2"]
 layout_mode = 2
-offset_right = 112.0
-offset_bottom = 24.0
 text = "[ Empty ]"
 horizontal_alignment = 1
 
-[node name="PartySlot3" type="Panel" parent="VBox/PartySlotContainer"]
+[node name="RemoveButton" type="Button" parent="VBox/PartySlotContainer/PartySlot2"]
+layout_mode = 2
+mouse_filter = 1
+
+[node name="PartySlot3" type="HBoxContainer" parent="VBox/PartySlotContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_qf87x")
+alignment = 1
 
 [node name="AdventurerLabel" type="Label" parent="VBox/PartySlotContainer/PartySlot3"]
 layout_mode = 2
-offset_right = 131.0
-offset_bottom = 26.0
 text = "[ Empty ]"
 horizontal_alignment = 1
+
+[node name="RemoveButton" type="Button" parent="VBox/PartySlotContainer/PartySlot3"]
+layout_mode = 2
+mouse_filter = 1

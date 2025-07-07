@@ -16,6 +16,8 @@ public class QuestGiver
 
 	public float Happiness = 0.0f;
 	public Quest ActiveQuest { get; set; } = null;
+	public Quest PostedQuest { get; set; }
+
 
 
 	// Link to Guest
@@ -36,4 +38,12 @@ public class QuestGiver
 		GameLog.Info($"📈 Quest Giver {Name} leveled up to {Level}!");
 	}
 }
+
+public string GetMoodStatus()
+{
+	if (Happiness == 0)
+		return "Neutral";
+	return $"{(Happiness > 0 ? "+" : "")}{Mathf.RoundToInt(Happiness)}";
+}
+
 }

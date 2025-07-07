@@ -107,4 +107,37 @@ public static class QuestGenerator
 			_ => 4
 		};
 	}
+	public static Quest GenerateFromGiver(QuestGiver giver, Guest guest)
+{
+	if (giver == null || guest == null)
+	{
+		GameLog.Debug("⚠️ Tried to generate a quest from a null giver or guest.");
+		return null;
+	}
+
+	// 🔒 Sanity check: guest must be valid and on the tavern floor
+	if (!guest.IsInside || guest.IsOnStreet || guest.IsElsewhere || guest.AssignedTable != null || guest.LocationCode != (int)GuestLocation.TavernFloor)
+	{
+		GameLog.Debug($"⛔ {guest.Name} tried to post a quest from outside or invalid state.");
+		return null;
+	}
+
+	if (giver.PostedQuest != null)
+	{
+		GameLog.Debug($"⛔ {giver.Name} already has a posted quest.");
+		return giver.PostedQuest;
+	}
+
+	var quest = GenerateQuest(QuestManager.Instance.GetNextQuestId());
+	quest.PostedBy = giver;
+	giver.PostedQuest = quest;
+	giver.QuestsPosted++;
+
+	GameLog.Debug($"🧾 [SAFE-GEN] {giver.Name} generated a new quest: '{quest.Title}'");
+	return quest;
+}
+
+
+
+	
 }

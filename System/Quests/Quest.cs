@@ -47,6 +47,7 @@ public QuestGiver PostedBy { get; set; }
 	public bool IsComplete = false;
 	public bool Failed = false;
 
+
 	// Synergy / Role guidance
 	public List<int> OptimalRoles = new(); // E.g. [1, 2, 4] for Tank/DPS/Healer
 

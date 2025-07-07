@@ -16,6 +16,8 @@ public partial class QuestDetailPopup : Window
 	[Export] public Button AcceptButton;
 	[Export] public Button CloseButton;
 	[Export] public Button DismissButton;
+	[Export] public ConfirmationDialog RetryDialog;
+
 
 
 	private Quest quest;
@@ -29,6 +31,7 @@ public partial class QuestDetailPopup : Window
 	CloseButton.Pressed += Hide;
 	AcceptButton.Pressed += OnAcceptPressed;
 	DismissButton.Pressed += OnDismissPressed;
+	RetryDialog.Confirmed += OnRetryConfirmed;
 
 	}
 	
@@ -58,11 +61,11 @@ public partial class QuestDetailPopup : Window
 	RegionLabel.Text = $"Region: {q.Region}";
 	TypeLabel.Text = $"Type: {q.Type}";
 	RewardLabel.Text = $"Reward: {q.Reward}g";
-	if (q.IsAccepted)
-	TimeLabel.Text = $"Est: {q.GetTotalExpectedTU()} hrs / Due: {q.Deadline:MMM dd, HH:mm}";
-else
-	TimeLabel.Text = $"Est: {q.GetTotalExpectedTU()} hrs";
 
+	if (q.IsAccepted)
+		TimeLabel.Text = $"Est: {q.GetTotalExpectedTU()} hrs / Due: {q.Deadline:MMM dd, HH:mm}";
+	else
+		TimeLabel.Text = $"Est: {q.GetTotalExpectedTU()} hrs";
 
 	var roles = new StringBuilder("Optimal Roles: ");
 	foreach (var role in q.OptimalRoles)
@@ -71,9 +74,10 @@ else
 
 	DescriptionLabel.Text = q.Description;
 
-	// ✅ Enable/disable Accept button properly
-	AcceptButton.Disabled = q.IsAccepted || q.IsLocked;
+	// 🔧 ✅ NEW — Update retry/dismiss logic too
+	SetQuestDetails(q);
 }
+
 
 
 
@@ -85,13 +89,17 @@ private void OnAcceptPressed()
 
 	if (boundQuest.Failed && boundQuest.IsComplete)
 {
-	QuestManager.Instance.RetryQuest(boundQuest);
+	int retryCost = (int)Math.Floor(boundQuest.Reward * 0.15f);
+	RetryDialog.DialogText = $"Reimburse {retryCost}g to retry this mission?";
+	RetryDialog.Show();
 }
 else
 {
 	boundQuest.Accept();
 	AcceptButton.Disabled = true;
+	Hide();
 }
+
 
 Hide();
 
@@ -138,6 +146,24 @@ private void OnDismissPressed()
 	QuestManager.Instance.DismissQuest(boundQuest);
 	Hide();
 }
+private void OnRetryConfirmed()
+{
+	if (boundQuest == null)
+		return;
+
+	int retryCost = (int)Math.Floor(boundQuest.Reward * 0.15f);
+	if (TavernManager.Gold < retryCost)
+	{
+		int shortfall = retryCost - TavernManager.Gold;
+		GameLog.Info($"⛔ You are {shortfall}g short to retry this quest.");
+		return;
+	}
+
+	QuestManager.Instance.RetryQuest(boundQuest);
+	Hide();
+}
+
+
 
 	private void OnCloseRequested()
 {
@@ -150,20 +176,40 @@ public void SetQuestDetails(Quest quest)
 	this.boundQuest = quest;
 
 	bool showRetry = quest.IsComplete && quest.Failed;
+bool isComplete = quest.IsComplete && !quest.Failed;
+bool inProgress = quest.IsAccepted && !quest.IsComplete;
 
-	DismissButton.Visible = showRetry;
+// ✨ Ensure Accept button is visible
+AcceptButton.Visible = true;
+AcceptButton.Disabled = isComplete || inProgress;
+DismissButton.Visible = showRetry;
 
-	if (showRetry)
-	{
-		AcceptButton.Text = "Retry";
-		AcceptButton.TooltipText = "Pay 15% of reward to try again.";
-	}
-	else
-	{
-		AcceptButton.Text = "Accept";
-		AcceptButton.TooltipText = "Send adventurers on this quest.";
-	}
+// 🔄 Configure Accept button based on quest state
+if (showRetry)
+{
+	AcceptButton.Text = "Retry";
+	AcceptButton.TooltipText = "Pay 15% of reward to try again.";
 }
+else if (isComplete)
+{
+	AcceptButton.Text = "Completed";
+	AcceptButton.TooltipText = "This quest has already been completed.";
+}
+else if (inProgress)
+{
+	AcceptButton.Text = "In Progress";
+	AcceptButton.TooltipText = "This quest is already underway.";
+}
+else
+{
+	AcceptButton.Text = "Accept";
+	AcceptButton.TooltipText = "Send adventurers on this quest.";
+}
+
+
+}
+
+
 
 
 

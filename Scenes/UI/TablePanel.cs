@@ -88,7 +88,7 @@ public partial class TablePanel : VBoxContainer
 				{
 					card.GetNode<Label>("VBoxContainer/NameLabel").Text = guest.BoundGiver.Name;
 					card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"Lv {guest.BoundGiver.Level} Informant";
-					card.GetNode<Label>("VBoxContainer/VitalsLabel").Text = $"Happiness: {Mathf.RoundToInt(guest.BoundGiver.Happiness * 100)}%";
+					card.GetNode<Label>("VBoxContainer/VitalsLabel").Text = $"Mood: {guest.BoundGiver.GetMoodStatus()}";
 				}
 
 				SeatSlotContainer.AddChild(card);

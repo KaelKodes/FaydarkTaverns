@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-
 public partial class QuestCard : Panel
 {
 	[Export] public Label TitleLabel;
@@ -13,7 +12,7 @@ public partial class QuestCard : Panel
 	[Export] public Label TimeLabel;
 
 	// Party slot containers
-	private List<Panel> PartySlots = new();
+	private List<HBoxContainer> PartySlots = new();
 	private List<Label> partySlotLabels = new();
 	private Quest quest;
 	public Quest Quest => quest;
@@ -39,7 +38,7 @@ public partial class QuestCard : Panel
 
 			for (int i = 1; i <= 3; i++)
 			{
-				var panel = GetNode<Panel>($"VBox/PartySlotContainer/PartySlot{i}");
+				var panel = GetNode<HBoxContainer>($"VBox/PartySlotContainer/PartySlot{i}");
 				PartySlots.Add(panel);
 
 				var label = panel.GetNode<Label>("AdventurerLabel");
@@ -59,10 +58,10 @@ public partial class QuestCard : Panel
 		SetMouseFilter(Control.MouseFilterEnum.Stop);
 	}
 	public void Bind(Quest quest)
-{
-	this.quest = quest;
-	UpdateDisplay();
-}
+	{
+		this.quest = quest;
+		UpdateDisplay();
+	}
 
 
 	public override void _ExitTree()
@@ -79,86 +78,144 @@ public partial class QuestCard : Panel
 	}
 
 	public void UpdateDisplay()
+{
+	if (quest == null)
 	{
-		if (quest == null)
+		GD.PrintErr("UpdateDisplay called with null quest.");
+		return;
+	}
+
+	GameLog.Debug($"[UpdateDisplay] Quest {quest.QuestId} | {quest.Title} | IsAccepted: {quest.IsAccepted} | IsLocked: {quest.IsLocked}");
+
+	// 🟩 Set quest info labels
+	TitleLabel.Text = quest.Title;
+	RegionLabel.Text = quest.Region.ToString();
+	TypeLabel.Text = quest.Type.ToString();
+	RewardLabel.Text = $"{quest.Reward}g";
+	TimeLabel.Text = $"{quest.GetTotalExpectedTU()} Hours";
+
+	GameLog.Debug($"Assigned Adventurers: {quest.AssignedAdventurers.Count}");
+
+	for (int i = 0; i < partySlotLabels.Count; i++)
+	{
+		var panel = PartySlots[i];
+		var label = partySlotLabels[i];
+		var removeButton = panel.GetNode<Button>("RemoveButton");
+
+		panel.MouseFilter = Control.MouseFilterEnum.Stop;
+
+		// Setup style
+		removeButton.Visible = false;
+		removeButton.Text = "❌";
+removeButton.CustomMinimumSize = new Vector2(12, 12);
+removeButton.AddThemeColorOverride("font_color", new Color(1, 0.3f, 0.3f));
+removeButton.AddThemeFontSizeOverride("font_size", 10);
+removeButton.SizeFlagsHorizontal = Control.SizeFlags.ShrinkCenter;
+removeButton.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
+removeButton.FocusMode = Control.FocusModeEnum.None;
+
+
+
+		// 🧹 Disconnect prior signals (hover + press)
+		foreach (var conn in removeButton.GetSignalConnectionList("pressed"))
 		{
-			GD.PrintErr("UpdateDisplay called with null quest.");
-			return;
+			if (conn is Godot.Collections.Dictionary dict && dict.ContainsKey("callable"))
+				removeButton.Disconnect("pressed", (Callable)dict["callable"]);
 		}
-		GameLog.Debug($"[UpdateDisplay] Quest {quest.QuestId} | {quest.Title} | IsAccepted: {quest.IsAccepted} | IsLocked: {quest.IsLocked}");
 
-		// 🟩 Update label values
-		TitleLabel.Text = quest.Title;
-		RegionLabel.Text = quest.Region.ToString();
-		TypeLabel.Text = quest.Type.ToString();
-		RewardLabel.Text = $"{quest.Reward}g";
-		TimeLabel.Text = $"{quest.GetTotalExpectedTU()} Hours";
-
-		GameLog.Debug($"Updating display for quest: {quest.Title}");
-		GameLog.Debug($"Assigned Adventurers: {quest.AssignedAdventurers.Count}");
-
-		for (int i = 0; i < partySlotLabels.Count; i++)
+		foreach (var conn in panel.GetSignalConnectionList("mouse_entered"))
 		{
-			if (i < quest.AssignedAdventurers.Count)
-			{
-				var fullName = quest.AssignedAdventurers[i].Name;
-				var firstName = fullName.Split(' ')[0];
-				partySlotLabels[i].Text = firstName;
-
-				GameLog.Debug($"  -> Slot {i}: {firstName}");
-			}
-			else
-			{
-				partySlotLabels[i].Text = "";
-				GameLog.Debug($"  -> Slot {i}: (empty)");
-			}
+			if (conn is Godot.Collections.Dictionary dict && dict.ContainsKey("callable"))
+				panel.Disconnect("mouse_entered", (Callable)dict["callable"]);
 		}
 
-		// 🎨 Background color logic
-var styleBox = new StyleBoxFlat(); // ⛔️ don't fetch from theme
-
-if (quest.IsComplete)
-{
-	// Black background for all completed quests
-	styleBox.BgColor = new Color(0.1f, 0.1f, 0.1f); // deep grey/black
-}
-else if (quest.IsAccepted && quest.IsLocked)
-{
-	styleBox.BgColor = new Color(0.2f, 0.6f, 0.2f); // green for in-progress
-}
-else
-{
-	styleBox.BgColor = new Color(0.2f, 0.4f, 0.6f); // blue for unaccepted
-}
-
-AddThemeStyleboxOverride("panel", styleBox);
-
-
-		// 🏳️ Result Banners (always evaluated after style)
-		var success = GetNode<TextureRect>("SuccessBanner");
-		var failed = GetNode<TextureRect>("FailedBanner");
-
-		if (quest.IsComplete)
+		foreach (var conn in panel.GetSignalConnectionList("mouse_exited"))
 		{
-			if (quest.Failed)
-			{
-				success.Visible = false;
-				failed.Visible = true;
-				GameLog.Debug($"[Banner] Showing FailedBanner for quest: {quest.Title}");
-			}
-			else
-			{
-				success.Visible = true;
-				failed.Visible = false;
-				GameLog.Debug($"[Banner] Showing SuccessBanner for quest: {quest.Title}");
-			}
+			if (conn is Godot.Collections.Dictionary dict && dict.ContainsKey("callable"))
+				panel.Disconnect("mouse_exited", (Callable)dict["callable"]);
+		}
+
+		if (i < quest.AssignedAdventurers.Count)
+		{
+			var adventurer = quest.AssignedAdventurers[i];
+			var firstName = adventurer.Name.Split(' ')[0];
+			label.Text = firstName;
+			panel.Visible = true;
+
+			// Press ❌ to unassign
+			var thisAdventurer = adventurer; // 🔒 capture locally
+
+removeButton.Pressed += () =>
+{
+	GameLog.Debug("✅ RemoveButton clicked");
+
+	if (!quest.IsLocked)
+	{
+		int index = quest.AssignedAdventurers.IndexOf(thisAdventurer);
+		if (index >= 0)
+		{
+			GameLog.Info($"❌ Removing {thisAdventurer.Name} from '{quest.Title}'");
+			UnassignFromSlot(index);
 		}
 		else
 		{
-			success.Visible = false;
-			failed.Visible = false;
+			GameLog.Info($"⚠️ Couldn't find {thisAdventurer.Name} in quest party list.");
 		}
 	}
+};
+
+
+
+			// Hover to show/hide ❌
+			panel.MouseEntered += () => { if (!quest.IsLocked) removeButton.Visible = true; };
+			panel.MouseExited += () => removeButton.Visible = false;
+
+			// Blue slot background
+			var slotStyle = new StyleBoxFlat { BgColor = new Color(0.2f, 0.4f, 0.9f) };
+			panel.AddThemeStyleboxOverride("panel", slotStyle);
+
+			GameLog.Debug($"  -> Slot {i}: {firstName}");
+		}
+		else
+		{
+			label.Text = "";
+			panel.Visible = false;
+			removeButton.Visible = false;
+			GameLog.Debug($"  -> Slot {i}: (empty)");
+		}
+	}
+
+	// Card background style
+	var styleBox = new StyleBoxFlat();
+	if (quest.IsComplete)
+		styleBox.BgColor = new Color(0.1f, 0.1f, 0.1f); // Completed
+	else if (quest.IsAccepted && quest.IsLocked)
+		styleBox.BgColor = new Color(0.2f, 0.6f, 0.2f); // Active
+	else
+		styleBox.BgColor = new Color(0.2f, 0.4f, 0.6f); // Available
+
+	AddThemeStyleboxOverride("panel", styleBox);
+
+	// 🏳️ Result banners
+	var success = GetNode<TextureRect>("SuccessBanner");
+	var failed = GetNode<TextureRect>("FailedBanner");
+
+	if (quest.IsComplete)
+	{
+		success.Visible = !quest.Failed;
+		failed.Visible = quest.Failed;
+		GameLog.Debug($"[Banner] Showing {(quest.Failed ? "FailedBanner" : "SuccessBanner")} for quest: {quest.Title}");
+	}
+	else
+	{
+		success.Visible = false;
+		failed.Visible = false;
+	}
+}
+
+
+
+
 
 	public override bool _CanDropData(Vector2 atPosition, Variant data)
 	{
@@ -166,7 +223,7 @@ AddThemeStyleboxOverride("panel", styleBox);
 		return data.AsGodotObject() is AdventurerCard && quest != null && quest.AssignedAdventurers.Count < 3;
 	}
 
-	public override void _DropData(Vector2 atPosition, Variant data)
+public override void _DropData(Vector2 atPosition, Variant data)
 {
 	var card = data.AsGodotObject() as AdventurerCard;
 	if (card == null || quest == null)
@@ -183,19 +240,35 @@ AddThemeStyleboxOverride("panel", styleBox);
 
 	if (guest != null)
 	{
+		// 🪑 Remove from table if seated
 		if (guest.AssignedTable != null)
+		{
 			guest.AssignedTable.RemoveGuest(guest);
+			guest.AssignedTable = null;
+			guest.SeatIndex = null;
+		}
 
-		TavernManager.Instance.OnGuestRemoved(guest);
-	}
-	else
-	{
-		GameLog.Debug($"❌ Card missing BoundGuest — cannot remove adventurer {adventurer.Name}");
+		// 🚶 Remove from floor if standing
+		if (TavernManager.Instance.GetGuestsInside().Contains(guest))
+		{
+			TavernManager.Instance.OnGuestRemoved(guest);
+		}
+
+		// 🎯 Update guest quest assignment state
+		guest.IsAssignedToQuest = true;
+		guest.IsOnQuest = false;
+		guest.IsInside = false;
+		guest.DepartureTime = null;
+		guest.LocationCode = (int)GuestLocation.Staging;
+
+		GameLog.Info($"🧭 {guest.Name} has been assigned to '{quest.Title}' and awaits departure.");
 	}
 
+	// 📜 Assign adventurer to quest
 	quest.AssignedAdventurers.Add(adventurer);
-	card.QueueFree();
 
+	// 💨 Clean up and refresh UI
+	card.QueueFree();
 	UpdateDisplay();
 	TavernManager.Instance?.DisplayAdventurers();
 	TavernManager.Instance?.UpdateFloorLabel();
@@ -207,47 +280,85 @@ AddThemeStyleboxOverride("panel", styleBox);
 
 
 
-	private void UnassignFromSlot(int index)
+private void UnassignFromSlot(int index)
+{
+	if (quest.IsLocked)
 	{
-		if (quest.IsLocked)
+		GameLog.Info("⛔ Cannot unassign adventurers — quest is locked.");
+		return;
+	}
+
+	if (index < quest.AssignedAdventurers.Count)
+	{
+		var adventurer = quest.AssignedAdventurers[index];
+		quest.AssignedAdventurers.RemoveAt(index);
+
+		// 🔍 Look for the guest anywhere (floor or staging)
+		var guest = TavernManager.Instance.AllVillagers.FirstOrDefault(g => g.BoundAdventurer == adventurer);
+
+		// 👷 Rebuild guest if somehow lost
+		if (guest == null)
 		{
-			GameLog.Info("⛔ Cannot unassign adventurers — quest is locked.");
-			return;
+			guest = new Guest
+			{
+				Name = adventurer.Name,
+				IsAdventurer = true,
+				BoundAdventurer = adventurer,
+				IsOnQuest = false,
+				IsAssignedToQuest = false,
+				IsInside = false,
+				VisitDay = ClockManager.CurrentDay,
+				VisitHour = ClockManager.CurrentTime.Hour,
+				WaitDuration = 1,
+				StayDuration = 4,
+				LocationCode = (int)GuestLocation.StreetOutside
+			};
+			GameLog.Debug($"⚠️ Reconstructed guest for unassigned adventurer: {guest.Name}");
 		}
 
-		if (index < quest.AssignedAdventurers.Count)
+		// 🔄 Reset state
+		guest.IsOnQuest = false;
+		guest.IsAssignedToQuest = false;
+		guest.IsInside = false;
+		guest.AssignedTable = null;
+		guest.SeatIndex = null;
+		guest.DepartureTime = null;
+
+		// 🏠 Try to re-admit or return to street
+		if (TavernManager.Instance.GetGuestsInside().Count < TavernManager.Instance.MaxFloorGuests)
 		{
-			var adventurer = quest.AssignedAdventurers[index];
-			quest.AssignedAdventurers.RemoveAt(index);
-			UpdateDisplay();
-			TavernManager.Instance.DisplayAdventurers();
+			TavernManager.Instance.AdmitGuestToTavern(guest);
+			GameLog.Info($"↩️ {guest.Name} re-entered the tavern.");
 		}
+		else
+		{
+			GuestManager.QueueGuest(guest);
+			GameLog.Info($"🚶 {guest.Name} returned to the street.");
+		}
+
+		UpdateDisplay();
+		TavernManager.Instance.DisplayAdventurers();
 	}
+}
+
+
+
 
 	public override void _GuiInput(InputEvent @event)
+{
+	if (@event is InputEventMouseButton mouseEvent && mouseEvent.Pressed)
 	{
-		if (@event is InputEventMouseButton mouseEvent && mouseEvent.Pressed)
+		if (mouseEvent.ButtonIndex == MouseButton.Left)
 		{
-			if (mouseEvent.ButtonIndex == MouseButton.Left)
-			{
-				var popup = GetTree().Root.GetNode<QuestDetailPopup>("TavernMain/QuestDetailPopup");
-				popup.SetQuest(quest);
-				popup.Show();
-			}
-			else if (mouseEvent.ButtonIndex == MouseButton.Right)
-			{
-				// ✅ Just remove the last adventurer from the party
-				for (int i = 0; i < partySlotLabels.Count; i++)
-				{
-					if (!string.IsNullOrEmpty(partySlotLabels[i].Text))
-					{
-						UnassignFromSlot(i);
-						break;
-					}
-				}
-			}
+			var popup = GetTree().Root.GetNode<QuestDetailPopup>("TavernMain/QuestDetailPopup");
+			popup.SetQuest(quest);
+			popup.Show();
 		}
+
+		// 🧹 Removed right-click unassign fallback
 	}
+}
+
 
 
 }

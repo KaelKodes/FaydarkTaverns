@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public partial class QuestBoardPanel : PanelContainer
 {
+
 	[Export] public NodePath CardHolderPath;
 	[Export] public PackedScene QuestCardScene;
 	[Export] public NodePath ActiveQuestContainerPath;

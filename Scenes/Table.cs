@@ -50,30 +50,33 @@ public partial class Table : Panel
 	}
 
 	public int AssignGuest(Guest guest)
+{
+	for (int i = 0; i < SeatedGuests.Count; i++)
 	{
-		for (int i = 0; i < SeatedGuests.Count; i++)
+		if (SeatedGuests[i] == null)
 		{
-			if (SeatedGuests[i] == null)
-			{
-				SeatedGuests[i] = guest;
-				guest.SeatIndex = i;
-				guest.AssignedTable = this;
+			SeatedGuests[i] = guest;
+			guest.SeatIndex = i;
+			guest.AssignedTable = this;
 
-				UpdateSeatVisual(i, guest);
+			// ✅ Set location to TableBase + TableId (use unique ID if you add it later)
+			guest.LocationCode = (int)GuestLocation.TableBase; // Can be expanded later to +TableId
 
-				if (LinkedPanel != null)
-					LinkedPanel?.UpdateSeatSlots();
+			UpdateSeatVisual(i, guest);
 
-				TavernManager.Instance.DisplayAdventurers();
-				TavernManager.Instance.UpdateFloorLabel();
+			if (LinkedPanel != null)
+				LinkedPanel.UpdateSeatSlots();
 
-				return i;
-			}
+			TavernManager.Instance.DisplayAdventurers();
+			TavernManager.Instance.UpdateFloorLabel();
+
+			return i;
 		}
-		return -1;
 	}
+	return -1;
+}
 
-	public void RemoveGuest(Guest guest)
+public void RemoveGuest(Guest guest)
 {
 	int index = SeatedGuests.IndexOf(guest);
 	if (index >= 0)
@@ -82,8 +85,11 @@ public partial class Table : Panel
 		guest.AssignedTable = null;
 		guest.SeatIndex = -1;
 
+		// ✅ Set location back to limbo; use TavernFloor later if needed
+		guest.LocationCode = (int)GuestLocation.InTown;
+
 		UpdateSeatVisual(index, null);
-		
+
 		LinkedPanel?.UpdateSeatSlots();
 	}
 }

@@ -60,4 +60,21 @@ public partial class ClassTemplate : RefCounted
 };
 
 	}
+	
+	public static List<string> GetAllClassNames()
+{
+	var templates = GetDefaultClassTemplates();
+	return new List<string>(templates.Keys);
+}
+public static ClassTemplate GetTemplateByName(string className)
+{
+	var templates = GetDefaultClassTemplates();
+	if (templates.ContainsKey(className))
+		return templates[className];
+
+	GameLog.Debug($"❌ ClassTemplate not found for class '{className}'.");
+	return null;
+}
+
+
 }

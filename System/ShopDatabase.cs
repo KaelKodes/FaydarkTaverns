@@ -41,11 +41,13 @@ public static class ShopDatabase
 	public static List<ShopItem> AllItems = new()
 	{
 		// 🪑 Tables
-		new ShopItem("Starting Table", 0, 1, 1, ShopCategory.Tables, "Free 4-seat starter table"),
-		new ShopItem("Tiny Table", 50, 2, -1, ShopCategory.Tables, "2-seat cozy table for duos"),
-		new ShopItem("Small Table", 100, 4, -1, ShopCategory.Tables, "4-seat table for small parties"),
-		new ShopItem("Medium Table", 250, 6, -1, ShopCategory.Tables, "6-seat table for larger groups"),
-		new ShopItem("Large Table", 500, 8, -1, ShopCategory.Tables, "8-seat raid-ready table"),
+		// 🪑 Tables
+new ShopItem("Starting Table", 0, 1, 1, ShopCategory.Tables, "Free 4-seat starter table"),
+new ShopItem("Tiny Table", 50, 2, 2, ShopCategory.Tables, "2-seat cozy table for duos"),
+new ShopItem("Small Table", 100, 4, 2, ShopCategory.Tables, "4-seat table for small parties"),
+new ShopItem("Medium Table", 250, 6, 2, ShopCategory.Tables, "6-seat table for larger groups"),
+new ShopItem("Large Table", 500, 8, 2, ShopCategory.Tables, "8-seat raid-ready table"),
+
 
 		// 🎨 Decorations
 		new ShopItem("Wall Banner", 25, 1, 8, ShopCategory.Decorations, "Decorative banner"),

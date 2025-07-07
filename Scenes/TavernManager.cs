@@ -28,6 +28,8 @@ public partial class TavernManager : Node
 	[Export] public VBoxContainer AdventurerListContainer;
 	[Export] public VBoxContainer TavernFloorPanel;
 	[Export] public VBoxContainer FloorSlots;
+	[Export] public Label TavernFloorLabel;
+
 
 
 	public List<Guest> floorGuests = new();
@@ -48,7 +50,7 @@ public partial class TavernManager : Node
 	public int SuccessComboCount => successComboCount;
 	public static int TavernLevel { get; private set; } = 1;
 	public static int TavernExp { get; private set; } = 0;
-	public static int ExpToNextLevel => TavernLevel * 100;
+	public static int ExpToNextLevel => TavernLevel * 10;
 
 
 
@@ -61,9 +63,13 @@ public partial class TavernManager : Node
 	};
 
 	// --- Adventurers ---
-	private Dictionary<string, ClassTemplate> classTemplates;
 	private List<Adventurer> streetOutsideGuests = new();
 	private static List<Table> tables = new();
+	public List<Guest> AllVillagers = new();
+	public int MaxVillagers => 16;
+	public int CurrentVillagerCount => AllVillagers.Count;
+	private bool hasSpawnedInitialParty = false; 
+
 
 	// --- Connected Scenes ---
 	private static PackedScene AdventurerCardScene = GD.Load<PackedScene>("res://Scenes/UI/AdventurerCard.tscn");
@@ -173,6 +179,8 @@ public partial class TavernManager : Node
 
 		UpdateTimeLabel();
 		RecheckSeating();
+		RecheckQuestPosting();
+
 
 
 		// 🔁 Check for quest resolution
@@ -208,71 +216,84 @@ public partial class TavernManager : Node
 
 
 
-	private void StartNewDay(DateTime currentDate)
+private void StartNewDay(DateTime currentDate)
+{
+	GD.Print($"🌅 New day triggered by ClockManager: {currentDate:D}");
+
+	QuestManager.Instance?.ClearUnclaimedQuests();
+
+	// 🧍 Only spawn the initial set of villagers once
+	if (!hasSpawnedInitialParty)
 	{
-		GD.Print($"🌅 New day triggered by ClockManager: {currentDate:D}");
-
-		QuestManager.Instance?.ClearUnclaimedQuests();
-		classTemplates = ClassTemplate.GetDefaultClassTemplates();
-
-		int idCounter = 1;
-		foreach (var kv in classTemplates)
+		// 🎯 Spawn one adventurer per class
+		foreach (var className in ClassTemplate.GetAllClassNames())
 		{
-			var adventurer = AdventurerGenerator.GenerateAdventurer(idCounter++, kv.Value);
-
-			int visitHour = GD.RandRange(6, 18);
-			int wait = GD.RandRange(1, 2);
-			int stay = GD.RandRange(4, 8);
-
-			var guest = new Guest
+			var guest = GuestManager.SpawnNewAdventurer(className, "Human", 1);
+			if (guest != null)
 			{
-				Name = adventurer.Name,
-				IsAdventurer = true,
-				VisitDay = ClockManager.CurrentDay,
-				VisitHour = visitHour,
-				WaitDuration = wait,
-				StayDuration = stay,
-				AssignedTable = null,
-				SeatIndex = null,
-				BoundAdventurer = adventurer
-			};
+				guest.IsOnStreet = true;
+				guest.IsElsewhere = false;
+				guest.LocationCode = (int)GuestLocation.StreetOutside;
 
-			GameLog.Debug($"🕐 {guest.Name} plans to visit at {visitHour}:00, wait {wait}h, stay {stay}h.");
-			GuestManager.QueueGuest(guest, this);
+				GuestManager.QueueGuest(guest);
+				if (!AllVillagers.Contains(guest))
+					AllVillagers.Add(guest);
+			}
 		}
 
-		// 🧓 Spawn Quest Givers
-		int questGiverCount = 2; // Adjust as needed or scale with renown
-		for (int i = 0; i < questGiverCount; i++)
+		// 🧓 Spawn 4 informants (quest givers)
+		for (int i = 0; i < 4; i++)
 		{
-			string name = AdventurerGenerator.GenerateName();
-			int visitHour = GD.RandRange(6, 18);
-			int wait = GD.RandRange(1, 2);
-			int stay = GD.RandRange(4, 8);
-
-			var guest = new Guest
+			var guest = GuestManager.SpawnNewInformant();
+			if (guest != null)
 			{
-				Name = name,
-				IsAdventurer = false,
-				VisitDay = ClockManager.CurrentDay,
-				VisitHour = visitHour,
-				WaitDuration = wait,
-				StayDuration = stay,
-				AssignedTable = null,
-				SeatIndex = null
-			};
+				guest.IsOnStreet = true;
+				guest.IsElsewhere = false;
+				guest.LocationCode = (int)GuestLocation.StreetOutside;
 
-			var giver = new QuestGiver(name, guest);
-			guest.BoundGiver = giver;
-
-			GameLog.Debug($"🕐 {guest.Name} (Quest Giver) plans to visit at {visitHour}:00, wait {wait}h, stay {stay}h.");
-			GuestManager.QueueGuest(guest, this);
+				GuestManager.QueueGuest(guest);
+				if (!AllVillagers.Contains(guest))
+					AllVillagers.Add(guest);
+			}
 		}
 
-		GD.Print("✨ A new day dawns...");
-		DisplayAdventurers();
-		UpdateFloorLabel();
+		hasSpawnedInitialParty = true;
 	}
+
+// 🔁 Persistent Guests
+foreach (var guest in AllVillagers)
+{
+	// Persistent guests only (i.e. bound)
+	bool isPersistent = guest.BoundGiver != null || guest.BoundAdventurer != null;
+
+	if (guest != null && isPersistent && guest.IsElsewhere)
+	{
+		guest.VisitDay = ClockManager.CurrentDay;
+		guest.VisitHour = GD.RandRange(6, 18);
+		guest.IsOnStreet = true;
+		guest.IsElsewhere = false;
+		guest.LocationCode = (int)GuestLocation.StreetOutside;
+
+		GuestManager.QueueGuest(guest);
+		GameLog.Debug($"🔁 {guest.Name} is returning to town today.");
+
+		if (!AllVillagers.Contains(guest))
+			AllVillagers.Add(guest);
+	}
+}
+
+
+
+	GD.Print("✨ A new day dawns...");
+	DisplayAdventurers();
+	UpdateFloorLabel();
+	RecheckSeating();
+}
+
+
+
+
+
 	
 	private void UpdateQuestCapacityLabel()
 {
@@ -291,67 +312,75 @@ public partial class TavernManager : Node
 	
 	#region Guests
 	public void DisplayAdventurers()
+{
+	if (FloorSlots == null || !IsInstanceValid(FloorSlots))
 	{
-		if (FloorSlots == null || !IsInstanceValid(FloorSlots))
+		GD.PrintErr("❌ FloorSlots container is null or invalid.");
+		return;
+	}
+
+	// Clear all floor slot contents
+	foreach (var child in FloorSlots.GetChildren())
+		child.QueueFree();
+
+	// ✅ Sanitize: remove any ghost guests still marked as on floor but not in AllVillagers
+	var floorList = AllVillagers
+	.Where(g =>
+		g != null &&
+		g.IsInside &&
+		g.AssignedTable == null &&
+		g.LocationCode == (int)GuestLocation.TavernFloor)
+	.ToList();
+
+
+	// Render exactly MaxFloorGuests number of slots
+	for (int i = 0; i < MaxFloorGuests; i++)
+	{
+		var guest = floorList.ElementAtOrDefault(i);
+
+		if (guest != null)
 		{
-			GD.PrintErr("❌ FloorSlots container is null or invalid.");
-			return;
-		}
+			var card = AdventurerCardScene.Instantiate<AdventurerCard>();
+			card.BoundGuest = guest;
+			card.BoundAdventurer = guest.BoundAdventurer;
+			card.SetMouseFilter(Control.MouseFilterEnum.Stop);
 
-		// Clear all floor slot contents
-		foreach (var child in FloorSlots.GetChildren())
-			child.QueueFree();
-
-		// Render exactly MaxFloorGuests number of slots
-		for (int i = 0; i < MaxFloorGuests; i++)
-		{
-			// 🧼 Only unseated guests should show here
-			var guest = floorGuests
-				.Where(g => g.AssignedTable == null && !g.IsOnQuest)
-				.ElementAtOrDefault(i);
-
-			if (guest != null)
+			// 🧙‍♂️ Adventurer
+			if (guest.BoundAdventurer != null)
 			{
-				var card = AdventurerCardScene.Instantiate<AdventurerCard>();
-				card.BoundGuest = guest;
-				card.BoundAdventurer = guest.BoundAdventurer;
-
-				card.SetMouseFilter(Control.MouseFilterEnum.Stop);
-
-				// 🧙‍♂️ Adventurer
-				if (guest.BoundAdventurer != null)
-				{
-					card.GetNode<Label>("VBoxContainer/NameLabel").Text = guest.BoundAdventurer.Name;
-					card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"{guest.BoundAdventurer.Level} {guest.BoundAdventurer.ClassName}";
-					card.GetNode<Label>("VBoxContainer/VitalsLabel").Text = $"HP: {guest.BoundAdventurer.GetHp()} | Mana: {guest.BoundAdventurer.GetMana()}";
-				}
-				// 🧓 Quest Giver
-				else if (guest.BoundGiver != null)
-				{
-					var giver = guest.BoundGiver;
-					card.BoundAdventurer = null;
-					card.GetNode<Label>("VBoxContainer/NameLabel").Text = giver.Name;
-					card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"Lv {giver.Level} Informant";
-					card.GetNode<Label>("VBoxContainer/VitalsLabel").Text = $"Mood: {(giver.Happiness == 0 ? "Neutral" : giver.Happiness > 0 ? "+" : "")}{(giver.Happiness == 0 ? "" : giver.Happiness.ToString())}";
-				}
-
-				FloorSlots.AddChild(card);
+				card.GetNode<Label>("VBoxContainer/NameLabel").Text = guest.BoundAdventurer.Name;
+				card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"{guest.BoundAdventurer.Level} {guest.BoundAdventurer.ClassName}";
+				card.GetNode<Label>("VBoxContainer/VitalsLabel").Text = $"HP: {guest.BoundAdventurer.GetHp()} | Mana: {guest.BoundAdventurer.GetMana()}";
 			}
-			else
+			// 🧓 Quest Giver
+			else if (guest.BoundGiver != null)
 			{
-				var emptySlot = new Panel();
-				emptySlot.CustomMinimumSize = new Vector2(250, 50);
-				emptySlot.AddThemeColorOverride("bg_color", new Color(0.2f, 0.2f, 0.2f));
-				FloorSlots.AddChild(emptySlot);
+				var giver = guest.BoundGiver;
+				card.BoundAdventurer = null;
+				card.GetNode<Label>("VBoxContainer/NameLabel").Text = giver.Name;
+				card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"Lv {giver.Level} Informant";
+				card.GetNode<Label>("VBoxContainer/VitalsLabel").Text = $"Mood: {(giver.Happiness == 0 ? "Neutral" : giver.Happiness > 0 ? "+" : "")}{(giver.Happiness == 0 ? "" : giver.Happiness.ToString())}";
 			}
-		}
 
-		// Update all table panels to reflect current seating
-		foreach (var table in tables)
+			FloorSlots.AddChild(card);
+		}
+		else
 		{
-			table.LinkedPanel?.UpdateSeatSlots();
+			var emptySlot = new Panel();
+			emptySlot.CustomMinimumSize = new Vector2(250, 50);
+			emptySlot.AddThemeColorOverride("bg_color", new Color(0.2f, 0.2f, 0.2f));
+			FloorSlots.AddChild(emptySlot);
 		}
 	}
+
+	// Update all table panels to reflect current seating
+	foreach (var table in tables)
+	{
+		table.LinkedPanel?.UpdateSeatSlots();
+	}
+}
+
+
 
 	public void OnGuestSeated(Guest guest)
 	{
@@ -494,35 +523,75 @@ public partial class TavernManager : Node
 
 
 	public void AddTable(string name)
+{
+	if (!tableCounters.ContainsKey(name))
+		tableCounters[name] = 1;
+	else
+		tableCounters[name]++;
+
+	string uniqueName = $"{name} {tableCounters[name]}";
+
+	var tableScene = GD.Load<PackedScene>("res://Scenes/Table.tscn");
+	var tableInstance = tableScene.Instantiate<Table>();
+	
+	// 👇 Set correct seat count per table type
+	switch (name)
 	{
-		// 🔢 Generate a unique name like "Tiny Table 1"
-		if (!tableCounters.ContainsKey(name))
-			tableCounters[name] = 1;
-		else
-			tableCounters[name]++;
-
-		string uniqueName = $"{name} {tableCounters[name]}";
-
-		// 🪑 Instantiate table
-		var tableScene = GD.Load<PackedScene>("res://Scenes/Table.tscn");
-		var tableInstance = tableScene.Instantiate<Table>();
-		tableInstance.SeatCount = 4;
-		tableInstance.TableName = uniqueName; // ✅ Assign the name
-
-		furniturePanel.FurnitureVBox.AddChild(tableInstance);
-		tables.Add(tableInstance);
-
-		// 🪑 Instantiate matching TablePanel
-		var panelScene = GD.Load<PackedScene>("res://Scenes/UI/TablePanel.tscn");
-		var panelInstance = panelScene.Instantiate<TablePanel>();
-
-		panelInstance.LinkedTable = tableInstance;
-		AdventurerListContainer.AddChild(panelInstance);
-
-		tableInstance.LinkedPanel = panelInstance;
-
-		GameLog.Info($"🪑 Table added: {uniqueName}");
+		case "Tiny Table": tableInstance.SeatCount = 2; break;
+		case "Small Table": tableInstance.SeatCount = 4; break;
+		case "Medium Table": tableInstance.SeatCount = 6; break;
+		case "Large Table": tableInstance.SeatCount = 8; break;
+		default: tableInstance.SeatCount = 4; break;
 	}
+
+	tableInstance.TableName = uniqueName;
+
+	// Layout fix (optional): add margin or spacing if needed
+	furniturePanel.FurnitureVBox.AddChild(tableInstance);
+	tables.Add(tableInstance);
+
+	var panelScene = GD.Load<PackedScene>("res://Scenes/UI/TablePanel.tscn");
+	var panelInstance = panelScene.Instantiate<TablePanel>();
+
+	panelInstance.LinkedTable = tableInstance;
+	AdventurerListContainer.AddChild(panelInstance);
+
+	tableInstance.LinkedPanel = panelInstance;
+
+	GameLog.Info($"🪑 Table added: {uniqueName}");
+}
+
+private void RecheckQuestPosting()
+{
+	foreach (var guest in AllVillagers)
+	{
+		if (guest.BoundGiver != null &&
+	guest.IsInside &&
+	!guest.IsOnStreet &&
+	!guest.IsElsewhere &&
+	guest.AssignedTable == null &&
+	guest.LocationCode == (int)GuestLocation.TavernFloor &&
+	!guest.IsAssignedToQuest &&
+	!guest.IsOnQuest &&
+	guest.BoundGiver.PostedQuest == null)
+
+
+		{
+			if (QuestManager.Instance.CanAddQuest())
+			{
+				var quest = QuestGenerator.GenerateFromGiver(guest.BoundGiver, guest);
+				if (quest != null)
+				{
+					QuestManager.Instance.AddQuest(quest);
+					guest.BoundGiver.PostedQuest = quest;
+					GameLog.Info($"🧾 {guest.Name} posted a new quest: '{quest.Title}'");
+				}
+			}
+		}
+	}
+}
+
+
 
 
 	private void AddDecoration(string name)
@@ -551,28 +620,49 @@ public partial class TavernManager : Node
 			TavernLevelLabel.TooltipText = $"{TavernExp} / {ExpToNextLevel} EXP";
 	}
 	private bool TrySeatGuest(Guest guest)
+{
+	foreach (var table in GetAvailableTables())
 	{
-		foreach (var table in GetAvailableTables())
+		if (!table.HasFreeSeat())
+			continue;
+
+		int index = table.AssignGuest(guest);
+
+		if (index >= 0)
 		{
-			if (table.HasFreeSeat())
-			{
-				table.AssignGuest(guest);
-				guest.AssignedTable = table;
-				guest.SeatIndex = table.GetFreeSeatIndex();
-				return true;
-			}
+			guest.AssignedTable = table;
+			guest.SeatIndex = index;
+
+			OnGuestSeated(guest);
+			return true;
 		}
-		return false;
+		else
+		{
+			GameLog.Debug($"⚠️ {guest.Name} could not be seated at {table.TableName} — seat assignment failed.");
+		}
 	}
+	return false;
+}
+
+
 
 	public void UpdateFloorLabel()
-	{
-		if (floorLabel == null || !IsInstanceValid(floorLabel))
-			return;
+{
+	int onFloor = AllVillagers.Count(g =>
+		g != null &&
+		g.IsInside &&
+		g.AssignedTable == null &&
+		!g.IsOnQuest &&
+		!g.IsAssignedToQuest &&
+		g.LocationCode == (int)GuestLocation.TavernFloor &&
+		!g.IsElsewhere &&
+		!g.IsOnStreet
+	);
 
-		int onFloor = floorGuests.Count(g => g.AssignedTable == null);
-		floorLabel.Text = $"Tavern Floor: {onFloor} / {MaxFloorGuests}";
-	}
+	TavernFloorLabel.Text = $"{onFloor}/{MaxFloorGuests}";
+}
+
+
 
 
 	public void OnGuestEntered(Guest guest)
@@ -589,58 +679,65 @@ public partial class TavernManager : Node
 	}
 
 	public void AdmitGuestToTavern(Guest guest)
+{
+	// 🚶 Set guest state *before* evaluating eligibility
+	guest.SetLocation(inside: true, onStreet: false, elsewhere: false);
+	guest.LocationCode = (int)GuestLocation.TavernFloor;
+
+	// 🧍 Ensure guest is tracked
+	if (!AllVillagers.Contains(guest))
+		AllVillagers.Add(guest);
+
+	// 🔒 Enforce standing guest limit (now includes this guest)
+	int standingGuests = AllVillagers.Count(g =>
+		g != null &&
+		g.IsInside &&
+		g.AssignedTable == null &&
+		!g.IsOnQuest &&
+		!g.IsAssignedToQuest &&
+		!g.IsElsewhere &&
+		!g.IsOnStreet &&
+		g.LocationCode == (int)GuestLocation.TavernFloor
+	);
+
+	if (standingGuests > MaxFloorGuests)
 	{
-		if (floorGuests.Contains(guest))
-			return; // ✅ already inside
+		GameLog.Info($"⛔ Someone tries to enter... but the tavern floor is full.");
+		return;
+	}
 
-		if (floorGuests.Count >= MaxFloorGuests)
-		{
-			GameLog.Debug($"🚫 {guest.Name} couldn't enter — floor full.");
-			return;
-		}
-
-		floorGuests.Add(guest);
-		UpdateFloorLabel();
-		DisplayAdventurers();
-
+	// 🎯 Quest givers must stand first to post quests
+	if (guest.BoundGiver != null)
+	{
+		GameLog.Debug($"📜 {guest.Name} entered to post a quest.");
+		if (!floorGuests.Contains(guest))
+			floorGuests.Add(guest);
+	}
+	else
+	{
+		// 🪑 Try to seat normal adventurers
 		if (TrySeatGuest(guest))
 		{
-			GameLog.Info($"🪑 {guest.Name} found a seat.");
+			GameLog.Debug($"✅ {guest.Name} was seated immediately.");
+			return;
 		}
 		else
 		{
-			GameLog.Debug($"🚶 {guest.Name} is standing (no seat yet).");
-		}
-
-		// 🧓 QUEST GIVER LOGIC
-		if (guest.BoundGiver != null)
-		{
-			var giver = guest.BoundGiver;
-
-			GameLog.Debug($"📜 {guest.Name} is a Quest Giver entering the tavern.");
-
-			if (giver.ActiveQuest == null)
-			{
-				var questId = QuestManager.Instance.GetNextQuestId();
-				var quest = QuestGenerator.GenerateQuest(questId);
-
-				giver.ActiveQuest = quest;
-				quest.PostedBy = giver;
-			}
-
-			if (QuestManager.Instance.CanAddQuest())
-			{
-				QuestManager.Instance.AddQuest(giver.ActiveQuest);
-				GameLog.Info($"📜 {guest.Name} posted a quest to the board.");
-				giver.QuestsPosted++;
-				giver.ActiveQuest = null;
-			}
-			else
-			{
-				GameLog.Info($"📋 Quest Board is full. {guest.Name} could not post a quest.");
-			}
+			if (!floorGuests.Contains(guest))
+				floorGuests.Add(guest);
 		}
 	}
+
+	GameLog.Info($"🏠 {guest.Name} entered the tavern.");
+	UpdateFloorLabel();
+	DisplayAdventurers();
+}
+
+
+
+
+
+
 
 
 	public void NotifyGuestLeft(Guest guest)
@@ -660,28 +757,42 @@ public partial class TavernManager : Node
 
 
 	public void RecheckSeating()
+{
+	foreach (var guest in floorGuests.ToList()) // ✅ avoid modification errors
 	{
-		foreach (var guest in floorGuests)
+		if (guest.AssignedTable != null)
+			continue; // already seated
+
+		if ((ClockManager.CurrentTime - guest.LastSeatCheck).TotalSeconds < 5)
+			continue; // not time yet
+
+		guest.LastSeatCheck = ClockManager.CurrentTime;
+
+		if (TrySeatGuest(guest))
 		{
-			if (guest.AssignedTable != null)
-				continue; // already seated
-
-			if ((ClockManager.CurrentTime - guest.LastSeatCheck).TotalSeconds < 5)
-				continue; // not time yet
-
-			guest.LastSeatCheck = ClockManager.CurrentTime;
-
-			if (TrySeatGuest(guest))
-			{
-				GameLog.Info($"🔁 {guest.Name} finally found a seat.");
-			}
+			GameLog.Info($"🔁 {guest.Name} finally found a seat.");
 		}
 	}
+}
+
 
 	public List<Guest> GetGuestsInside()
+{
+	// Remove any nulls or guests that are no longer marked IsInside
+	floorGuests = floorGuests.Where(g => g != null && g.IsInside).ToList();
+
+	// Repair any inconsistencies (force IsInside to true)
+	foreach (var guest in floorGuests)
 	{
-		return floorGuests;
+		guest.IsInside = true;
+		guest.IsOnStreet = false;
+		guest.IsElsewhere = false;
+		guest.LocationCode = 2;
 	}
+
+	return floorGuests;
+}
+
 
 
 

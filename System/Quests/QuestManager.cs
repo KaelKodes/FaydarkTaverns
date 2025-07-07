@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public class QuestManager
 {
@@ -102,6 +103,43 @@ public void DismissQuest(Quest quest)
 	GameLog.Info($"🗑️ Quest '{quest.Title}' dismissed. Informant less happy.");
 	OnQuestsUpdated?.Invoke();
 }
+private void HandleQuestReturn(Quest quest)
+{
+	foreach (var adventurer in quest.AssignedAdventurers)
+	{
+		var guest = TavernManager.Instance.AllVillagers.FirstOrDefault(g => g.BoundAdventurer == adventurer);
+		if (guest == null)
+		{
+			GameLog.Debug($"⚠️ Could not find guest for returning adventurer: {adventurer.Name}");
+			continue;
+		}
+
+		guest.IsOnQuest = false;
+		guest.IsAssignedToQuest = false;
+		guest.IsInside = false;
+		guest.IsOnStreet = false;
+		guest.IsElsewhere = false;
+		guest.DepartureTime = null;
+		guest.AssignedTable = null;
+		guest.SeatIndex = null;
+		guest.LocationCode = 0; // In Town
+
+		// Attempt to return them to the tavern or street
+		if (TavernManager.Instance.GetGuestsInside().Count < TavernManager.Instance.MaxFloorGuests)
+		{
+			TavernManager.Instance.AdmitGuestToTavern(guest);
+			GameLog.Info($"🧭 {guest.Name} has returned from '{quest.Title}' and entered the tavern.");
+		}
+		else
+		{
+			guest.IsOnStreet = true;
+			guest.LocationCode = 1; // Street
+			GuestManager.QueueGuest(guest);
+			GameLog.Info($"🧭 {guest.Name} has returned from '{quest.Title}' and waits outside.");
+		}
+	}
+}
+
 
 
 
@@ -144,6 +182,8 @@ public void CompleteQuest(Quest quest)
 	var result = QuestSimulator.Simulate(quest);
 	quest.IsComplete = true;
 	quest.Failed = !result.Success;
+	HandleQuestReturn(quest);
+
 
 	if (result.Success)
 {
@@ -167,9 +207,8 @@ public void CompleteQuest(Quest quest)
 	foreach (var adventurer in quest.AssignedAdventurers)
 	{
 		adventurer.GainXP(result.ExpGained);
-		TavernManager.Instance.DisplayAdventurers();
 	}
-
+	TavernManager.Instance.DisplayAdventurers();
 	LogQuestResult(quest, result);
 	NotifyQuestStateChanged(quest);
 	GameLog.Info($"🎉 Quest '{quest.Title}' completed. Success: {result.Success}");
