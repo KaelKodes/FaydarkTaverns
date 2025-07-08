@@ -10,6 +10,8 @@ public partial class Adventurer : RefCounted
 	public string ClassName;
 	public int RoleId;
 	public Gender Gender;
+	public int PortraitId { get; set; }
+
 
 	public int Strength;
 	public int Dexterity;
@@ -29,22 +31,25 @@ public partial class Adventurer : RefCounted
 	public int XPToLevelUp => Level * 100;
 
 
-	public Adventurer(int id, string name, string className, int roleId, int str, int dex, int con, int intel,
-				  int aggression, int distance, int healingUse, int focus)
-	{
-		Id = id;
-		Name = name;
-		ClassName = className;
-		RoleId = roleId;
-		Strength = str;
-		Dexterity = dex;
-		Constitution = con;
-		Intelligence = intel;
-		Aggression = aggression;
-		Distance = distance;
-		HealingUse = healingUse;
-		Focus = focus;
-	}
+	// In Adventurer.cs:
+public Adventurer(int id, string name, string className, int roleId, int portraitId, int str, int dex, int con, int intel,
+	int aggression, int distance, int healingUse, int focus)
+{
+	Id = id;
+	Name = name;
+	ClassName = className;
+	RoleId = roleId;
+	PortraitId = portraitId;
+	Strength = str;
+	Dexterity = dex;
+	Constitution = con;
+	Intelligence = intel;
+	Aggression = aggression;
+	Distance = distance;
+	HealingUse = healingUse;
+	Focus = focus;
+}
+
 
 	public int GetHp() => Constitution * 10;
 	public int GetMana() => Intelligence * 10;

@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://bg6we31odfnlk"]
+[gd_scene load_steps=3 format=3 uid="uid://bg6we31odfnlk"]
 
 [ext_resource type="Script" uid="uid://dg7cq0725bmjt" path="res://Scenes/ShopPanel.cs" id="1_yqe7u"]
+[ext_resource type="Script" uid="uid://qi56yy8o3hs4" path="res://System/Sound/UIInteractButton.cs" id="2_s3syp"]
 
 [node name="ShopPanel" type="Window" node_paths=PackedStringArray("ItemListContainer", "CartContainer", "TotalLabel", "ConfirmButton", "CloseButton", "TabTables", "TabDecorations", "TabSupplies")]
 title = "Tavern Shop"
@@ -35,14 +36,17 @@ alignment = 1
 [node name="Tables" type="Button" parent="VBoxContainer/Tabs"]
 layout_mode = 2
 text = "Tables"
+script = ExtResource("2_s3syp")
 
 [node name="Decorations" type="Button" parent="VBoxContainer/Tabs"]
 layout_mode = 2
 text = "Decorations"
+script = ExtResource("2_s3syp")
 
 [node name="Supplies" type="Button" parent="VBoxContainer/Tabs"]
 layout_mode = 2
 text = "Supplies"
+script = ExtResource("2_s3syp")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -77,7 +81,9 @@ horizontal_alignment = 1
 [node name="ConfirmPurchase" type="Button" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Confirm Purchase"
+script = ExtResource("2_s3syp")
 
 [node name="Close" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 text = "Close"
+script = ExtResource("2_s3syp")

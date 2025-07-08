@@ -24,6 +24,8 @@ public class Guest
 
 	// ─── New property to track each guest’s gender ──────────────────────
 	public Gender Gender;
+	public int PortraitId { get; set; }
+
 
 	public bool IsAdventurer;
 	public Adventurer BoundAdventurer { get; set; }

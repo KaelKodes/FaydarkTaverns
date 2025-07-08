@@ -51,9 +51,19 @@ private Guest GenerateQuestGiverGuest()
 public static void QueueGuest(Guest guest)
 {
 	guest.SetLocation(inside: false, onStreet: true, elsewhere: false);
-	GuestManager.guestsOutside.Add(guest);
-	GameLog.Debug($"🚶 {guest.Name} is walking by.");
+
+	// Prevent duplicate addition
+	if (!guestsOutside.Contains(guest))
+	{
+		guestsOutside.Add(guest);
+		GameLog.Debug($"🚶 {guest.Name} is walking by.");
+	}
+	else
+	{
+		GameLog.Debug($"⚠️ {guest.Name} is already queued outside. Skipping duplicate.");
+	}
 }
+
 
 
 
@@ -197,16 +207,17 @@ public static Guest SpawnNewAdventurer(string className, string race = "Human", 
 	var adventurer = AdventurerGenerator.GenerateAdventurer(level, template);
 
 	var guest = new Guest
-	{
-		Name            = adventurer.Name,
-		Gender          = adventurer.Gender,          // pull from the adventurer
-		IsAdventurer    = true,
-		VisitDay        = ClockManager.CurrentDay,
-		VisitHour       = (int)GD.RandRange(6, 18),   // float→int cast is fine here
-		WaitDuration    = (int)GD.RandRange(1, 2),
-		StayDuration    = (int)GD.RandRange(4, 8),
-		BoundAdventurer = adventurer
-	};
+{
+	Name            = adventurer.Name,
+	Gender          = adventurer.Gender,
+	IsAdventurer    = true,
+	VisitDay        = ClockManager.CurrentDay,
+	VisitHour       = (int)GD.RandRange(6, 18),
+	WaitDuration    = (int)GD.RandRange(1, 2),
+	StayDuration    = (int)GD.RandRange(4, 8),
+	BoundAdventurer = adventurer,
+	PortraitId      = adventurer.PortraitId
+};
 
 	GameLog.Debug($"🧙 Spawned Adventurer: {guest.Name} ({className}, {guest.Gender})");
 	return guest;
@@ -218,6 +229,8 @@ public static Guest SpawnNewInformant()
 	var gender = (Gender)(new Random().Next(0, 2));
 	string name = AdventurerGenerator.GenerateName(gender);
 
+	int portraitId = AdventurerGenerator.RandomPortraitIdForClassGender("Informant", gender);
+
 	var guest = new Guest
 	{
 		Name         = name,
@@ -226,7 +239,8 @@ public static Guest SpawnNewInformant()
 		VisitDay     = ClockManager.CurrentDay,
 		VisitHour    = (int)GD.RandRange(6, 18),
 		WaitDuration = (int)GD.RandRange(1, 2),
-		StayDuration = (int)GD.RandRange(4, 8)
+		StayDuration = (int)GD.RandRange(4, 8),
+		PortraitId   = portraitId
 	};
 
 	guest.BoundGiver = new QuestGiver(name, guest);
@@ -234,6 +248,7 @@ public static Guest SpawnNewInformant()
 	GameLog.Debug($"📜 Spawned Informant: {name} ({gender})");
 	return guest;
 }
+
 
 
 

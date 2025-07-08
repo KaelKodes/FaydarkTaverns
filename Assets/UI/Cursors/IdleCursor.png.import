@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ba7qkana0atwd"
-path="res://.godot/imported/FT Icon.png-c369865fd65fa4821ef0239bcfa3c422.ctex"
+uid="uid://c10ix5ub2nk33"
+path="res://.godot/imported/IdleCursor.png-7bed428a6f4019e3758e33ea81930943.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/UI/FT Icon.png"
-dest_files=["res://.godot/imported/FT Icon.png-c369865fd65fa4821ef0239bcfa3c422.ctex"]
+source_file="res://Assets/UI/Cursors/IdleCursor.png"
+dest_files=["res://.godot/imported/IdleCursor.png-7bed428a6f4019e3758e33ea81930943.ctex"]
 
 [params]
 

@@ -23,40 +23,56 @@ public partial class QuestCard : Panel
 	}
 
 	public override void _Ready()
+{
+	GameLog.Debug("QuestCard: Running _Ready()");
+
+	try
 	{
-		GameLog.Debug("QuestCard: Running _Ready()");
+		TitleLabel = GetNode<Label>("VBox/TitleLabel");
+		RegionLabel = GetNode<Label>("VBox/RegionLabel");
+		TypeLabel = GetNode<Label>("VBox/TypeLabel");
+		RewardLabel = GetNode<Label>("VBox/RewardLabel");
+		TimeLabel = GetNode<Label>("VBox/TimeLabel");
 
-
-
-		try
+		for (int i = 1; i <= 3; i++)
 		{
-			TitleLabel = GetNode<Label>("VBox/TitleLabel");
-			RegionLabel = GetNode<Label>("VBox/RegionLabel");
-			TypeLabel = GetNode<Label>("VBox/TypeLabel");
-			RewardLabel = GetNode<Label>("VBox/RewardLabel");
-			TimeLabel = GetNode<Label>("VBox/TimeLabel");
+			var panel = GetNode<HBoxContainer>($"VBox/PartySlotContainer/PartySlot{i}");
+			PartySlots.Add(panel);
 
-			for (int i = 1; i <= 3; i++)
-			{
-				var panel = GetNode<HBoxContainer>($"VBox/PartySlotContainer/PartySlot{i}");
-				PartySlots.Add(panel);
-
-				var label = panel.GetNode<Label>("AdventurerLabel");
-				partySlotLabels.Add(label);
-			}
-
-			if (quest != null)
-				UpdateDisplay();
-
-			AddToGroup("QuestCard"); // ✅ Add this to ensure cards are trackable
-		}
-		catch (Exception e)
-		{
-			GD.PrintErr("❌ QuestCard _Ready() failed: ", e.Message);
+			var label = panel.GetNode<Label>("AdventurerLabel");
+			partySlotLabels.Add(label);
 		}
 
-		SetMouseFilter(Control.MouseFilterEnum.Stop);
+		if (quest != null)
+			UpdateDisplay();
+
+		AddToGroup("QuestCard"); // ✅ Add this to ensure cards are trackable
 	}
+	catch (Exception e)
+	{
+		GD.PrintErr("❌ QuestCard _Ready() failed: ", e.Message);
+	}
+
+	SetMouseFilter(Control.MouseFilterEnum.Stop);
+
+	// ─── UI SOUND HOOKS (safe to add after all init) ────────────────
+
+	this.MouseEntered += () => UIAudio.Instance.PlayHover();
+	this.FocusEntered += () => UIAudio.Instance.PlayHover();
+
+	this.GuiInput += @event =>
+	{
+		if (@event is InputEventMouseButton mouseEvent &&
+			mouseEvent.ButtonIndex == MouseButton.Left &&
+			mouseEvent.Pressed)
+		{
+			UIAudio.Instance.PlayClick();
+		}
+	};
+
+	// ────────────────────────────────────────────────────────────────
+}
+
 	public void Bind(Quest quest)
 	{
 		this.quest = quest;
@@ -107,14 +123,12 @@ public partial class QuestCard : Panel
 		// Setup style
 		removeButton.Visible = false;
 		removeButton.Text = "❌";
-removeButton.CustomMinimumSize = new Vector2(12, 12);
-removeButton.AddThemeColorOverride("font_color", new Color(1, 0.3f, 0.3f));
-removeButton.AddThemeFontSizeOverride("font_size", 10);
-removeButton.SizeFlagsHorizontal = Control.SizeFlags.ShrinkCenter;
-removeButton.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
-removeButton.FocusMode = Control.FocusModeEnum.None;
-
-
+		removeButton.CustomMinimumSize = new Vector2(12, 12);
+		removeButton.AddThemeColorOverride("font_color", new Color(1, 0.3f, 0.3f));
+		removeButton.AddThemeFontSizeOverride("font_size", 10);
+		removeButton.SizeFlagsHorizontal = Control.SizeFlags.ShrinkCenter;
+		removeButton.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
+		removeButton.FocusMode = Control.FocusModeEnum.None;
 
 		// 🧹 Disconnect prior signals (hover + press)
 		foreach (var conn in removeButton.GetSignalConnectionList("pressed"))
@@ -135,6 +149,10 @@ removeButton.FocusMode = Control.FocusModeEnum.None;
 				panel.Disconnect("mouse_exited", (Callable)dict["callable"]);
 		}
 
+		// >>>>>>>>>>>>>> ADD THIS HOVER SOUND LOGIC <<<<<<<<<<<<<<
+		panel.MouseEntered += () => UIAudio.Instance.PlayHover();
+		// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 		if (i < quest.AssignedAdventurers.Count)
 		{
 			var adventurer = quest.AssignedAdventurers[i];
@@ -145,26 +163,24 @@ removeButton.FocusMode = Control.FocusModeEnum.None;
 			// Press ❌ to unassign
 			var thisAdventurer = adventurer; // 🔒 capture locally
 
-removeButton.Pressed += () =>
-{
-	GameLog.Debug("✅ RemoveButton clicked");
+			removeButton.Pressed += () =>
+			{
+				GameLog.Debug("✅ RemoveButton clicked");
 
-	if (!quest.IsLocked)
-	{
-		int index = quest.AssignedAdventurers.IndexOf(thisAdventurer);
-		if (index >= 0)
-		{
-			GameLog.Info($"❌ Removing {thisAdventurer.Name} from '{quest.Title}'");
-			UnassignFromSlot(index);
-		}
-		else
-		{
-			GameLog.Info($"⚠️ Couldn't find {thisAdventurer.Name} in quest party list.");
-		}
-	}
-};
-
-
+				if (!quest.IsLocked)
+				{
+					int index = quest.AssignedAdventurers.IndexOf(thisAdventurer);
+					if (index >= 0)
+					{
+						GameLog.Info($"❌ Removing {thisAdventurer.Name} from '{quest.Title}'");
+						UnassignFromSlot(index);
+					}
+					else
+					{
+						GameLog.Info($"⚠️ Couldn't find {thisAdventurer.Name} in quest party list.");
+					}
+				}
+			};
 
 			// Hover to show/hide ❌
 			panel.MouseEntered += () => { if (!quest.IsLocked) removeButton.Visible = true; };
@@ -212,6 +228,7 @@ removeButton.Pressed += () =>
 		failed.Visible = false;
 	}
 }
+
 
 
 

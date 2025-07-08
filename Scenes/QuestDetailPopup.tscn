@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://g7cdgtjmhjxt"]
+[gd_scene load_steps=3 format=3 uid="uid://g7cdgtjmhjxt"]
 
 [ext_resource type="Script" uid="uid://sfjxjgulmfra" path="res://Scenes/UI/QuestDetailPopup.cs" id="1_jec6c"]
+[ext_resource type="Script" uid="uid://qi56yy8o3hs4" path="res://System/Sound/UIInteractButton.cs" id="2_psih4"]
 
 [node name="QuestDetailPopup" type="Window" node_paths=PackedStringArray("TitleLabel", "RegionLabel", "TypeLabel", "RewardLabel", "TimeLabel", "OptimalRolesLabel", "DescriptionLabel", "AcceptButton", "CloseButton", "DismissButton", "RetryDialog")]
 size = Vector2i(218, 228)
@@ -69,15 +70,18 @@ alignment = 1
 [node name="AcceptButton" type="Button" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Accept"
+script = ExtResource("2_psih4")
 
 [node name="CloseButton" type="Button" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Close"
+script = ExtResource("2_psih4")
 
 [node name="DismissButton" type="Button" parent="VBoxContainer/HBoxContainer"]
 visible = false
 layout_mode = 2
 text = "Dismiss"
+script = ExtResource("2_psih4")
 
 [node name="RetryDialog" type="ConfirmationDialog" parent="."]
 

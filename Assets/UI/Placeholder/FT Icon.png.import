@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://x7avoxuurhcs"
-path="res://.godot/imported/Taverns2j.jpeg-ff0ce32a66aa3730b3b85f1d2cb605ec.ctex"
+uid="uid://ba7qkana0atwd"
+path="res://.godot/imported/FT Icon.png-d036de0d1d9dfea98d4e5aaefcf90aba.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/UI/Taverns2j.jpeg"
-dest_files=["res://.godot/imported/Taverns2j.jpeg-ff0ce32a66aa3730b3b85f1d2cb605ec.ctex"]
+source_file="res://Assets/UI/Placeholder/FT Icon.png"
+dest_files=["res://.godot/imported/FT Icon.png-d036de0d1d9dfea98d4e5aaefcf90aba.ctex"]
 
 [params]
 

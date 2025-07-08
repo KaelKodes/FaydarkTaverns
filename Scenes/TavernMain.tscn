@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://bp53yv3ypaa5j"]
+[gd_scene load_steps=26 format=3 uid="uid://bp53yv3ypaa5j"]
 
 [ext_resource type="Script" uid="uid://hacx1tuggxkp" path="res://Scenes/QuestBoardPanel.cs" id="1_7ljul"]
 [ext_resource type="Script" uid="uid://bw4esvijflh3" path="res://Scenes/TavernManager.cs" id="1_v6xsb"]
@@ -14,6 +14,14 @@
 [ext_resource type="Texture2D" uid="uid://du5bi4nrmosy8" path="res://Assets/UI/Bkg/TavernView.png" id="11_20rui"]
 [ext_resource type="Texture2D" uid="uid://bdfjo5q8ltm3j" path="res://Assets/UI/Bkg/Panel.png" id="12_slrnj"]
 [ext_resource type="Texture2D" uid="uid://b3o0xw4hwlcru" path="res://Assets/UI/Bkg/Candle.png" id="13_wlqhj"]
+[ext_resource type="Script" uid="uid://qi56yy8o3hs4" path="res://System/Sound/UIInteractButton.cs" id="14_udw8w"]
+[ext_resource type="Script" uid="uid://beiuw711c5786" path="res://System/Sound/UIAudio.cs" id="16_kk1q5"]
+[ext_resource type="AudioStream" uid="uid://c0q1moejob5v6" path="res://Assets/Audio/FX/mouserelease1.ogg" id="17_rf4u6"]
+[ext_resource type="AudioStream" uid="uid://cfg07wjymrrlq" path="res://Assets/Audio/FX/mouseclick1.ogg" id="18_udw8w"]
+[ext_resource type="Script" uid="uid://c1jlb6pv777cr" path="res://System/UI/UICursor.cs" id="19_udw8w"]
+[ext_resource type="Texture2D" uid="uid://c10ix5ub2nk33" path="res://Assets/UI/Cursors/IdleCursor.png" id="20_31se6"]
+[ext_resource type="Texture2D" uid="uid://ctj5ywaei1oec" path="res://Assets/UI/Cursors/GrabCursor.png" id="21_vy8gr"]
+[ext_resource type="Texture2D" uid="uid://daquq11f4fwy0" path="res://Assets/UI/Cursors/PointCursor.png" id="22_abkob"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3yx2a"]
 
@@ -234,22 +242,27 @@ alignment = 1
 [node name="PauseButton" type="Button" parent="TavernDisplay/ControlPanel/TopBar"]
 layout_mode = 2
 text = "Pause"
+script = ExtResource("14_udw8w")
 
 [node name="Button1x" type="Button" parent="TavernDisplay/ControlPanel/TopBar"]
 layout_mode = 2
 text = "1x"
+script = ExtResource("14_udw8w")
 
 [node name="Button2x" type="Button" parent="TavernDisplay/ControlPanel/TopBar"]
 layout_mode = 2
 text = "2x"
+script = ExtResource("14_udw8w")
 
 [node name="Button4x" type="Button" parent="TavernDisplay/ControlPanel/TopBar"]
 layout_mode = 2
 text = "4x"
+script = ExtResource("14_udw8w")
 
 [node name="Button8x" type="Button" parent="TavernDisplay/ControlPanel/TopBar"]
 layout_mode = 2
 text = "10x"
+script = ExtResource("14_udw8w")
 
 [node name="GoldLabel" type="Label" parent="TavernDisplay/ControlPanel"]
 layout_mode = 2
@@ -259,6 +272,7 @@ horizontal_alignment = 1
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Shop"
+script = ExtResource("14_udw8w")
 
 [node name="TavernRenown" type="Control" parent="TavernDisplay"]
 anchors_preset = 0
@@ -371,6 +385,20 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_slrnj")
 [node name="LogText" type="RichTextLabel" parent="LogControl/LogPanel"]
 layout_mode = 2
 scroll_following = true
+
+[node name="UIAudio" type="Node" parent="." node_paths=PackedStringArray("AudioPlayer")]
+script = ExtResource("16_kk1q5")
+AudioPlayer = NodePath("AudioStreamPlayer")
+HoverSound = ExtResource("17_rf4u6")
+ClickSound = ExtResource("18_udw8w")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="UIAudio"]
+
+[node name="UICursor" type="Node" parent="."]
+script = ExtResource("19_udw8w")
+IdleCursor = ExtResource("20_31se6")
+GrabCursor = ExtResource("21_vy8gr")
+PointCursor = ExtResource("22_abkob")
 
 [connection signal="pressed" from="TavernDisplay/ControlPanel/TopBar/Button1x" to="GuestPanels/QuestBoardPanel" method="OnSpeed1xPressed"]
 [connection signal="pressed" from="TavernDisplay/ControlPanel/TopBar/Button2x" to="GuestPanels/QuestBoardPanel" method="OnSpeed2xPressed"]

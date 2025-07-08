@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dc0rneoqg34q1"
-path="res://.godot/imported/FT Icon2.png-2a6e82c0115f2ba5acb4a6050375784e.ctex"
+uid="uid://ctj5ywaei1oec"
+path="res://.godot/imported/GrabCursor.png-6d949d4307d80b89d3ef589936a2e39e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/UI/FT Icon2.png"
-dest_files=["res://.godot/imported/FT Icon2.png-2a6e82c0115f2ba5acb4a6050375784e.ctex"]
+source_file="res://Assets/UI/Cursors/GrabCursor.png"
+dest_files=["res://.godot/imported/GrabCursor.png-6d949d4307d80b89d3ef589936a2e39e.ctex"]
 
 [params]
 

@@ -50,10 +50,16 @@ public partial class ShopPanel : Window
 		if (TavernManager.TavernLevel >= item.LevelRequirement && item.PurchasedQuantity < item.MaxOwned)
 		{
 			label.MouseFilter = Control.MouseFilterEnum.Stop;
+
+			// UI sound events
+			label.MouseEntered += () => UIAudio.Instance.PlayHover();
 			label.GuiInput += @event =>
 			{
 				if (@event is InputEventMouseButton mouse && mouse.Pressed && mouse.ButtonIndex == MouseButton.Left)
+				{
+					UIAudio.Instance.PlayClick();
 					AddToCart(item);
+				}
 			};
 		}
 		else
@@ -66,6 +72,7 @@ public partial class ShopPanel : Window
 
 	RefreshCartDisplay();
 }
+
 
 
 	private void AddToCart(ShopItem item)

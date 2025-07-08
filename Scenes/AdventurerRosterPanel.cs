@@ -13,21 +13,22 @@ public partial class AdventurerRosterPanel : PanelContainer
 		adventurerListContainer = GetNode<VBoxContainer>("ScrollContainer/AdventurerListContainer");
 	}
 
-	public void Populate(List<Adventurer> adventurers)
-	{
-		// Clear existing cards
-		foreach (Node child in adventurerListContainer.GetChildren())
-		{
-			child.QueueFree();
-		}
+	public void Populate(List<Guest> guests)
+{
+	foreach (Node child in adventurerListContainer.GetChildren())
+		child.QueueFree();
 
-		// Add new cards
-		foreach (var adventurer in adventurers)
-		{
-			var card = AdventurerCardScene.Instantiate<AdventurerCard>();
-card.BoundAdventurer = adventurer;
-;
-			adventurerListContainer.AddChild(card);
-		}
+	foreach (var guest in guests)
+	{
+		var card = AdventurerCardScene.Instantiate<AdventurerCard>();
+		card.BoundGuest = guest;
+		if (guest.BoundAdventurer != null)
+			card.BoundAdventurer = guest.BoundAdventurer;
+		if (guest.BoundGiver != null)
+			card.BoundGiver = guest.BoundGiver;
+
+		adventurerListContainer.AddChild(card);
 	}
+}
+
 }

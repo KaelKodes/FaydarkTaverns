@@ -56,31 +56,35 @@ public partial class AdventurerGenerator : RefCounted
 
 	public static int RandomTrait() => random.Next(-50, 51);
 
-	// New overload to generate an Adventurer WITH gender
-	public static Adventurer GenerateAdventurer(int id, ClassTemplate template, Gender gender)
-	{
-		string name = GenerateName(gender);
-		var adventurer = new Adventurer(
-			id,
-			name,
-			template.ClassName,
-			template.RoleId,
-			RandomizeStat(template.Strength),
-			RandomizeStat(template.Dexterity),
-			RandomizeStat(template.Constitution),
-			RandomizeStat(template.Intelligence),
-			RandomTrait(),
-			RandomTrait(),
-			RandomTrait(),
-			RandomTrait()
-		);
+	// New overload to generate an Adventurer
+public static Adventurer GenerateAdventurer(int id, ClassTemplate template, Gender gender)
+{
+	string name = GenerateName(gender);
+	int portraitId = RandomPortraitIdForClassGender(template.ClassName, gender);
 
-		adventurer.Template = template;
-		// Make sure Adventurer has a Gender property:
-		adventurer.Gender = gender;  
+	var adventurer = new Adventurer(
+		id,
+		name,
+		template.ClassName,
+		template.RoleId,
+		portraitId, // now included in constructor!
+		RandomizeStat(template.Strength),
+		RandomizeStat(template.Dexterity),
+		RandomizeStat(template.Constitution),
+		RandomizeStat(template.Intelligence),
+		RandomTrait(),
+		RandomTrait(),
+		RandomTrait(),
+		RandomTrait()
+	);
 
-		return adventurer;
-	}
+	adventurer.Template = template;
+	adventurer.Gender = gender;
+
+	return adventurer;
+}
+
+
 
 	// (Optional) keep the old signature, delegating to the new one:
 	public static Adventurer GenerateAdventurer(int id, ClassTemplate template)
@@ -88,4 +92,14 @@ public partial class AdventurerGenerator : RefCounted
 		var gender = (Gender)random.Next(0, 2);
 		return GenerateAdventurer(id, template, gender);
 	}
+	
+	public static int RandomPortraitIdForClassGender(string className, Gender gender)
+{
+	string initial = gender == Gender.Male ? "M" : "F";
+	int variants = className == "Informant"
+		? (initial == "M" ? 3 : 1)
+		: 2;
+	return GD.RandRange(1, variants);
+}
+
 }
