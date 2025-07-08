@@ -348,18 +348,18 @@ foreach (var guest in AllVillagers)
 			// 🧙‍♂️ Adventurer
 			if (guest.BoundAdventurer != null)
 			{
-				card.GetNode<Label>("VBoxContainer/NameLabel").Text = guest.BoundAdventurer.Name;
-				card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"{guest.BoundAdventurer.Level} {guest.BoundAdventurer.ClassName}";
-				card.GetNode<Label>("VBoxContainer/VitalsLabel").Text = $"HP: {guest.BoundAdventurer.GetHp()} | Mana: {guest.BoundAdventurer.GetMana()}";
+				card.GetNode<Label>("MarginContainer2/VBoxContainer/NameLabel").Text = guest.BoundAdventurer.Name;
+				card.GetNode<Label>("MarginContainer2/VBoxContainer/ClassLabel").Text = $"{guest.BoundAdventurer.Level} {guest.BoundAdventurer.ClassName}";
+				card.GetNode<Label>("MarginContainer2/VBoxContainer/VitalsLabel").Text = $"HP: {guest.BoundAdventurer.GetHp()} | Mana: {guest.BoundAdventurer.GetMana()}";
 			}
 			// 🧓 Quest Giver
 			else if (guest.BoundGiver != null)
 			{
 				var giver = guest.BoundGiver;
 				card.BoundAdventurer = null;
-				card.GetNode<Label>("VBoxContainer/NameLabel").Text = giver.Name;
-				card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"Lv {giver.Level} Informant";
-				card.GetNode<Label>("VBoxContainer/VitalsLabel").Text = $"Mood: {(giver.Happiness == 0 ? "Neutral" : giver.Happiness > 0 ? "+" : "")}{(giver.Happiness == 0 ? "" : giver.Happiness.ToString())}";
+				card.GetNode<Label>("MarginContainer2/VBoxContainer/NameLabel").Text = giver.Name;
+				card.GetNode<Label>("MarginContainer2/VBoxContainer/ClassLabel").Text = $"Lv {giver.Level} Informant";
+				card.GetNode<Label>("MarginContainer2/VBoxContainer/VitalsLabel").Text = $"Mood: {(giver.Happiness == 0 ? "Neutral" : giver.Happiness > 0 ? "+" : "")}{(giver.Happiness == 0 ? "" : giver.Happiness.ToString())}";
 			}
 
 			FloorSlots.AddChild(card);

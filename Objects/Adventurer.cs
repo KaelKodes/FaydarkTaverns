@@ -9,6 +9,7 @@ public partial class Adventurer : RefCounted
 	public string Name;
 	public string ClassName;
 	public int RoleId;
+	public Gender Gender;
 
 	public int Strength;
 	public int Dexterity;

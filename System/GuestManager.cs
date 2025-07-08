@@ -193,40 +193,48 @@ public static Guest SpawnNewAdventurer(string className, string race = "Human", 
 		return null;
 	}
 
+	// use the default generator which now randomizes gender internally
 	var adventurer = AdventurerGenerator.GenerateAdventurer(level, template);
+
 	var guest = new Guest
 	{
-		Name = adventurer.Name,
-		IsAdventurer = true,
-		VisitDay = ClockManager.CurrentDay,
-		VisitHour = GD.RandRange(6, 18),
-		WaitDuration = GD.RandRange(1, 2),
-		StayDuration = GD.RandRange(4, 8),
+		Name            = adventurer.Name,
+		Gender          = adventurer.Gender,          // pull from the adventurer
+		IsAdventurer    = true,
+		VisitDay        = ClockManager.CurrentDay,
+		VisitHour       = (int)GD.RandRange(6, 18),   // float→int cast is fine here
+		WaitDuration    = (int)GD.RandRange(1, 2),
+		StayDuration    = (int)GD.RandRange(4, 8),
 		BoundAdventurer = adventurer
 	};
 
-	GameLog.Debug($"🧙 Spawned Adventurer: {guest.Name} ({className})");
+	GameLog.Debug($"🧙 Spawned Adventurer: {guest.Name} ({className}, {guest.Gender})");
 	return guest;
 }
 
 public static Guest SpawnNewInformant()
 {
-	string name = AdventurerGenerator.GenerateName();
+	// pick a true random gender for name consistency
+	var gender = (Gender)(new Random().Next(0, 2));
+	string name = AdventurerGenerator.GenerateName(gender);
+
 	var guest = new Guest
 	{
-		Name = name,
+		Name         = name,
+		Gender       = gender,
 		IsAdventurer = false,
-		VisitDay = ClockManager.CurrentDay,
-		VisitHour = GD.RandRange(6, 18),
-		WaitDuration = GD.RandRange(1, 2),
-		StayDuration = GD.RandRange(4, 8)
+		VisitDay     = ClockManager.CurrentDay,
+		VisitHour    = (int)GD.RandRange(6, 18),
+		WaitDuration = (int)GD.RandRange(1, 2),
+		StayDuration = (int)GD.RandRange(4, 8)
 	};
 
 	guest.BoundGiver = new QuestGiver(name, guest);
 
-	GameLog.Debug($"📜 Spawned Informant: {name}");
+	GameLog.Debug($"📜 Spawned Informant: {name} ({gender})");
 	return guest;
 }
+
 
 
 

@@ -80,15 +80,15 @@ public partial class TablePanel : VBoxContainer
 				// ✅ Populate display
 				if (guest.BoundAdventurer != null)
 				{
-					card.GetNode<Label>("VBoxContainer/NameLabel").Text = guest.BoundAdventurer.Name;
-					card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"{guest.BoundAdventurer.Level} {guest.BoundAdventurer.ClassName}";
-					card.GetNode<Label>("VBoxContainer/VitalsLabel").Text = $"HP: {guest.BoundAdventurer.GetHp()} | Mana: {guest.BoundAdventurer.GetMana()}";
+					card.GetNode<Label>("MarginContainer2/VBoxContainer/NameLabel").Text = guest.BoundAdventurer.Name;
+					card.GetNode<Label>("MarginContainer2/VBoxContainer/ClassLabel").Text = $"{guest.BoundAdventurer.Level} {guest.BoundAdventurer.ClassName}";
+					card.GetNode<Label>("MarginContainer2/VBoxContainer/VitalsLabel").Text = $"HP: {guest.BoundAdventurer.GetHp()} | Mana: {guest.BoundAdventurer.GetMana()}";
 				}
 				else if (guest.BoundGiver != null)
 				{
-					card.GetNode<Label>("VBoxContainer/NameLabel").Text = guest.BoundGiver.Name;
-					card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"Lv {guest.BoundGiver.Level} Informant";
-					card.GetNode<Label>("VBoxContainer/VitalsLabel").Text = $"Mood: {guest.BoundGiver.GetMoodStatus()}";
+					card.GetNode<Label>("MarginContainer2/VBoxContainer/NameLabel").Text = guest.BoundGiver.Name;
+					card.GetNode<Label>("MarginContainer2/VBoxContainer/ClassLabel").Text = $"Lv {guest.BoundGiver.Level} Informant";
+					card.GetNode<Label>("MarginContainer2/VBoxContainer/VitalsLabel").Text = $"Mood: {guest.BoundGiver.GetMoodStatus()}";
 				}
 
 				SeatSlotContainer.AddChild(card);
