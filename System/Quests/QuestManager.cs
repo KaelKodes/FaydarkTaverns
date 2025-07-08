@@ -125,7 +125,7 @@ private void HandleQuestReturn(Quest quest)
 		guest.LocationCode = 0; // In Town
 
 		// Attempt to return them to the tavern or street
-		if (TavernManager.Instance.GetGuestsInside().Count < TavernManager.Instance.MaxFloorGuests)
+		if (TavernManager.Instance.GetGuestsInside().Count < TavernStats.Instance.MaxFloorGuests)
 		{
 			TavernManager.Instance.AdmitGuestToTavern(guest);
 			GameLog.Info($"🧭 {guest.Name} has returned from '{quest.Title}' and entered the tavern.");
@@ -268,6 +268,13 @@ public List<Quest> GetCompletedQuests()
 {
 	return completedQuests;
 }
+public void IncreaseQuestLimit()
+{
+	MaxQuestSlots++;
+	GameLog.Info($"📈 Quest board capacity increased to {MaxQuestSlots}.");
+}
+
+
 
 }
 

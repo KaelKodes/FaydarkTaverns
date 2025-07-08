@@ -342,7 +342,8 @@ private void UnassignFromSlot(int index)
 		guest.DepartureTime = null;
 
 		// 🏠 Try to re-admit or return to street
-		if (TavernManager.Instance.GetGuestsInside().Count < TavernManager.Instance.MaxFloorGuests)
+		if (TavernManager.Instance.GetGuestsInside().Count < TavernStats.Instance.MaxFloorGuests)
+
 		{
 			TavernManager.Instance.AdmitGuestToTavern(guest);
 			GameLog.Info($"↩️ {guest.Name} re-entered the tavern.");

@@ -60,7 +60,7 @@ public class Guest
 		// 🕒 Calculate dynamic stay duration
 		int baseStay    = GD.RandRange(2, 3);
 		int seatBonus   = AssignedTable != null ? 1 : 0;
-		int renownBonus = Mathf.Clamp(TavernManager.Instance.Renown / 50, 0, 3);
+		int renownBonus = Mathf.Clamp(TavernStats.Instance.Renown / 50, 0, 3);
 
 		StayDuration   = baseStay + seatBonus + renownBonus;
 		DepartureTime  = ClockManager.CurrentTime.AddHours(StayDuration);

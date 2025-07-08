@@ -82,7 +82,7 @@ if (portrait != null)
 	}
 
 	string initial = gender == Gender.Male ? "M" : "F";
-	string assetPath = $"res://assets/ui/ClassPortraits/{className}/{className}{initial}{portraitId}.jpg";
+	string assetPath = $"res://Assets/UI/ClassPortraits/{className}/{className}{initial}{portraitId}.jpg";
 	var tex2D = ResourceLoader.Load<Texture2D>(assetPath);
 	portrait.Texture = tex2D;
 }

@@ -4,7 +4,8 @@ public enum ShopCategory
 {
 	Tables,
 	Decorations,
-	Supplies
+	Supplies,
+	Upgrades
 }
 
 public class ShopItem
@@ -42,7 +43,7 @@ public static class ShopDatabase
 	{
 		// 🪑 Tables
 		// 🪑 Tables
-new ShopItem("Starting Table", 0, 1, 1, ShopCategory.Tables, "Free 4-seat starter table"),
+new ShopItem("Starting Table", 0, 1, 1, ShopCategory.Tables, "Free 2-seat starter table"),
 new ShopItem("Tiny Table", 50, 2, 2, ShopCategory.Tables, "2-seat cozy table for duos"),
 new ShopItem("Small Table", 100, 4, 2, ShopCategory.Tables, "4-seat table for small parties"),
 new ShopItem("Medium Table", 250, 6, 2, ShopCategory.Tables, "6-seat table for larger groups"),
@@ -53,12 +54,20 @@ new ShopItem("Large Table", 500, 8, 2, ShopCategory.Tables, "8-seat raid-ready t
 		new ShopItem("Wall Banner", 25, 1, 8, ShopCategory.Decorations, "Decorative banner"),
 		new ShopItem("Fancy Rug", 50, 2, 1, ShopCategory.Decorations, "Stylish rug"),
 		new ShopItem("Mounted Trophy", 100, 4, 4, ShopCategory.Decorations, "Display your beast-slaying pride"),
-		new ShopItem("Upgrade Tavern Sign", 500, 6, 1, ShopCategory.Decorations, "Draws elite guests"),
 
 		// 🍞 Supplies (x10 bundles)
 		new ShopItem("Bread Loaf x10", 20, 1, -1, ShopCategory.Supplies, "Bundle of bread"),
 		new ShopItem("Mug of Ale x10", 30, 1, -1, ShopCategory.Supplies, "Bundle of ale"),
 		new ShopItem("Hearty Stew x10", 60, 5, -1, ShopCategory.Supplies, "Extends guest stay"),
-		new ShopItem("Rare Wine x10", 120, 7, -1, ShopCategory.Supplies, "Treat for VIP guests")
+		new ShopItem("Rare Wine x10", 120, 7, -1, ShopCategory.Supplies, "Treat for VIP guests"),
+		
+		// 🔧 Upgrades
+new ShopItem("Increase Floor Cap", 250, 2, -1, ShopCategory.Upgrades, "Adds +1 to max guests on the tavern floor."),
+new ShopItem("Increase Quest Cap", 300, 3, -1, ShopCategory.Upgrades, "Allows more quests to be posted at once."),
+new ShopItem("Upgrade Tavern Sign", 750, 6, 1, ShopCategory.Upgrades, "Boosts renown and visibility."),
+new ShopItem("Unlock Oven", 500, 2, 1, ShopCategory.Upgrades, "Unlocks the ability to sell food."),
+new ShopItem("Unlock Keg Stand", 500, 4, 1, ShopCategory.Upgrades, "Unlocks the ability to sell drinks."),
+new ShopItem("Unlock Lodging", 1000, 10, 1, ShopCategory.Upgrades, "Prepares the tavern to house guests overnight."),
+
 	};
 }

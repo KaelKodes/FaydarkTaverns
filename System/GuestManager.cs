@@ -112,7 +112,7 @@ public void TickGuests(DateTime currentTime)
 		if (itIsTheirDay && itIsTimeToEnter)
 		{
 			int standingGuests = TavernManager.Instance.GetGuestsInside().Count;
-			if (standingGuests < TavernManager.Instance.MaxFloorGuests)
+			if (standingGuests < TavernStats.Instance.MaxFloorGuests)
 			{
 				AdmitGuest(guest); // handles removal
 			}

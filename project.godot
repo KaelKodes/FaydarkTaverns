@@ -20,6 +20,8 @@ config/icon="res://icon.svg"
 ClockManager="*res://System/ClockManager.cs"
 GuestManager="*res://System/GuestManager.cs"
 UIAudio="*res://System/Sound/UIAudio.cs"
+TavernStats="*res://System/TavernStats.cs"
+UpgradeManager="*res://System/UpgradeManager.cs"
 
 [display]
 

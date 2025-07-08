@@ -5,7 +5,7 @@ using System.Linq;
 
 public partial class Table : Panel
 {
-	[Export] public int SeatCount = 4;
+	[Export] public int SeatCount = 2;
 	private PackedScene seatSlotScene = GD.Load<PackedScene>("res://Scenes/SeatSlot.tscn");
 
 	private Label nameLabel;

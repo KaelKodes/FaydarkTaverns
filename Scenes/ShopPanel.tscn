@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://dg7cq0725bmjt" path="res://Scenes/ShopPanel.cs" id="1_yqe7u"]
 [ext_resource type="Script" uid="uid://qi56yy8o3hs4" path="res://System/Sound/UIInteractButton.cs" id="2_s3syp"]
 
-[node name="ShopPanel" type="Window" node_paths=PackedStringArray("ItemListContainer", "CartContainer", "TotalLabel", "ConfirmButton", "CloseButton", "TabTables", "TabDecorations", "TabSupplies")]
+[node name="ShopPanel" type="Window" node_paths=PackedStringArray("ItemListContainer", "CartContainer", "TotalLabel", "ConfirmButton", "CloseButton", "TabTables", "TabDecorations", "TabSupplies", "TabUpgrade")]
 title = "Tavern Shop"
 initial_position = 1
 size = Vector2i(325, 335)
@@ -19,6 +19,7 @@ CloseButton = NodePath("VBoxContainer/Close")
 TabTables = NodePath("VBoxContainer/Tabs/Tables")
 TabDecorations = NodePath("VBoxContainer/Tabs/Decorations")
 TabSupplies = NodePath("VBoxContainer/Tabs/Supplies")
+TabUpgrade = NodePath("VBoxContainer/Tabs/Upgrades")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 anchors_preset = 15
@@ -35,17 +36,26 @@ alignment = 1
 
 [node name="Tables" type="Button" parent="VBoxContainer/Tabs"]
 layout_mode = 2
+tooltip_text = "Allows More Room!"
 text = "Tables"
 script = ExtResource("2_s3syp")
 
 [node name="Decorations" type="Button" parent="VBoxContainer/Tabs"]
 layout_mode = 2
+tooltip_text = "Increase Renown!"
 text = "Decorations"
 script = ExtResource("2_s3syp")
 
 [node name="Supplies" type="Button" parent="VBoxContainer/Tabs"]
 layout_mode = 2
+tooltip_text = "Feed the Masses!"
 text = "Supplies"
+script = ExtResource("2_s3syp")
+
+[node name="Upgrades" type="Button" parent="VBoxContainer/Tabs"]
+layout_mode = 2
+tooltip_text = "Improve the Tavern!"
+text = "Upgrades"
 script = ExtResource("2_s3syp")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]

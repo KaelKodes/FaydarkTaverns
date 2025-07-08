@@ -19,21 +19,20 @@ public partial class TavernManager : Node
 	[Export] public Button ShopButton;
 	[Export] public Control ShopPanel;
 	[Export] public NodePath QuestBoardPath;
-	[Export] private int TavernSignLevel = 0;
+	//[Export] private int TavernSignLevel = 0;
 	[Export] public Label TavernRenownDisplay;
 	[Export] public Label TavernLevelDisplay;           // shows current level (e.g. "1")
 	[Export] public Label TavernLevelLabel;             // shows static text "Tavern Level"
-	[Export] public int MaxFloorGuests = 5;
+	//[Export] public int MaxFloorGuests = 5;
 	[Export] private Label floorLabel;
 	[Export] public VBoxContainer AdventurerListContainer;
 	[Export] public VBoxContainer TavernFloorPanel;
 	[Export] public VBoxContainer FloorSlots;
 	[Export] public Label TavernFloorLabel;
-
+	//[Export] public int Renown = 0;
 
 
 	public List<Guest> floorGuests = new();
-	[Export] public int Renown = 0;
 	public static TavernManager Instance { get; private set; }
 	private ClockManager Clock => GetNode<ClockManager>("/root/ClockManager");
 	private Dictionary<string, int> tableCounters = new();
@@ -334,7 +333,7 @@ foreach (var guest in AllVillagers)
 
 
 	// Render exactly MaxFloorGuests number of slots
-	for (int i = 0; i < MaxFloorGuests; i++)
+	for (int i = 0; i < TavernStats.Instance.MaxFloorGuests; i++)
 	{
 		var guest = floorList.ElementAtOrDefault(i);
 
@@ -503,22 +502,18 @@ foreach (var guest in AllVillagers)
 		return availableTables;
 	}
 
-	public void IncreaseTavernLevel()
-	{
-		TavernLevel++;
-		GameLog.Info($"🏰 Tavern leveled up! New level: {TavernLevel}");
-	}
+	//public void IncreaseTavernLevel()
+	//{
+	//	TavernLevel++;
+	//	GameLog.Info($"🏰 Tavern leveled up! New level: {TavernLevel}");
+	//}
+	
 	public void GainTavernExp(int amount)
-	{
-		TavernExp += amount;
-		while (TavernExp >= ExpToNextLevel)
-		{
-			TavernExp -= ExpToNextLevel;
-			TavernLevel++;
-		}
+{
+	TavernStats.Instance.AddExp(amount);
+	UpdateTavernStatsDisplay();
+}
 
-		UpdateTavernStatsDisplay(); // ✅ update the UI after stat change
-	}
 
 
 
@@ -537,6 +532,7 @@ foreach (var guest in AllVillagers)
 	// 👇 Set correct seat count per table type
 	switch (name)
 	{
+		case "Starting Table": tableInstance.SeatCount = 2; break; 
 		case "Tiny Table": tableInstance.SeatCount = 2; break;
 		case "Small Table": tableInstance.SeatCount = 4; break;
 		case "Medium Table": tableInstance.SeatCount = 6; break;
@@ -608,17 +604,19 @@ private void RecheckQuestPosting()
 	{
 		successComboCount = 0;
 	}
+	
 	public void UpdateTavernStatsDisplay()
-	{
-		if (TavernLevelDisplay != null)
-			TavernLevelDisplay.Text = TavernLevel.ToString();
+{
+	if (TavernLevelDisplay != null)
+		TavernLevelDisplay.Text = TavernStats.Instance.Level.ToString();
 
-		if (TavernRenownDisplay != null)
-			TavernRenownDisplay.Text = Renown.ToString();
+	if (TavernRenownDisplay != null)
+		TavernRenownDisplay.Text = TavernStats.Instance.Renown.ToString();
 
-		if (TavernLevelLabel != null)
-			TavernLevelLabel.TooltipText = $"{TavernExp} / {ExpToNextLevel} EXP";
-	}
+	if (TavernLevelLabel != null)
+		TavernLevelLabel.TooltipText = $"{TavernStats.Instance.Exp} / {TavernStats.Instance.ExpToNextLevel} EXP";
+}
+
 	private bool TrySeatGuest(Guest guest)
 {
 	foreach (var table in GetAvailableTables())
@@ -643,6 +641,13 @@ private void RecheckQuestPosting()
 	}
 	return false;
 }
+public int GetPurchasedCount(string itemName)
+{
+	if (PurchasedItems.TryGetValue(itemName, out var count))
+		return count;
+
+	return 0;
+}
 
 
 
@@ -659,7 +664,7 @@ private void RecheckQuestPosting()
 		!g.IsOnStreet
 	);
 
-	TavernFloorLabel.Text = $"{onFloor}/{MaxFloorGuests}";
+	TavernFloorLabel.Text = $"{onFloor}/{TavernStats.Instance.MaxFloorGuests}";
 }
 
 
@@ -700,7 +705,7 @@ private void RecheckQuestPosting()
 		g.LocationCode == (int)GuestLocation.TavernFloor
 	);
 
-	if (standingGuests > MaxFloorGuests)
+	if (standingGuests > TavernStats.Instance.MaxFloorGuests)
 	{
 		GameLog.Info($"⛔ Someone tries to enter... but the tavern floor is full.");
 		return;
@@ -845,10 +850,6 @@ private void RecheckQuestPosting()
 				Supplies["Ale"] += 10;
 				break;
 
-			case "Upgrade Tavern Sign":
-				TavernSignLevel++;
-				break;
-
 			default:
 				GameLog.Debug($"⚠️ Unknown shop item purchased: {item.Name}");
 				break;
@@ -857,10 +858,16 @@ private void RecheckQuestPosting()
 		// ✅ Grant Renown
 		if (item.RenownValue > 0)
 		{
-			Renown += item.RenownValue;
+			TavernStats.Instance.AddRenown(item.RenownValue);
 			UpdateTavernStatsDisplay();
 			GameLog.Info($"🏅 Gained {item.RenownValue} Renown from {item.Name}!");
 		}
+		// ✅ Track purchases for enforcement logic
+if (!PurchasedItems.ContainsKey(item.Name))
+	PurchasedItems[item.Name] = 1;
+else
+	PurchasedItems[item.Name]++;
+
 
 	}
 

@@ -14,6 +14,8 @@ public partial class ShopPanel : Window
 	[Export] public Button TabTables;
 	[Export] public Button TabDecorations;
 	[Export] public Button TabSupplies;
+	[Export] public Button TabUpgrade;
+
 
 	private ShopCategory activeCategory = ShopCategory.Tables;
 	private Dictionary<string, int> cart = new();
@@ -23,6 +25,8 @@ public partial class ShopPanel : Window
 		TabTables.Pressed += () => SwitchCategory(ShopCategory.Tables);
 		TabDecorations.Pressed += () => SwitchCategory(ShopCategory.Decorations);
 		TabSupplies.Pressed += () => SwitchCategory(ShopCategory.Supplies);
+		TabUpgrade.Pressed += () => SwitchCategory(ShopCategory.Upgrades);
+
 
 		ConfirmButton.Pressed += ConfirmPurchase;
 		CloseButton.Pressed += Hide;
@@ -47,11 +51,21 @@ public partial class ShopPanel : Window
 		var label = new Label();
 		label.Text = $"{item.Name} - {item.Cost}g (Lv {item.LevelRequirement})";
 
-		if (TavernManager.TavernLevel >= item.LevelRequirement && item.PurchasedQuantity < item.MaxOwned)
+		bool isTable = item.Category == ShopCategory.Tables;
+
+		// 🔢 Determine current owned and cap
+		int current = TavernManager.Instance.GetPurchasedCount(item.Name);
+		int cap = isTable
+			? TavernStats.Instance.TableCaps.GetValueOrDefault(item.Name, 0)
+			: item.MaxOwned;
+
+		bool isUnderCap = (cap == -1 || current < cap);
+		bool levelUnlocked = TavernStats.Instance.Level >= item.LevelRequirement;
+
+		if (levelUnlocked && isUnderCap)
 		{
 			label.MouseFilter = Control.MouseFilterEnum.Stop;
 
-			// UI sound events
 			label.MouseEntered += () => UIAudio.Instance.PlayHover();
 			label.GuiInput += @event =>
 			{
@@ -65,6 +79,12 @@ public partial class ShopPanel : Window
 		else
 		{
 			label.Modulate = new Color(0.5f, 0.5f, 0.5f);
+
+			// 🛠 Optional tooltip explaining why item is locked
+			if (!levelUnlocked)
+				label.TooltipText = $"Requires Tavern Level {item.LevelRequirement}";
+			else if (!isUnderCap)
+				label.TooltipText = $"Limit reached ({current}/{cap})";
 		}
 
 		ItemListContainer.AddChild(label);
@@ -75,21 +95,39 @@ public partial class ShopPanel : Window
 
 
 
-	private void AddToCart(ShopItem item)
-	{
-		if (!cart.ContainsKey(item.Name))
-			cart[item.Name] = 0;
 
-		if (cart[item.Name] + item.PurchasedQuantity < item.MaxOwned)
-		{
-			cart[item.Name]++;
-			RefreshCartDisplay();
-		}
+
+	private void AddToCart(ShopItem item)
+{
+	if (!cart.ContainsKey(item.Name))
+		cart[item.Name] = 0;
+
+	bool isTable = item.Category == ShopCategory.Tables;
+
+	// 🧠 Determine cap and how many are already owned
+	int currentOwned = TavernManager.Instance.GetPurchasedCount(item.Name);
+	int cap = isTable
+		? TavernStats.Instance.TableCaps.GetValueOrDefault(item.Name, 0)
+		: item.MaxOwned;
+
+	int totalAfterAdd = cart[item.Name] + currentOwned;
+
+	if (cap == -1 || totalAfterAdd < cap)
+	{
+		cart[item.Name]++;
+		RefreshCartDisplay();
 	}
+	else
+	{
+		GameLog.Debug($"⛔ Cannot add {item.Name} — reached cap ({totalAfterAdd}/{cap})");
+	}
+}
+
+
 
 	private void RefreshCartDisplay()
 {
-	// Clear old UI
+	// 🔄 Clear previous UI elements
 	foreach (var child in CartContainer.GetChildren())
 		child.QueueFree();
 
@@ -97,10 +135,16 @@ public partial class ShopPanel : Window
 
 	foreach (var entry in cart)
 	{
-		var item = ShopDatabase.AllItems.First(i => i.Name == entry.Key);
+		var item = ShopDatabase.AllItems.FirstOrDefault(i => i.Name == entry.Key);
+		if (item == null)
+		{
+			GD.PrintErr($"❌ Item not found in ShopDatabase: {entry.Key}");
+			continue;
+		}
+
 		int qty = entry.Value;
 
-		// HBox: [❌] [Label]
+		// 📦 HBox: [❌] [Label]
 		var hbox = new HBoxContainer();
 
 		var removeButton = new Button
@@ -111,15 +155,18 @@ public partial class ShopPanel : Window
 			TooltipText = "Remove one"
 		};
 
-		// Capture name to use in lambda
+		// 🧠 Capture item name in local scope for lambda
 		string itemName = item.Name;
 
 		removeButton.Pressed += () =>
 		{
-			if (cart[itemName] > 1)
-				cart[itemName]--;
-			else
-				cart.Remove(itemName);
+			if (cart.TryGetValue(itemName, out int count))
+			{
+				if (count > 1)
+					cart[itemName]--;
+				else
+					cart.Remove(itemName);
+			}
 
 			RefreshCartDisplay();
 		};
@@ -132,7 +179,6 @@ public partial class ShopPanel : Window
 
 		hbox.AddChild(removeButton);
 		hbox.AddChild(label);
-
 		CartContainer.AddChild(hbox);
 
 		total += item.Cost * qty;
@@ -140,6 +186,7 @@ public partial class ShopPanel : Window
 
 	TotalLabel.Text = $"Total: {total}g";
 }
+
 
 
 	private void ConfirmPurchase()
@@ -153,7 +200,11 @@ public partial class ShopPanel : Window
 			var item = ShopDatabase.AllItems.First(i => i.Name == entry.Key);
 			for (int i = 0; i < entry.Value; i++)
 			{
-				TavernManager.Instance.PurchaseItem(item);
+				if (item.Category == ShopCategory.Upgrades)
+	UpgradeManager.Instance.ApplyUpgrade(item);
+else
+	TavernManager.Instance.PurchaseItem(item);
+
 				item.PurchasedQuantity++;
 			}
 		}
