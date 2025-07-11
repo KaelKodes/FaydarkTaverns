@@ -123,7 +123,7 @@ public partial class TavernManager : Node
 		Button8x ??= GetNode<Button>("../ControlPanel/TopBar/Button8x");
 		Button8x.Pressed += OnSpeed8xPressed;
 
-		var board = GetNode<QuestBoardPanel>("../GuestPanels/QuestBoardPanel");
+		var board = GetNode<QuestBoardPanel>("../QuestBoardPanel");
 
 		ShopButton = GetNode<Button>("../TavernDisplay/ControlPanel/ShopButton");
 		ShopButton.Pressed += ToggleShop;
@@ -136,7 +136,7 @@ public partial class TavernManager : Node
 
 
 		// Locate UI container to hold adventurer cards
-		adventurerListUI = GetNodeOrNull<VBoxContainer>("../GuestPanels/AdventurerRosterPanel/ScrollContainer/AdventurerListContainer");
+		adventurerListUI = GetNodeOrNull<VBoxContainer>("../AdventurerRosterPanel/AdventurerListContainer");
 
 		if (adventurerListUI == null)
 		{
@@ -324,52 +324,45 @@ foreach (var guest in AllVillagers)
 
 	// ✅ Sanitize: remove any ghost guests still marked as on floor but not in AllVillagers
 	var floorList = AllVillagers
-	.Where(g =>
-		g != null &&
-		g.IsInside &&
-		g.AssignedTable == null &&
-		g.LocationCode == (int)GuestLocation.TavernFloor)
-	.ToList();
-
+		.Where(g =>
+			g != null &&
+			g.IsInside &&
+			g.AssignedTable == null &&
+			g.LocationCode == (int)GuestLocation.TavernFloor)
+		.ToList();
 
 	// Render exactly MaxFloorGuests number of slots
 	for (int i = 0; i < TavernStats.Instance.MaxFloorGuests; i++)
 	{
 		var guest = floorList.ElementAtOrDefault(i);
 
+		var card = AdventurerCardScene.Instantiate<AdventurerCard>();
+		card.SetMouseFilter(Control.MouseFilterEnum.Stop);
+
 		if (guest != null)
 		{
-			var card = AdventurerCardScene.Instantiate<AdventurerCard>();
 			card.BoundGuest = guest;
 			card.BoundAdventurer = guest.BoundAdventurer;
-			card.SetMouseFilter(Control.MouseFilterEnum.Stop);
 
-			// 🧙‍♂️ Adventurer
 			if (guest.BoundAdventurer != null)
 			{
-				card.GetNode<Label>("MarginContainer2/VBoxContainer/NameLabel").Text = guest.BoundAdventurer.Name;
-				card.GetNode<Label>("MarginContainer2/VBoxContainer/ClassLabel").Text = $"{guest.BoundAdventurer.Level} {guest.BoundAdventurer.ClassName}";
-				card.GetNode<Label>("MarginContainer2/VBoxContainer/VitalsLabel").Text = $"HP: {guest.BoundAdventurer.GetHp()} | Mana: {guest.BoundAdventurer.GetMana()}";
+				card.GetNode<Label>("VBoxContainer/NameLabel").Text = guest.BoundAdventurer.Name;
+				card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"{guest.BoundAdventurer.Level} {guest.BoundAdventurer.ClassName}";
 			}
-			// 🧓 Quest Giver
 			else if (guest.BoundGiver != null)
 			{
 				var giver = guest.BoundGiver;
 				card.BoundAdventurer = null;
-				card.GetNode<Label>("MarginContainer2/VBoxContainer/NameLabel").Text = giver.Name;
-				card.GetNode<Label>("MarginContainer2/VBoxContainer/ClassLabel").Text = $"Lv {giver.Level} Informant";
-				card.GetNode<Label>("MarginContainer2/VBoxContainer/VitalsLabel").Text = $"Mood: {(giver.Happiness == 0 ? "Neutral" : giver.Happiness > 0 ? "+" : "")}{(giver.Happiness == 0 ? "" : giver.Happiness.ToString())}";
+				card.GetNode<Label>("VBoxContainer/NameLabel").Text = giver.Name;
+				card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"{giver.Level} Informant";
 			}
-
-			FloorSlots.AddChild(card);
 		}
 		else
 		{
-			var emptySlot = new Panel();
-			emptySlot.CustomMinimumSize = new Vector2(250, 50);
-			emptySlot.AddThemeColorOverride("bg_color", new Color(0.2f, 0.2f, 0.2f));
-			FloorSlots.AddChild(emptySlot);
+			card.SetEmptySlot();
 		}
+
+		FloorSlots.AddChild(card);
 	}
 
 	// Update all table panels to reflect current seating
@@ -378,6 +371,7 @@ foreach (var guest in AllVillagers)
 		table.LinkedPanel?.UpdateSeatSlots();
 	}
 }
+
 
 
 

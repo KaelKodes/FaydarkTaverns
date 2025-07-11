@@ -23,9 +23,9 @@
 [ext_resource type="Texture2D" uid="uid://ctj5ywaei1oec" path="res://Assets/UI/Cursors/GrabCursor.png" id="21_vy8gr"]
 [ext_resource type="Texture2D" uid="uid://daquq11f4fwy0" path="res://Assets/UI/Cursors/PointCursor.png" id="22_abkob"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3yx2a"]
-
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_esg4o"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3yx2a"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_slrnj"]
 
@@ -52,6 +52,25 @@ offset_right = 1912.0
 offset_bottom = 1080.0
 texture = ExtResource("11_20rui")
 
+[node name="TavernFloorLabel" type="Label" parent="."]
+z_index = 5
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+offset_left = 277.0
+offset_top = 44.0
+offset_right = 307.0
+offset_bottom = 67.0
+size_flags_vertical = 0
+horizontal_alignment = 1
+
+[node name="QuestCapacity" type="Label" parent="."]
+layout_mode = 2
+offset_left = 64.0
+offset_top = 43.0
+offset_right = 188.0
+offset_bottom = 66.0
+text = "Questboard #/#"
+
 [node name="ClockManager" type="Node" parent="."]
 script = ExtResource("7_6462i")
 
@@ -68,138 +87,18 @@ Button2x = NodePath("../TavernDisplay/ControlPanel/TopBar/Button2x")
 Button4x = NodePath("../TavernDisplay/ControlPanel/TopBar/Button4x")
 Button8x = NodePath("../TavernDisplay/ControlPanel/TopBar/Button8x")
 ShopButton = NodePath("../TavernDisplay/ControlPanel/ShopButton")
-QuestBoardPath = NodePath("../GuestPanels/QuestBoardPanel/ScrollContainer/QuestBoard")
+QuestBoardPath = NodePath("../QuestBoardPanel/ScrollContainer/QuestBoard")
 TavernRenownDisplay = NodePath("../TavernDisplay/TavernRenown/VBoxContainer/TavernRenownDisplay")
 TavernLevelDisplay = NodePath("../TavernDisplay/TavernLevelControl/VBoxContainer/TavernLevelDisplay")
 TavernLevelLabel = NodePath("../TavernDisplay/TavernLevelControl/VBoxContainer/TavernLevelLabel")
-floorLabel = NodePath("../GuestPanels/AdventurerRosterPanel/ScrollContainer/AdventurerListContainer/TavernFloorPanel/TavernFloorLabel")
-AdventurerListContainer = NodePath("../GuestPanels/AdventurerRosterPanel/ScrollContainer/AdventurerListContainer")
-TavernFloorPanel = NodePath("../GuestPanels/AdventurerRosterPanel/ScrollContainer/AdventurerListContainer/TavernFloorPanel")
-FloorSlots = NodePath("../GuestPanels/AdventurerRosterPanel/ScrollContainer/AdventurerListContainer/TavernFloorPanel/FloorSlots")
-TavernFloorLabel = NodePath("../GuestPanels/AdventurerRosterPanel/ScrollContainer/AdventurerListContainer/TavernFloorPanel/TavernFloorLabel")
-AdventurerRosterPath = NodePath("../GuestPanels/AdventurerRosterPanel")
+floorLabel = NodePath("../TavernFloorLabel")
+AdventurerListContainer = NodePath("../AdventurerRosterPanel/AdventurerListContainer")
+TavernFloorPanel = NodePath("../AdventurerRosterPanel/AdventurerListContainer/TavernFloorPanel")
+FloorSlots = NodePath("../AdventurerRosterPanel/AdventurerListContainer/TavernFloorPanel/FloorSlots")
+TavernFloorLabel = NodePath("../TavernFloorLabel")
+AdventurerRosterPath = NodePath("../AdventurerRosterPanel")
 ShopPanelScene = ExtResource("5_icuts")
 FurniturePanelPath = NodePath("../FurnitureContainer/FurniturePanel")
-
-[node name="GuestPanels" type="HBoxContainer" parent="."]
-layout_mode = 0
-offset_left = 56.0
-offset_top = 72.0
-offset_right = 664.0
-offset_bottom = 1017.0
-theme_override_constants/separation = 8
-
-[node name="QuestBoardPanel" type="PanelContainer" parent="GuestPanels"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StyleBoxEmpty_3yx2a")
-script = ExtResource("1_7ljul")
-CardHolderPath = NodePath("ScrollContainer/QuestBoard/ActiveQuestPanel/ActiveQuestContainer")
-QuestCardScene = ExtResource("2_6wg6o")
-ActiveQuestContainerPath = NodePath("ScrollContainer/QuestBoard/ActiveQuestPanel/ActiveQuestContainer")
-CompletedQuestContainerPath = NodePath("ScrollContainer/QuestBoard/CompletedQuestPanel/CompletedQuestContainer")
-
-[node name="ScrollContainer" type="ScrollContainer" parent="GuestPanels/QuestBoardPanel"]
-layout_mode = 2
-
-[node name="QuestBoard" type="VBoxContainer" parent="GuestPanels/QuestBoardPanel/ScrollContainer"]
-layout_mode = 2
-theme_override_constants/separation = 1
-alignment = 1
-
-[node name="ActiveQuestPanel" type="PanelContainer" parent="GuestPanels/QuestBoardPanel/ScrollContainer/QuestBoard"]
-layout_mode = 2
-
-[node name="ActiveQuestContainer" type="VBoxContainer" parent="GuestPanels/QuestBoardPanel/ScrollContainer/QuestBoard/ActiveQuestPanel"]
-layout_mode = 2
-alignment = 1
-
-[node name="CompletedQuestPanel" type="PanelContainer" parent="GuestPanels/QuestBoardPanel/ScrollContainer/QuestBoard"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="CompletedQuestContainer" type="VBoxContainer" parent="GuestPanels/QuestBoardPanel/ScrollContainer/QuestBoard/CompletedQuestPanel"]
-z_index = 3
-layout_mode = 2
-alignment = 1
-
-[node name="AdventurerRosterPanel" type="PanelContainer" parent="GuestPanels"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StyleBoxEmpty_esg4o")
-script = ExtResource("2_w3872")
-AdventurerCardScene = ExtResource("5_6wg6o")
-
-[node name="ScrollContainer" type="ScrollContainer" parent="GuestPanels/AdventurerRosterPanel"]
-layout_mode = 2
-
-[node name="AdventurerListContainer" type="VBoxContainer" parent="GuestPanels/AdventurerRosterPanel/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="TavernFloorPanel" type="VBoxContainer" parent="GuestPanels/AdventurerRosterPanel/ScrollContainer/AdventurerListContainer"]
-layout_mode = 2
-
-[node name="TavernFloorLabel" type="Label" parent="GuestPanels/AdventurerRosterPanel/ScrollContainer/AdventurerListContainer/TavernFloorPanel"]
-layout_mode = 2
-horizontal_alignment = 1
-
-[node name="FloorSlots" type="VBoxContainer" parent="GuestPanels/AdventurerRosterPanel/ScrollContainer/AdventurerListContainer/TavernFloorPanel"]
-layout_mode = 2
-
-[node name="QuestDetailPopup" parent="." instance=ExtResource("6_smfey")]
-position = Vector2i(750, 100)
-visible = false
-content_scale_mode = 1
-
-[node name="QuestCapacity" type="Label" parent="."]
-layout_mode = 2
-offset_left = 132.0
-offset_top = 43.0
-offset_right = 186.0
-offset_bottom = 66.0
-text = "Questboard #/#"
-
-[node name="AdventurerLabel" type="Label" parent="."]
-layout_mode = 2
-offset_left = 446.0
-offset_top = 45.0
-offset_right = 542.0
-offset_bottom = 68.0
-
-[node name="FurnitureContainer" type="Control" parent="."]
-z_index = 1
-anchors_preset = 0
-offset_left = 1419.0
-offset_top = 211.0
-offset_right = 1829.0
-offset_bottom = 605.0
-
-[node name="TextureRect" type="TextureRect" parent="FurnitureContainer"]
-layout_mode = 2
-offset_right = 410.0
-offset_bottom = 394.0
-texture = ExtResource("8_3yx2a")
-expand_mode = 1
-
-[node name="FurniturePanel" type="Panel" parent="FurnitureContainer"]
-z_index = 2
-custom_minimum_size = Vector2(25, 25)
-layout_mode = 2
-offset_left = 14.0
-offset_top = 23.0
-offset_right = 395.0
-offset_bottom = 374.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-script = ExtResource("9_wnxq3")
-
-[node name="FurnitureVBox" type="VBoxContainer" parent="FurnitureContainer/FurniturePanel"]
-layout_mode = 0
-offset_left = 3.0
-offset_right = 381.0
-offset_bottom = 353.0
-theme_override_constants/separation = 35
 
 [node name="TavernDisplay" type="Panel" parent="."]
 layout_mode = 0
@@ -334,6 +233,112 @@ layout_mode = 2
 text = "0"
 horizontal_alignment = 1
 
+[node name="AdventurerRosterPanel" type="PanelContainer" parent="."]
+layout_mode = 2
+offset_left = 252.0
+offset_top = 72.0
+offset_right = 252.0
+offset_bottom = 1017.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_esg4o")
+script = ExtResource("2_w3872")
+AdventurerCardScene = ExtResource("5_6wg6o")
+
+[node name="AdventurerListContainer" type="VBoxContainer" parent="AdventurerRosterPanel"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 101
+
+[node name="TavernFloorPanel" type="VBoxContainer" parent="AdventurerRosterPanel/AdventurerListContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 27
+alignment = 1
+
+[node name="FloorSlots" type="VBoxContainer" parent="AdventurerRosterPanel/AdventurerListContainer/TavernFloorPanel"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 108
+
+[node name="QuestBoardPanel" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+offset_left = 25.0
+offset_top = 72.0
+offset_right = 114.0
+offset_bottom = 1017.0
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_3yx2a")
+script = ExtResource("1_7ljul")
+CardHolderPath = NodePath("ScrollContainer/QuestBoard/ActiveQuestPanel/ActiveQuestContainer")
+QuestCardScene = ExtResource("2_6wg6o")
+ActiveQuestContainerPath = NodePath("ScrollContainer/QuestBoard/ActiveQuestPanel/ActiveQuestContainer")
+CompletedQuestContainerPath = NodePath("ScrollContainer/QuestBoard/CompletedQuestPanel/CompletedQuestContainer")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="QuestBoardPanel"]
+layout_mode = 2
+size_flags_horizontal = 0
+horizontal_scroll_mode = 0
+
+[node name="QuestBoard" type="VBoxContainer" parent="QuestBoardPanel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="ActiveQuestPanel" type="PanelContainer" parent="QuestBoardPanel/ScrollContainer/QuestBoard"]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="ActiveQuestContainer" type="VBoxContainer" parent="QuestBoardPanel/ScrollContainer/QuestBoard/ActiveQuestPanel"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+alignment = 1
+
+[node name="CompletedQuestPanel" type="PanelContainer" parent="QuestBoardPanel/ScrollContainer/QuestBoard"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CompletedQuestContainer" type="VBoxContainer" parent="QuestBoardPanel/ScrollContainer/QuestBoard/CompletedQuestPanel"]
+z_index = 3
+layout_mode = 2
+alignment = 1
+
+[node name="FurnitureContainer" type="Control" parent="."]
+z_index = 1
+anchors_preset = 0
+offset_left = 1419.0
+offset_top = 211.0
+offset_right = 1829.0
+offset_bottom = 605.0
+
+[node name="TextureRect" type="TextureRect" parent="FurnitureContainer"]
+layout_mode = 2
+offset_right = 410.0
+offset_bottom = 394.0
+texture = ExtResource("8_3yx2a")
+expand_mode = 1
+
+[node name="FurniturePanel" type="Panel" parent="FurnitureContainer"]
+z_index = 2
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+offset_left = 14.0
+offset_top = 23.0
+offset_right = 395.0
+offset_bottom = 374.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+script = ExtResource("9_wnxq3")
+
+[node name="FurnitureVBox" type="VBoxContainer" parent="FurnitureContainer/FurniturePanel"]
+layout_mode = 0
+offset_left = 3.0
+offset_right = 381.0
+offset_bottom = 353.0
+theme_override_constants/separation = 35
+
 [node name="LogControl" type="Control" parent="."]
 layout_mode = 2
 anchors_preset = 0
@@ -400,7 +405,12 @@ IdleCursor = ExtResource("20_31se6")
 GrabCursor = ExtResource("21_vy8gr")
 PointCursor = ExtResource("22_abkob")
 
-[connection signal="pressed" from="TavernDisplay/ControlPanel/TopBar/Button1x" to="GuestPanels/QuestBoardPanel" method="OnSpeed1xPressed"]
-[connection signal="pressed" from="TavernDisplay/ControlPanel/TopBar/Button2x" to="GuestPanels/QuestBoardPanel" method="OnSpeed2xPressed"]
-[connection signal="pressed" from="TavernDisplay/ControlPanel/TopBar/Button4x" to="GuestPanels/QuestBoardPanel" method="OnSpeed4xPressed"]
+[node name="QuestDetailPopup" parent="." instance=ExtResource("6_smfey")]
+position = Vector2i(750, 100)
+visible = false
+content_scale_mode = 1
+
+[connection signal="pressed" from="TavernDisplay/ControlPanel/TopBar/Button1x" to="QuestBoardPanel" method="OnSpeed1xPressed"]
+[connection signal="pressed" from="TavernDisplay/ControlPanel/TopBar/Button2x" to="QuestBoardPanel" method="OnSpeed2xPressed"]
+[connection signal="pressed" from="TavernDisplay/ControlPanel/TopBar/Button4x" to="QuestBoardPanel" method="OnSpeed4xPressed"]
 [connection signal="pressed" from="TavernDisplay/ControlPanel/TopBar/Button8x" to="ClockManager" method="OnSpeed8xPressed"]

@@ -9,6 +9,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 3
 alignment = 1
 script = ExtResource("1_toxyg")
 TableNameLabel = NodePath("NameLabel")
@@ -25,6 +26,10 @@ horizontal_alignment = 1
 
 [node name="SeatContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 107
+alignment = 1
 
 [node name="SeatSlot" type="Panel" parent="SeatContainer"]
 layout_mode = 2
+size_flags_horizontal = 0

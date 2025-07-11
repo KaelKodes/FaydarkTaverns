@@ -1,60 +1,88 @@
-[gd_scene load_steps=3 format=3 uid="uid://ch7r0s51qa60a"]
+[gd_scene load_steps=4 format=3 uid="uid://ch7r0s51qa60a"]
 
 [ext_resource type="Script" uid="uid://ctgsvgv1is7jt" path="res://Scenes/UI/AdventurerCard.cs" id="1_0yjfg"]
 [ext_resource type="Script" uid="uid://qi56yy8o3hs4" path="res://System/Sound/UIInteractButton.cs" id="2_2sog6"]
+[ext_resource type="Texture2D" uid="uid://dgsmrh4xjsgis" path="res://Assets/UI/ClassPortraits/Informant/InformantM3.jpg" id="2_lt3fg"]
 
-[node name="AdventurerCard" type="PanelContainer"]
-offset_right = 271.0
-offset_bottom = 77.0
+[node name="AdventurerCard" type="Panel"]
+z_index = 1
+offset_right = 88.0
+offset_bottom = 103.0
+scale = Vector2(1.00344, 0.776052)
+size_flags_horizontal = 4
+size_flags_vertical = 4
 script = ExtResource("1_0yjfg")
 
 [node name="Background" type="ColorRect" parent="."]
+z_index = 2
 layout_mode = 2
+offset_right = 92.0
+offset_bottom = 107.0
+scale = Vector2(0.829574, 0.965532)
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
+offset_top = 15.4629
+offset_right = 76.0
+offset_bottom = 88.4629
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_constants/margin_left = 3
-theme_override_constants/margin_top = 3
+theme_override_constants/margin_top = 0
 theme_override_constants/margin_right = 3
 
 [node name="Portrait" type="TextureRect" parent="MarginContainer"]
-z_index = 2
+z_index = 3
 custom_minimum_size = Vector2(70, 70)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
 mouse_filter = 2
+texture = ExtResource("2_lt3fg")
 expand_mode = 1
 
-[node name="MarginContainer2" type="MarginContainer" parent="."]
-layout_mode = 2
-theme_override_constants/margin_left = 44
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer2"]
-z_index = 1
-layout_mode = 2
-alignment = 1
-
-[node name="NameLabel" type="Label" parent="MarginContainer2/VBoxContainer"]
-layout_mode = 2
-horizontal_alignment = 1
-
-[node name="ClassLabel" type="Label" parent="MarginContainer2/VBoxContainer"]
-layout_mode = 2
-horizontal_alignment = 1
-
-[node name="VitalsLabel" type="Label" parent="MarginContainer2/VBoxContainer"]
-layout_mode = 2
-horizontal_alignment = 1
-
 [node name="KickButton" type="Button" parent="."]
-z_index = 3
+z_index = 10
 custom_minimum_size = Vector2(5, 5)
 layout_mode = 2
+offset_left = 86.7018
+offset_right = 94.7018
+offset_bottom = 10.0
+scale = Vector2(1, 0.896916)
 size_flags_horizontal = 8
 size_flags_vertical = 0
 size_flags_stretch_ratio = 0.35
 mouse_filter = 1
 script = ExtResource("2_2sog6")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+z_index = 4
+layout_mode = 0
+offset_top = 1.0
+offset_right = 75.0
+offset_bottom = 87.0
+scale = Vector2(1.08345, 1.18714)
+theme_override_constants/separation = 53
+alignment = 1
+
+[node name="NameLabel" type="Label" parent="VBoxContainer"]
+custom_minimum_size = Vector2(75, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Name"
+text_overrun_behavior = 3
+max_lines_visible = 2
+
+[node name="ClassLabel" type="Label" parent="VBoxContainer"]
+custom_minimum_size = Vector2(75, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_font_sizes/font_size = 12
+text = "CLass"
+horizontal_alignment = 1
+text_overrun_behavior = 3
+
+[node name="VitalsLabel" type="Label" parent="VBoxContainer"]
+visible = false
+layout_mode = 2
+horizontal_alignment = 1

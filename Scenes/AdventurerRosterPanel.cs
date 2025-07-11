@@ -10,7 +10,7 @@ public partial class AdventurerRosterPanel : PanelContainer
 	public override void _Ready()
 	{
 		AdventurerCardScene ??= GD.Load<PackedScene>("res://Scenes/UI/AdventurerCard.tscn");
-		adventurerListContainer = GetNode<VBoxContainer>("ScrollContainer/AdventurerListContainer");
+		adventurerListContainer = GetNode<VBoxContainer>("AdventurerListContainer");
 	}
 
 	public void Populate(List<Guest> guests)

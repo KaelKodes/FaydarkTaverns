@@ -66,44 +66,34 @@ public partial class TablePanel : VBoxContainer
 		}
 		else // 🎴 ALC TablePanel: full draggable card display
 		{
+			var card = AdventurerCardScene.Instantiate<AdventurerCard>();
+			card.SetMouseFilter(Control.MouseFilterEnum.Stop);
+
 			if (guest != null && !guest.IsOnQuest)
 			{
-				var card = AdventurerCardScene.Instantiate<AdventurerCard>();
-
-				// ✅ Bind the exact guest and adventurer
 				card.BoundGuest = guest;
 				card.BoundAdventurer = guest.BoundAdventurer;
 
-				// ✅ Required to receive input events for drag
-				card.SetMouseFilter(Control.MouseFilterEnum.Stop);
-
-				// ✅ Populate display
 				if (guest.BoundAdventurer != null)
 				{
-					card.GetNode<Label>("MarginContainer2/VBoxContainer/NameLabel").Text = guest.BoundAdventurer.Name;
-					card.GetNode<Label>("MarginContainer2/VBoxContainer/ClassLabel").Text = $"{guest.BoundAdventurer.Level} {guest.BoundAdventurer.ClassName}";
-					card.GetNode<Label>("MarginContainer2/VBoxContainer/VitalsLabel").Text = $"HP: {guest.BoundAdventurer.GetHp()} | Mana: {guest.BoundAdventurer.GetMana()}";
+					card.GetNode<Label>("VBoxContainer/NameLabel").Text = guest.BoundAdventurer.Name;
+					card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"{guest.BoundAdventurer.Level} {guest.BoundAdventurer.ClassName}";
 				}
 				else if (guest.BoundGiver != null)
 				{
-					card.GetNode<Label>("MarginContainer2/VBoxContainer/NameLabel").Text = guest.BoundGiver.Name;
-					card.GetNode<Label>("MarginContainer2/VBoxContainer/ClassLabel").Text = $"Lv {guest.BoundGiver.Level} Informant";
-					card.GetNode<Label>("MarginContainer2/VBoxContainer/VitalsLabel").Text = $"Mood: {guest.BoundGiver.GetMoodStatus()}";
+					card.BoundAdventurer = null;
+					card.GetNode<Label>("VBoxContainer/NameLabel").Text = guest.BoundGiver.Name;
+					card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"{guest.BoundGiver.Level} Informant";
 				}
-
-				SeatSlotContainer.AddChild(card);
 			}
 			else
 			{
-				// 🕳️ Empty or quest-assigned slot
-				var emptyPanel = new Panel();
-				emptyPanel.CustomMinimumSize = new Vector2(250, 50);
-				emptyPanel.AddThemeColorOverride("bg_color", new Color(0.15f, 0.15f, 0.15f));
-				SeatSlotContainer.AddChild(emptyPanel);
+				card.SetEmptySlot();
 			}
+
+			SeatSlotContainer.AddChild(card);
 		}
 	}
 }
-
 
 }

@@ -3,7 +3,7 @@ using System;
 
 public partial class SeatSlot : Panel
 {
-	[Export] public Color EmptyColor = new Color(0.4f, 0.4f, 0.4f);       // Gray
+	[Export] public Color EmptyColor = new Color(0, 0, 0, 0.4f); // 40% black overlay
 	[Export] public Color AdventurerColor = new Color(0.2f, 0.4f, 0.9f);   // Blue
 	[Export] public Color QuestGiverColor = new Color(0.9f, 0.8f, 0.2f);   // Yellow
 

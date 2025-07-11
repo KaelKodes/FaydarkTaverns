@@ -187,8 +187,8 @@ public partial class QuestCard : Panel
 			panel.MouseExited += () => removeButton.Visible = false;
 
 			// Blue slot background
-			var slotStyle = new StyleBoxFlat { BgColor = new Color(0.2f, 0.4f, 0.9f) };
-			panel.AddThemeStyleboxOverride("panel", slotStyle);
+			//var slotStyle = new StyleBoxFlat { BgColor = new Color(0.2f, 0.4f, 0.9f) };
+			//panel.AddThemeStyleboxOverride("panel", slotStyle);
 
 			GameLog.Debug($"  -> Slot {i}: {firstName}");
 		}
@@ -203,14 +203,26 @@ public partial class QuestCard : Panel
 
 	// Card background style
 	var styleBox = new StyleBoxFlat();
-	if (quest.IsComplete)
-		styleBox.BgColor = new Color(0.1f, 0.1f, 0.1f); // Completed
-	else if (quest.IsAccepted && quest.IsLocked)
-		styleBox.BgColor = new Color(0.2f, 0.6f, 0.2f); // Active
-	else
-		styleBox.BgColor = new Color(0.2f, 0.4f, 0.6f); // Available
+styleBox.ContentMarginTop = 0;
+styleBox.ContentMarginBottom = 0;
+styleBox.ContentMarginLeft = 0;
+styleBox.ContentMarginRight = 0;
 
-	AddThemeStyleboxOverride("panel", styleBox);
+styleBox.BorderWidthTop = 0;
+styleBox.BorderWidthBottom = 0;
+styleBox.BorderWidthLeft = 0;
+styleBox.BorderWidthRight = 0;
+
+// Apply background color based on quest state
+if (quest.IsComplete)
+	styleBox.BgColor = new Color(0.1f, 0.1f, 0.1f); // Completed
+else if (quest.IsAccepted && quest.IsLocked)
+	styleBox.BgColor = new Color(0.2f, 0.6f, 0.2f); // Active
+else
+	styleBox.BgColor = new Color(0.2f, 0.4f, 0.6f); // Available
+
+AddThemeStyleboxOverride("panel", styleBox);
+
 
 	// 🏳️ Result banners
 	var success = GetNode<TextureRect>("SuccessBanner");
