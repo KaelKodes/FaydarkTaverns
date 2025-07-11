@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FaydarkTaverns.Objects;
 
 public class QuestManager
 {
@@ -38,8 +39,12 @@ public void AddQuest(Quest quest)
 	activeQuests.Add(quest);
 	GameLog.Debug($"📋 Quest added. Board now has {activeQuests.Count}/{MaxQuestSlots} quests.");
 
-	OnQuestsUpdated?.Invoke(); // 🔁 Signal to refresh Quest UI
+	OnQuestsUpdated?.Invoke();
+
+	// ✅ Let tavern recheck quest posting
+	TavernManager.Instance?.RecheckQuestPosting();
 }
+
 public List<Quest> GetDisplayableQuests()
 {
 	return activeQuests.FindAll(q =>
@@ -94,20 +99,69 @@ public void RetryQuest(Quest quest)
 }
 public void DismissQuest(Quest quest)
 {
-	if (!quest.Failed || !quest.IsComplete) return;
+	if (quest == null)
+		return;
 
-	activeQuests.Remove(quest);
-	InformantManager.Instance.LowerHappiness(5);
+	// 🧹 Remove from active list
+	ActiveQuests.Remove(quest);
 
+	// 🗑️ Remove from board UI
+	var tree = Godot.Engine.GetMainLoop() as SceneTree;
+	if (tree != null)
+	{
+		foreach (var card in tree.GetNodesInGroup("QuestCard"))
+		{
+			if (card is QuestCard qc && qc.HasQuest(quest))
+			{
+				qc.QueueFree();
+				break;
+			}
+		}
+	}
 
-	GameLog.Info($"🗑️ Quest '{quest.Title}' dismissed. Informant less happy.");
-	OnQuestsUpdated?.Invoke();
+	// 🧓 Tag NPC as unavailable to repost
+	if (quest.PostedBy != null)
+	{
+		quest.PostedBy.PostedQuest = null;
+		quest.PostedBy.HasPostedToday = true;
+		quest.PostedBy.AdjustHappiness(-2);
+		GameLog.Info($"📜😤 {quest.PostedBy.Name} will not post again until tomorrow.");
+	}
+
+	GameLog.Info($"🗑️ Dismissed quest: {quest.Title}");
 }
+
+
+public void UnassignAdventurer(Quest quest, NPCData npc)
+{
+	if (quest.AssignedAdventurers.Contains(npc))
+	{
+		quest.AssignedAdventurers.Remove(npc);
+
+		var guest = TavernManager.Instance.AllVillagers
+			.FirstOrDefault(g => g.BoundNPC != null && g.BoundNPC == npc);
+
+		if (guest != null)
+		{
+			guest.IsOnQuest = false;
+			guest.IsAssignedToQuest = false;
+			guest.DepartureTime = null;
+			guest.AssignedTable = null;
+			guest.SeatIndex = null;
+			guest.LocationCode = (int)GuestLocation.StreetOutside;
+
+			TavernManager.Instance.AdmitGuestToTavern(guest);
+		}
+	}
+}
+
 private void HandleQuestReturn(Quest quest)
 {
 	foreach (var adventurer in quest.AssignedAdventurers)
 	{
-		var guest = TavernManager.Instance.AllVillagers.FirstOrDefault(g => g.BoundAdventurer == adventurer);
+		var guest = TavernManager.Instance.AllVillagers
+			.FirstOrDefault(g => g.BoundNPC != null && g.BoundNPC == adventurer);
+
 		if (guest == null)
 		{
 			GameLog.Debug($"⚠️ Could not find guest for returning adventurer: {adventurer.Name}");
@@ -122,9 +176,8 @@ private void HandleQuestReturn(Quest quest)
 		guest.DepartureTime = null;
 		guest.AssignedTable = null;
 		guest.SeatIndex = null;
-		guest.LocationCode = 0; // In Town
+		guest.LocationCode = (int)GuestLocation.InTown;
 
-		// Attempt to return them to the tavern or street
 		if (TavernManager.Instance.GetGuestsInside().Count < TavernStats.Instance.MaxFloorGuests)
 		{
 			TavernManager.Instance.AdmitGuestToTavern(guest);
@@ -133,12 +186,13 @@ private void HandleQuestReturn(Quest quest)
 		else
 		{
 			guest.IsOnStreet = true;
-			guest.LocationCode = 1; // Street
+			guest.LocationCode = (int)GuestLocation.StreetOutside;
 			GuestManager.QueueGuest(guest);
 			GameLog.Info($"🧭 {guest.Name} has returned from '{quest.Title}' and waits outside.");
 		}
 	}
 }
+
 
 
 

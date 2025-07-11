@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://w7he4xk8qe6k" path="res://Scenes/UI/QuestCard.tscn" id="2_6wg6o"]
 [ext_resource type="Script" uid="uid://x4id2gkwvhxq" path="res://System/TimerManager.cs" id="2_t546b"]
 [ext_resource type="Script" uid="uid://bo03gb6exqxki" path="res://Scenes/AdventurerRosterPanel.cs" id="2_w3872"]
-[ext_resource type="PackedScene" uid="uid://ch7r0s51qa60a" path="res://Scenes/UI/AdventurerCard.tscn" id="5_6wg6o"]
+[ext_resource type="PackedScene" uid="uid://ch7r0s51qa60a" path="res://Scenes/UI/GuestCard.tscn" id="5_6wg6o"]
 [ext_resource type="PackedScene" uid="uid://bg6we31odfnlk" path="res://Scenes/ShopPanel.tscn" id="5_icuts"]
 [ext_resource type="PackedScene" uid="uid://g7cdgtjmhjxt" path="res://Scenes/QuestDetailPopup.tscn" id="6_smfey"]
 [ext_resource type="Script" uid="uid://i7n3efuy43nr" path="res://System/ClockManager.cs" id="7_6462i"]
@@ -241,7 +241,7 @@ offset_right = 252.0
 offset_bottom = 1017.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_esg4o")
 script = ExtResource("2_w3872")
-AdventurerCardScene = ExtResource("5_6wg6o")
+GuestCardScene = ExtResource("5_6wg6o")
 
 [node name="AdventurerListContainer" type="VBoxContainer" parent="AdventurerRosterPanel"]
 layout_mode = 2

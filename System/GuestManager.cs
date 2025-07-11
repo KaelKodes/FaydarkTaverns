@@ -1,6 +1,8 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using FaydarkTaverns.Objects;
+
 
 public partial class GuestManager : Node
 {
@@ -27,26 +29,6 @@ public partial class GuestManager : Node
 	timer.Timeout += () => TickGuests(ClockManager.CurrentTime);
 }
 
-private Guest GenerateQuestGiverGuest()
-{
-	string name = AdventurerGenerator.GenerateName();
-
-	var guest = new Guest
-	{
-		Name = name,
-		IsAdventurer = false,
-		VisitDay = ClockManager.CurrentDay,
-		VisitHour = GD.RandRange(6, 12),  // morning arrivals
-		WaitDuration = 2,
-		StayDuration = GD.RandRange(4, 6)
-	};
-
-	guest.BoundGiver = new QuestGiver(name, guest);
-
-	GameLog.Debug($"🧓 Quest Giver '{name}' generated.");
-
-	return guest;
-}
 
 public static void QueueGuest(Guest guest)
 {
@@ -194,58 +176,40 @@ if (!guestsInside.Contains(guest))
 }
 
 // Guest Spawning
-public static Guest SpawnNewAdventurer(string className, string race = "Human", int level = 1)
+public static Guest SpawnNewNPC(NPCRole role, string className = "Warrior")
 {
-	var template = ClassTemplate.GetTemplateByName(className);
-	if (template == null)
-	{
-		GameLog.Debug($"❌ Invalid class name: {className}");
-		return null;
-	}
+	var npc = NPCFactory.CreateBaseNPC();
+	npc.Role = role;
 
-	// use the default generator which now randomizes gender internally
-	var adventurer = AdventurerGenerator.GenerateAdventurer(level, template);
+// Set portrait now that role is known
+NPCFactory.AssignPortrait(npc);
 
-	var guest = new Guest
+// Apply role-based stat logic
+switch (role)
 {
-	Name            = adventurer.Name,
-	Gender          = adventurer.Gender,
-	IsAdventurer    = true,
-	VisitDay        = ClockManager.CurrentDay,
-	VisitHour       = (int)GD.RandRange(6, 18),
-	WaitDuration    = (int)GD.RandRange(1, 2),
-	StayDuration    = (int)GD.RandRange(4, 8),
-	BoundAdventurer = adventurer,
-	PortraitId      = adventurer.PortraitId
-};
+	case NPCRole.Adventurer:
+		var template = ClassTemplate.GetTemplateByName(className);
+		NPCFactory.AssignAdventurerStats(npc, template);
+		break;
 
-	GameLog.Debug($"🧙 Spawned Adventurer: {guest.Name} ({className}, {guest.Gender})");
-	return guest;
+	case NPCRole.QuestGiver:
+		NPCFactory.AssignInformantStats(npc);
+		break;
 }
 
-public static Guest SpawnNewInformant()
-{
-	// pick a true random gender for name consistency
-	var gender = (Gender)(new Random().Next(0, 2));
-	string name = AdventurerGenerator.GenerateName(gender);
-
-	int portraitId = AdventurerGenerator.RandomPortraitIdForClassGender("Informant", gender);
 
 	var guest = new Guest
 	{
-		Name         = name,
-		Gender       = gender,
-		IsAdventurer = false,
-		VisitDay     = ClockManager.CurrentDay,
-		VisitHour    = (int)GD.RandRange(6, 18),
-		WaitDuration = (int)GD.RandRange(1, 2),
-		StayDuration = (int)GD.RandRange(4, 8),
-		PortraitId   = portraitId
+		Name = npc.Name,
+		Gender = (Gender)Enum.Parse(typeof(Gender), npc.Gender),
+		VisitDay = ClockManager.CurrentDay,
+		VisitHour = GD.RandRange(6, 18),
+		WaitDuration = GD.RandRange(1, 2),
+		StayDuration = GD.RandRange(4, 8),
+		PortraitId = npc.PortraitId,
+		BoundNPC = npc
 	};
 
-	guest.BoundGiver = new QuestGiver(name, guest);
-
-	GameLog.Debug($"📜 Spawned Informant: {name} ({gender})");
 	return guest;
 }
 

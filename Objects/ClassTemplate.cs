@@ -75,6 +75,17 @@ public static ClassTemplate GetTemplateByName(string className)
 	GameLog.Debug($"❌ ClassTemplate not found for class '{className}'.");
 	return null;
 }
+public static int GetRoleIdFromClass(string className)
+{
+	return className switch
+	{
+		"Warrior" => 1,
+		"Mage" => 2,
+		"Rogue" => 3,
+		"Healer" => 4,
+		_ => 0
+	};
+}
 
 
 }

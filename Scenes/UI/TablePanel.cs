@@ -2,12 +2,13 @@ using Godot;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using FaydarkTaverns.Objects;
 
 public partial class TablePanel : VBoxContainer
 {
 	[Export] public Label TableNameLabel;
 	[Export] public VBoxContainer SeatSlotContainer;
-	[Export] public PackedScene AdventurerCardScene;
+	[Export] public PackedScene GuestCardScene;
 
 	public Table LinkedTable;
 
@@ -17,83 +18,88 @@ public partial class TablePanel : VBoxContainer
 		{
 			TableNameLabel.Text = LinkedTable.TableName;
 			GenerateSeats(LinkedTable.SeatCount);
-			UpdateSeatSlots();
+			CallDeferred(nameof(UpdateSeatSlots));
 		}
 	}
 
 	public void GenerateSeats(int count)
 	{
-		// 🔁 Clear existing
+		if (SeatSlotContainer == null)
+			return;
+
 		foreach (Node child in SeatSlotContainer.GetChildren())
 			child.QueueFree();
 
-		// ➕ Add empty SeatSlot nodes
 		for (int i = 0; i < count; i++)
 		{
-			var seatSlot = new SeatSlot(); // Custom control
-			seatSlot.Name = $"SeatSlot{i + 1}";
-			seatSlot.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
-			seatSlot.MouseFilter = Control.MouseFilterEnum.Stop;
+			var seatSlot = new SeatSlot
+			{
+				Name = $"SeatSlot{i + 1}",
+				SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+				MouseFilter = Control.MouseFilterEnum.Stop
+			};
 
 			SeatSlotContainer.AddChild(seatSlot);
 		}
 	}
 
 	public void UpdateSeatSlots()
-{
-	if (LinkedTable == null || SeatSlotContainer == null)
-		return;
-
-	SeatSlotContainer.ClearChildren();
-
-	for (int i = 0; i < LinkedTable.SeatCount; i++)
 	{
-		var guest = LinkedTable.SeatedGuests[i];
-
-		// 🪑 Furniture Panel: simplified display
-		if (Owner is FurniturePanel)
+		if (LinkedTable == null || SeatSlotContainer == null)
 		{
-			var slot = new SeatSlot();
-
-			if (guest == null)
-				slot.SetEmpty();
-			else if (guest.IsAdventurer)
-				slot.SetAdventurer();
-			else
-				slot.SetQuestGiver();
-
-			SeatSlotContainer.AddChild(slot);
+			GD.PrintErr("⛔ TablePanel: UpdateSeatSlots called with null LinkedTable or SeatSlotContainer.");
+			return;
 		}
-		else // 🎴 ALC TablePanel: full draggable card display
+
+		SeatSlotContainer.ClearChildren();
+
+		for (int i = 0; i < LinkedTable.SeatCount; i++)
 		{
-			var card = AdventurerCardScene.Instantiate<AdventurerCard>();
-			card.SetMouseFilter(Control.MouseFilterEnum.Stop);
+			var guest = LinkedTable.SeatedGuests.ElementAtOrDefault(i);
 
-			if (guest != null && !guest.IsOnQuest)
+			if (Owner is FurniturePanel)
 			{
-				card.BoundGuest = guest;
-				card.BoundAdventurer = guest.BoundAdventurer;
+				var slot = new SeatSlot();
 
-				if (guest.BoundAdventurer != null)
-				{
-					card.GetNode<Label>("VBoxContainer/NameLabel").Text = guest.BoundAdventurer.Name;
-					card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"{guest.BoundAdventurer.Level} {guest.BoundAdventurer.ClassName}";
-				}
-				else if (guest.BoundGiver != null)
-				{
-					card.BoundAdventurer = null;
-					card.GetNode<Label>("VBoxContainer/NameLabel").Text = guest.BoundGiver.Name;
-					card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"{guest.BoundGiver.Level} Informant";
-				}
+				if (guest == null)
+					slot.SetEmpty();
+				else if (guest.IsAdventurer)
+					slot.SetAdventurer();
+				else if (guest.IsQuestGiver)
+					slot.SetQuestGiver();
+				else
+					slot.SetEmpty();
+
+				SeatSlotContainer.AddChild(slot);
 			}
 			else
 			{
-				card.SetEmptySlot();
-			}
+				var card = GuestCardScene.Instantiate<GuestCard>();
+				card.SetMouseFilter(Control.MouseFilterEnum.Stop);
 
-			SeatSlotContainer.AddChild(card);
+				if (guest != null && !guest.IsOnQuest)
+				{
+					card.BoundGuest = guest;
+					card.BoundNPC = guest.BoundNPC;
+
+					if (guest.BoundNPC != null)
+					{
+						var lastInitial = string.IsNullOrEmpty(guest.BoundNPC.LastName) ? "" : $"{guest.BoundNPC.LastName[0]}.";
+						card.GetNode<Label>("VBoxContainer/NameLabel").Text = $"{guest.BoundNPC.FirstName} {lastInitial}";
+						card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"{guest.BoundNPC.Level} {guest.BoundNPC.ClassName}";
+					}
+					else
+					{
+						card.SetEmptySlot();
+					}
+				}
+				else
+				{
+					card.SetEmptySlot();
+				}
+
+				SeatSlotContainer.AddChild(card);
+			}
 		}
 	}
-}
-
 }

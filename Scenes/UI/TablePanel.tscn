@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://b561g6jbgxqol"]
 
 [ext_resource type="Script" uid="uid://bm7l6kmy6q2sl" path="res://Scenes/UI/TablePanel.cs" id="1_toxyg"]
-[ext_resource type="PackedScene" uid="uid://ch7r0s51qa60a" path="res://Scenes/UI/AdventurerCard.tscn" id="2_sa5u8"]
+[ext_resource type="PackedScene" uid="uid://ch7r0s51qa60a" path="res://Scenes/UI/GuestCard.tscn" id="2_sa5u8"]
 
 [node name="TablePanel" type="VBoxContainer" node_paths=PackedStringArray("TableNameLabel", "SeatSlotContainer")]
 anchors_preset = 15
@@ -14,7 +14,7 @@ alignment = 1
 script = ExtResource("1_toxyg")
 TableNameLabel = NodePath("NameLabel")
 SeatSlotContainer = NodePath("SeatContainer")
-AdventurerCardScene = ExtResource("2_sa5u8")
+GuestCardScene = ExtResource("2_sa5u8")
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 2

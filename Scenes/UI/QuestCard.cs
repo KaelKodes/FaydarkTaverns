@@ -92,6 +92,7 @@ public partial class QuestCard : Panel
 		GameLog.Debug($"[CARD] Card node: {Name} | Bound quest ref: {q.GetHashCode()} | Title: {q.Title} | QuestId: {q.QuestId}");
 		if (IsInsideTree()) UpdateDisplay();
 	}
+	
 
 	public void UpdateDisplay()
 {
@@ -248,20 +249,20 @@ AddThemeStyleboxOverride("panel", styleBox);
 
 	public override bool _CanDropData(Vector2 atPosition, Variant data)
 	{
-		// This must return TRUE if we are dragging an AdventurerCard
-		return data.AsGodotObject() is AdventurerCard && quest != null && quest.AssignedAdventurers.Count < 3;
+		// This must return TRUE if we are dragging an GuestCard
+		return data.AsGodotObject() is GuestCard && quest != null && quest.AssignedAdventurers.Count < 3;
 	}
 
 public override void _DropData(Vector2 atPosition, Variant data)
 {
-	var card = data.AsGodotObject() as AdventurerCard;
+	var card = data.AsGodotObject() as GuestCard;
 	if (card == null || quest == null)
 		return;
 
 	if (quest.IsLocked)
 		return;
 
-	var adventurer = card.BoundAdventurer;
+	var adventurer = card.BoundNPC;
 	if (adventurer == null || quest.AssignedAdventurers.Contains(adventurer))
 		return;
 
@@ -309,6 +310,7 @@ public override void _DropData(Vector2 atPosition, Variant data)
 
 
 
+
 private void UnassignFromSlot(int index)
 {
 	if (quest.IsLocked)
@@ -323,7 +325,8 @@ private void UnassignFromSlot(int index)
 		quest.AssignedAdventurers.RemoveAt(index);
 
 		// 🔍 Look for the guest anywhere (floor or staging)
-		var guest = TavernManager.Instance.AllVillagers.FirstOrDefault(g => g.BoundAdventurer == adventurer);
+		var guest = TavernManager.Instance.AllVillagers
+			.FirstOrDefault(g => g.BoundNPC != null && g.BoundNPC == adventurer);
 
 		// 👷 Rebuild guest if somehow lost
 		if (guest == null)
@@ -331,8 +334,9 @@ private void UnassignFromSlot(int index)
 			guest = new Guest
 			{
 				Name = adventurer.Name,
-				IsAdventurer = true,
-				BoundAdventurer = adventurer,
+				Gender = (Gender)(new Random().Next(0, 2)),
+				PortraitId = adventurer.PortraitId,
+				BoundNPC = adventurer,
 				IsOnQuest = false,
 				IsAssignedToQuest = false,
 				IsInside = false,
@@ -342,6 +346,7 @@ private void UnassignFromSlot(int index)
 				StayDuration = 4,
 				LocationCode = (int)GuestLocation.StreetOutside
 			};
+
 			GameLog.Debug($"⚠️ Reconstructed guest for unassigned adventurer: {guest.Name}");
 		}
 
@@ -355,7 +360,6 @@ private void UnassignFromSlot(int index)
 
 		// 🏠 Try to re-admit or return to street
 		if (TavernManager.Instance.GetGuestsInside().Count < TavernStats.Instance.MaxFloorGuests)
-
 		{
 			TavernManager.Instance.AdmitGuestToTavern(guest);
 			GameLog.Info($"↩️ {guest.Name} re-entered the tavern.");
@@ -370,6 +374,7 @@ private void UnassignFromSlot(int index)
 		TavernManager.Instance.DisplayAdventurers();
 	}
 }
+
 
 
 

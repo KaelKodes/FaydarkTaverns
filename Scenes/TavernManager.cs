@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using static GuestLogic;
+using FaydarkTaverns.Objects;
+
 
 
 
@@ -62,7 +64,7 @@ public partial class TavernManager : Node
 	};
 
 	// --- Adventurers ---
-	private List<Adventurer> streetOutsideGuests = new();
+	private List<Guest> streetOutsideGuests = new();
 	private static List<Table> tables = new();
 	public List<Guest> AllVillagers = new();
 	public int MaxVillagers => 16;
@@ -71,7 +73,7 @@ public partial class TavernManager : Node
 
 
 	// --- Connected Scenes ---
-	private static PackedScene AdventurerCardScene = GD.Load<PackedScene>("res://Scenes/UI/AdventurerCard.tscn");
+	private static PackedScene GuestCardScene = GD.Load<PackedScene>("res://Scenes/UI/GuestCard.tscn");
 	private static VBoxContainer adventurerListUI;
 	[Export] public NodePath AdventurerRosterPath;
 	private AdventurerRosterPanel adventurerRosterPanel;
@@ -143,7 +145,7 @@ public partial class TavernManager : Node
 			GD.PrintErr("❌ 'adventurerListUI' was not found — check scene tree and node paths.");
 		}
 
-		AdventurerCardScene ??= GD.Load<PackedScene>("res://Scenes/UI/AdventurerCard.tscn");
+		GuestCardScene ??= GD.Load<PackedScene>("res://Scenes/UI/GuestCard.tscn");
 
 		if (!string.IsNullOrEmpty(AdventurerRosterPath))
 		{
@@ -206,7 +208,7 @@ public partial class TavernManager : Node
 
 		foreach (var q in QuestManager.Instance.GetAcceptedQuests())
 		{
-			GD.Print($"🔍 Active Quest: {q.QuestId} | {q.Title} | Accepted: {q.IsAccepted}");
+			GameLog.Debug($"🔍 Active Quest: {q.QuestId} | {q.Title} | Accepted: {q.IsAccepted}");
 		}
 	}
 
@@ -217,7 +219,7 @@ public partial class TavernManager : Node
 
 private void StartNewDay(DateTime currentDate)
 {
-	GD.Print($"🌅 New day triggered by ClockManager: {currentDate:D}");
+	GameLog.Debug($"🌅 New day triggered by ClockManager: {currentDate:D}");
 
 	QuestManager.Instance?.ClearUnclaimedQuests();
 
@@ -227,7 +229,7 @@ private void StartNewDay(DateTime currentDate)
 		// 🎯 Spawn one adventurer per class
 		foreach (var className in ClassTemplate.GetAllClassNames())
 		{
-			var guest = GuestManager.SpawnNewAdventurer(className, "Human", 1);
+			var guest = GuestManager.SpawnNewNPC(NPCRole.Adventurer, className);
 			if (guest != null)
 			{
 				guest.IsOnStreet = true;
@@ -243,7 +245,7 @@ private void StartNewDay(DateTime currentDate)
 		// 🧓 Spawn 4 informants (quest givers)
 		for (int i = 0; i < 4; i++)
 		{
-			var guest = GuestManager.SpawnNewInformant();
+			var guest = GuestManager.SpawnNewNPC(NPCRole.QuestGiver);
 			if (guest != null)
 			{
 				guest.IsOnStreet = true;
@@ -259,35 +261,41 @@ private void StartNewDay(DateTime currentDate)
 		hasSpawnedInitialParty = true;
 	}
 
-// 🔁 Persistent Guests
-foreach (var guest in AllVillagers)
-{
-	// Persistent guests only (i.e. bound)
-	bool isPersistent = guest.BoundGiver != null || guest.BoundAdventurer != null;
-
-	if (guest != null && isPersistent && guest.IsElsewhere)
+	// 🔁 Persistent Guests
+	foreach (var guest in AllVillagers)
 	{
-		guest.VisitDay = ClockManager.CurrentDay;
-		guest.VisitHour = GD.RandRange(6, 18);
-		guest.IsOnStreet = true;
-		guest.IsElsewhere = false;
-		guest.LocationCode = (int)GuestLocation.StreetOutside;
+		// 🔄 Reset their "HasPostedToday" flag
+		if (guest.BoundNPC != null)
+			guest.BoundNPC.HasPostedToday = false;
 
-		GuestManager.QueueGuest(guest);
-		GameLog.Debug($"🔁 {guest.Name} is returning to town today.");
+		// 🧍 Only persistent guests return
+		bool isPersistent = guest.BoundNPC != null;
+		bool isQuestBound = guest.IsAssignedToQuest || guest.IsOnQuest;
+		bool isInStaging = guest.LocationCode == (int)GuestLocation.Staging;
+		bool isDeployed = guest.LocationCode >= (int)GuestLocation.DeployedBase;
 
-		if (!AllVillagers.Contains(guest))
-			AllVillagers.Add(guest);
+		if (guest != null && isPersistent && guest.IsElsewhere && !isQuestBound && !isInStaging && !isDeployed)
+		{
+			guest.VisitDay = ClockManager.CurrentDay;
+			guest.VisitHour = GD.RandRange(6, 18);
+			guest.IsOnStreet = true;
+			guest.IsElsewhere = false;
+			guest.LocationCode = (int)GuestLocation.StreetOutside;
+
+			GuestManager.QueueGuest(guest);
+			GameLog.Debug($"🔁 {guest.Name} is returning to town today.");
+
+			if (!AllVillagers.Contains(guest))
+				AllVillagers.Add(guest);
+		}
 	}
-}
 
-
-
-	GD.Print("✨ A new day dawns...");
+	GD.Print("✨ Midnight, a New Day begins...");
 	DisplayAdventurers();
 	UpdateFloorLabel();
 	RecheckSeating();
 }
+
 
 
 
@@ -332,44 +340,38 @@ foreach (var guest in AllVillagers)
 		.ToList();
 
 	// Render exactly MaxFloorGuests number of slots
-	for (int i = 0; i < TavernStats.Instance.MaxFloorGuests; i++)
+for (int i = 0; i < TavernStats.Instance.MaxFloorGuests; i++)
+{
+	var guest = floorList.ElementAtOrDefault(i);
+
+	var card = GuestCardScene.Instantiate<GuestCard>();
+	card.SetMouseFilter(Control.MouseFilterEnum.Stop);
+
+	if (guest != null && guest.BoundNPC != null)
 	{
-		var guest = floorList.ElementAtOrDefault(i);
+		card.BoundGuest = guest;
+		card.BoundNPC = guest.BoundNPC;
 
-		var card = AdventurerCardScene.Instantiate<AdventurerCard>();
-		card.SetMouseFilter(Control.MouseFilterEnum.Stop);
+		string name = guest.BoundNPC.FirstName;
+		string roleLabel = guest.BoundNPC.ClassName;
 
-		if (guest != null)
-		{
-			card.BoundGuest = guest;
-			card.BoundAdventurer = guest.BoundAdventurer;
-
-			if (guest.BoundAdventurer != null)
-			{
-				card.GetNode<Label>("VBoxContainer/NameLabel").Text = guest.BoundAdventurer.Name;
-				card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"{guest.BoundAdventurer.Level} {guest.BoundAdventurer.ClassName}";
-			}
-			else if (guest.BoundGiver != null)
-			{
-				var giver = guest.BoundGiver;
-				card.BoundAdventurer = null;
-				card.GetNode<Label>("VBoxContainer/NameLabel").Text = giver.Name;
-				card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"{giver.Level} Informant";
-			}
-		}
-		else
-		{
-			card.SetEmptySlot();
-		}
-
-		FloorSlots.AddChild(card);
+		card.GetNode<Label>("VBoxContainer/NameLabel").Text = name;
+		card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"{guest.BoundNPC.Level} {roleLabel}";
+	}
+	else
+	{
+		card.SetEmptySlot();
 	}
 
-	// Update all table panels to reflect current seating
-	foreach (var table in tables)
-	{
-		table.LinkedPanel?.UpdateSeatSlots();
-	}
+	FloorSlots.AddChild(card);
+}
+
+// Update all table panels to reflect current seating
+foreach (var table in tables)
+{
+	table.LinkedPanel?.UpdateSeatSlots();
+}
+
 }
 
 
@@ -551,35 +553,41 @@ foreach (var guest in AllVillagers)
 	GameLog.Info($"🪑 Table added: {uniqueName}");
 }
 
-private void RecheckQuestPosting()
+public void RecheckQuestPosting()
 {
 	foreach (var guest in AllVillagers)
+{
+	if (guest.BoundNPC == null || guest.BoundNPC.Role != NPCRole.QuestGiver)
+		continue;
+
+	if (guest.BoundNPC.HasPostedToday)
+		continue;
+
+	if (guest.IsInside &&
+		!guest.IsOnStreet &&
+		!guest.IsElsewhere &&
+		guest.AssignedTable == null &&
+		guest.LocationCode == (int)GuestLocation.TavernFloor &&
+		!guest.IsAssignedToQuest &&
+		!guest.IsOnQuest &&
+		guest.BoundNPC.PostedQuest == null)
 	{
-		if (guest.BoundGiver != null &&
-	guest.IsInside &&
-	!guest.IsOnStreet &&
-	!guest.IsElsewhere &&
-	guest.AssignedTable == null &&
-	guest.LocationCode == (int)GuestLocation.TavernFloor &&
-	!guest.IsAssignedToQuest &&
-	!guest.IsOnQuest &&
-	guest.BoundGiver.PostedQuest == null)
-
-
+		if (QuestManager.Instance.CanAddQuest())
 		{
-			if (QuestManager.Instance.CanAddQuest())
+			var quest = QuestGenerator.GenerateFromGiver(guest.BoundNPC, guest);
+			if (quest != null)
 			{
-				var quest = QuestGenerator.GenerateFromGiver(guest.BoundGiver, guest);
-				if (quest != null)
-				{
-					QuestManager.Instance.AddQuest(quest);
-					guest.BoundGiver.PostedQuest = quest;
-					GameLog.Info($"🧾 {guest.Name} posted a new quest: '{quest.Title}'");
-				}
+				QuestManager.Instance.AddQuest(quest);
+				guest.BoundNPC.PostedQuest = quest;
+				guest.BoundNPC.HasPostedToday = true;
+				GameLog.Info($"🧾 {guest.Name} posted a new quest: '{quest.Title}'");
 			}
 		}
 	}
 }
+
+}
+
 
 
 
@@ -706,11 +714,14 @@ public int GetPurchasedCount(string itemName)
 	}
 
 	// 🎯 Quest givers must stand first to post quests
-	if (guest.BoundGiver != null)
+	if (guest.BoundNPC != null && guest.BoundNPC.Role == NPCRole.QuestGiver)
 	{
 		GameLog.Debug($"📜 {guest.Name} entered to post a quest.");
 		if (!floorGuests.Contains(guest))
 			floorGuests.Add(guest);
+
+		// ✅ Recheck board posting
+		RecheckQuestPosting();
 	}
 	else
 	{
@@ -731,6 +742,7 @@ public int GetPurchasedCount(string itemName)
 	UpdateFloorLabel();
 	DisplayAdventurers();
 }
+
 
 
 

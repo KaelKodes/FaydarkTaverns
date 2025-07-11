@@ -1,48 +1,46 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using FaydarkTaverns.Objects;
 
 public static class QuestSimulator
 {
 	public static QuestResult Simulate(Quest quest)
 	{
 		if (quest == null || quest.AssignedAdventurers.Count == 0)
-{
-	GD.PrintErr("⚠️ QuestSimulator.Simulate called with null or empty quest.");
-	return new QuestResult
-	{
-		Success = false,
-		GoldEarned = 0,
-		ExpGained = 0,
-		ResolvedAt = ClockManager.CurrentTime
-	};
-}
-
+		{
+			GD.PrintErr("⚠️ QuestSimulator.Simulate called with null or empty quest.");
+			return new QuestResult
+			{
+				Success = false,
+				GoldEarned = 0,
+				ExpGained = 0,
+				ResolvedAt = ClockManager.CurrentTime
+			};
+		}
 
 		float matchScore = CalculatePartyMatch(quest);
 		bool success = matchScore >= 0.5f;
 
 		int baseReward = quest.Reward;
-int baseXP = success ? 100 : 40;
+		int baseXP = success ? 100 : 40;
 
-// 🎯 Risk-Reward Bonus: +10% per adventurer not sent
-int expected = quest.OptimalRoles.Count;
-int actual = quest.AssignedAdventurers.Count;
-int missing = Mathf.Clamp(expected - actual, 0, expected);
+		int expected = quest.OptimalRoles.Count;
+		int actual = quest.AssignedAdventurers.Count;
+		int missing = Mathf.Clamp(expected - actual, 0, expected);
 
-float bonusFactor = 1f + (missing * 0.10f);
+		float bonusFactor = 1f + (missing * 0.10f);
 
-int reward = success
-	? Mathf.RoundToInt(baseReward * bonusFactor)
-	: Mathf.RoundToInt(baseReward * 0.5f);
+		int reward = success
+			? Mathf.RoundToInt(baseReward * bonusFactor)
+			: Mathf.RoundToInt(baseReward * 0.5f);
 
-int xp = Mathf.RoundToInt(baseXP * bonusFactor);
+		int xp = Mathf.RoundToInt(baseXP * bonusFactor);
 
-if (missing > 0)
-{
-	GameLog.Info($"🎲 Risk bonus applied: {missing} adventurer(s) under optimal. Bonus x{bonusFactor:F2}");
-}
-
+		if (missing > 0)
+		{
+			GameLog.Info($"🎲 Risk bonus applied: {missing} adventurer(s) under optimal. Bonus x{bonusFactor:F2}");
+		}
 
 		GD.Print($"🎲 Simulating quest '{quest.Title}' | Match Score: {matchScore:F2} | Success: {success}");
 
@@ -65,7 +63,9 @@ if (missing > 0)
 
 		foreach (var optimalRole in quest.OptimalRoles)
 		{
-			if (quest.AssignedAdventurers.Exists(a => a.RoleId == optimalRole && !usedRoles.Contains(a.RoleId)))
+			if (quest.AssignedAdventurers.Exists(a => 
+				ClassTemplate.GetRoleIdFromClass(a.ClassName) == optimalRole && 
+				!usedRoles.Contains(optimalRole)))
 			{
 				matchCount++;
 				usedRoles.Add(optimalRole);

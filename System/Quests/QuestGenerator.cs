@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using FaydarkTaverns.Objects;
+
 
 public static class QuestGenerator
 {
@@ -107,7 +109,7 @@ public static class QuestGenerator
 			_ => 4
 		};
 	}
-	public static Quest GenerateFromGiver(QuestGiver giver, Guest guest)
+	public static Quest GenerateFromGiver(NPCData giver, Guest guest)
 {
 	if (giver == null || guest == null)
 	{
@@ -136,6 +138,7 @@ public static class QuestGenerator
 	GameLog.Debug($"🧾 [SAFE-GEN] {giver.Name} generated a new quest: '{quest.Title}'");
 	return quest;
 }
+
 
 
 

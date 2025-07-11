@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using FaydarkTaverns.Objects;
 
 public enum GuestLocation
 {
@@ -11,7 +12,6 @@ public enum GuestLocation
 	DeployedBase = 40   // 4.x = Deployed to quest ID
 }
 
-// ─── New top-level enum for Gender ─────────────────────────────────────
 public enum Gender
 {
 	Male,
@@ -22,23 +22,24 @@ public class Guest
 {
 	public string Name;
 
-	// ─── New property to track each guest’s gender ──────────────────────
 	public Gender Gender;
 	public int PortraitId { get; set; }
 
+	// ✅ Unified NPC reference
+	public NPCData BoundNPC { get; set; }
 
-	public bool IsAdventurer;
-	public Adventurer BoundAdventurer { get; set; }
-	public QuestGiver BoundGiver { get; set; } = null;
+	// ✅ Role helpers
+	public bool IsAdventurer => BoundNPC?.Role == NPCRole.Adventurer;
+	public bool IsQuestGiver => BoundNPC?.Role == NPCRole.QuestGiver;
 
 	public int VisitDay;
 	public int VisitHour;
 	public int WaitDuration;   // How long they'll wait outside
 	public int StayDuration;   // How long they stay once inside
 
-	public bool IsInside = false;                // Actively inside the tavern
-	public bool IsOnStreet = false;              // Waiting outside
-	public bool IsElsewhere = false;             // Out of scope (in town, home, etc.)
+	public bool IsInside = false;
+	public bool IsOnStreet = false;
+	public bool IsElsewhere = false;
 	public bool IsOnQuest { get; set; } = false;
 	public bool IsAssignedToQuest { get; set; } = false;
 
@@ -52,20 +53,18 @@ public class Guest
 
 	public event Action OnAdmitted;
 
-	/// Call this method when the guest is admitted to the tavern.
 	public void Admit()
 	{
 		IsInside = true;
 
-		// 🕒 Calculate dynamic stay duration
-		int baseStay    = GD.RandRange(2, 3);
-		int seatBonus   = AssignedTable != null ? 1 : 0;
+		int baseStay = GD.RandRange(2, 3);
+		int seatBonus = AssignedTable != null ? 1 : 0;
 		int renownBonus = Mathf.Clamp(TavernStats.Instance.Renown / 50, 0, 3);
 
-		StayDuration   = baseStay + seatBonus + renownBonus;
-		DepartureTime  = ClockManager.CurrentTime.AddHours(StayDuration);
+		StayDuration = baseStay + seatBonus + renownBonus;
+		DepartureTime = ClockManager.CurrentTime.AddHours(StayDuration);
 
-		LocationCode   = (int)GuestLocation.TavernFloor;
+		LocationCode = (int)GuestLocation.TavernFloor;
 		OnAdmitted?.Invoke();
 	}
 
@@ -73,11 +72,11 @@ public class Guest
 	{
 		return $"[GUEST:{Name}@{GetHashCode()}]";
 	}
+
 	public void SetLocation(bool inside, bool onStreet, bool elsewhere)
 	{
-		IsInside   = inside;
+		IsInside = inside;
 		IsOnStreet = onStreet;
-		IsElsewhere= elsewhere;
+		IsElsewhere = elsewhere;
 	}
-
 }

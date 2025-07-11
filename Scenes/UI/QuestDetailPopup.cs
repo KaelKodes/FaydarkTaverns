@@ -88,23 +88,21 @@ private void OnAcceptPressed()
 	GD.Print($"[ACCEPT] Accepting quest ref: {boundQuest.GetHashCode()} | QuestId: {boundQuest.QuestId} | Title: {boundQuest.Title}");
 
 	if (boundQuest.Failed && boundQuest.IsComplete)
-{
-	int retryCost = (int)Math.Floor(boundQuest.Reward * 0.15f);
-	RetryDialog.DialogText = $"Reimburse {retryCost}g to retry this mission?";
-	RetryDialog.Show();
-}
-else
-{
-	boundQuest.Accept();
-	AcceptButton.Disabled = true;
+	{
+		int retryCost = (int)Math.Floor(boundQuest.Reward * 0.15f);
+		RetryDialog.DialogText = $"Reimburse {retryCost}g to retry this mission?";
+		RetryDialog.Show();
+	}
+	else
+	{
+		boundQuest.Accept();
+		AcceptButton.Disabled = true;
+		Hide();
+	}
+
 	Hide();
-}
 
-
-Hide();
-
-
-	// Refresh all quest cards
+	// 🔁 Refresh all quest cards
 	foreach (var card in GetTree().GetNodesInGroup("QuestCard"))
 	{
 		if (card is QuestCard qc && qc.HasQuest(boundQuest))
@@ -116,7 +114,7 @@ Hide();
 	{
 		var guest = TavernManager.Instance
 			.GetGuestsInside()
-			.FirstOrDefault(g => g.BoundAdventurer == adventurer);
+			.FirstOrDefault(g => g.BoundNPC != null && g.BoundNPC == adventurer);
 
 		if (guest != null)
 		{
@@ -130,8 +128,7 @@ Hide();
 			GameLog.Debug($"📦 {guest.Name} left to go on a quest.");
 
 			// ✅ Update the table UI
-			table.LinkedPanel.UpdateSeatSlots();
-
+			table?.LinkedPanel?.UpdateSeatSlots();
 		}
 		else
 		{
@@ -139,13 +136,28 @@ Hide();
 		}
 	}
 }
+
 private void OnDismissPressed()
 {
-	if (boundQuest == null) return;
+	if (boundQuest == null)
+		return;
+
+	if (boundQuest.IsAccepted && !boundQuest.IsComplete)
+	{
+		GameLog.Info("⛔ You can't dismiss a quest that is already in progress.");
+		return;
+	}
+
+	// 🚫 Remove assigned adventurers
+	foreach (var adventurer in boundQuest.AssignedAdventurers.ToList())
+	{
+		QuestManager.Instance.UnassignAdventurer(boundQuest, adventurer);
+	}
 
 	QuestManager.Instance.DismissQuest(boundQuest);
 	Hide();
 }
+
 private void OnRetryConfirmed()
 {
 	if (boundQuest == null)
@@ -182,7 +194,22 @@ bool inProgress = quest.IsAccepted && !quest.IsComplete;
 // ✨ Ensure Accept button is visible
 AcceptButton.Visible = true;
 AcceptButton.Disabled = isComplete || inProgress;
-DismissButton.Visible = showRetry;
+
+//Dismiss
+DismissButton.Visible = true;
+
+if (quest.IsAccepted && !quest.IsComplete)
+{
+	DismissButton.Disabled = true;
+	DismissButton.TooltipText = "They've already left!";
+}
+else
+{
+	DismissButton.Disabled = false;
+	DismissButton.TooltipText = "Dismiss this quest and remove any assigned adventurers.";
+}
+
+
 
 // 🔄 Configure Accept button based on quest state
 if (showRetry)

@@ -1,6 +1,8 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using FaydarkTaverns.Objects;
+
 
 public enum QuestType
 {
@@ -31,7 +33,7 @@ public DateTime Deadline;
 public TimeSpan Elapsed => ClockManager.CurrentTime - StartTime;
 public bool IsOverdue => Assigned && ClockManager.CurrentTime > Deadline;
 public DateTime LastSeatCheck = DateTime.MinValue;
-public QuestGiver PostedBy { get; set; }
+public NPCData PostedBy { get; set; }
 
 
 
@@ -39,7 +41,7 @@ public QuestGiver PostedBy { get; set; }
 
 	// Party assignment
 	public bool Assigned => AssignedAdventurers.Count > 0;
-	public List<Adventurer> AssignedAdventurers = new();
+	public List<NPCData> AssignedAdventurers = new();
 
 	// Status
 	public bool IsAccepted = false;
@@ -80,13 +82,17 @@ public QuestGiver PostedBy { get; set; }
 
 	var uniqueRoles = new HashSet<int>();
 	foreach (var a in AssignedAdventurers)
-		uniqueRoles.Add(a.RoleId);
+	{
+		int roleId = ClassTemplate.GetRoleIdFromClass(a.ClassName);
+		uniqueRoles.Add(roleId);
+	}
 
 	if (uniqueRoles.Count >= 3)
 		bonus += (int)(TaskHours * 0.05); // 5% bonus for good synergy
 
 	return bonus;
 }
+
 
 
 public void Accept()
