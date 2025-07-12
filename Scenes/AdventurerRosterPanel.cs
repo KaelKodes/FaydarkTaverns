@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using FaydarkTaverns.Objects;
 
-
 public partial class AdventurerRosterPanel : PanelContainer
 {
 	[Export] public PackedScene GuestCardScene;
@@ -13,24 +12,40 @@ public partial class AdventurerRosterPanel : PanelContainer
 	{
 		GuestCardScene ??= GD.Load<PackedScene>("res://Scenes/UI/GuestCard.tscn");
 		adventurerListContainer = GetNode<VBoxContainer>("AdventurerListContainer");
+
+		GuestManager.OnGuestLeft += HandleGuestLeft;
+
 	}
 
 	public void Populate(List<Guest> guests)
-{
-	foreach (Node child in adventurerListContainer.GetChildren())
-		child.QueueFree();
-
-	foreach (var guest in guests)
 	{
-		var card = GuestCardScene.Instantiate<GuestCard>();
-		card.BoundGuest = guest;
+		foreach (Node child in adventurerListContainer.GetChildren())
+			child.QueueFree();
 
-		if (guest.BoundNPC != null)
-			card.BoundNPC = guest.BoundNPC;
+		foreach (var guest in guests)
+		{
+			if (guest.CurrentState != NPCState.TavernFloor)
+				continue;
 
-		adventurerListContainer.AddChild(card);
+			var card = GuestCardScene.Instantiate<GuestCard>();
+			card.BoundGuest = guest;
+
+			if (guest.BoundNPC != null)
+				card.BoundNPC = guest.BoundNPC;
+
+			adventurerListContainer.AddChild(card);
+		}
 	}
-}
 
-
+	private void HandleGuestLeft(Guest guest)
+	{
+		foreach (var card in adventurerListContainer.GetChildren())
+		{
+			if (card is GuestCard gc && gc.BoundGuest == guest)
+			{
+				gc.QueueFree();
+				break;
+			}
+		}
+	}
 }

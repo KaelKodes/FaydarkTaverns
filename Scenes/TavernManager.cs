@@ -2,7 +2,6 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static GuestLogic;
 using FaydarkTaverns.Objects;
 
 
@@ -174,47 +173,44 @@ public partial class TavernManager : Node
 
 
 	public override void _Process(double delta)
+{
+	if (isPaused || TimeMultiplier == 0)
+		return;
+
+	UpdateTimeLabel();
+	RecheckSeating();
+	RecheckQuestPosting();
+
+	// 🔁 Check for quest resolution
+	foreach (var quest in QuestManager.Instance.GetAcceptedQuests())
 	{
-		if (isPaused || TimeMultiplier == 0)
-			return;
-
-		UpdateTimeLabel();
-		RecheckSeating();
-		RecheckQuestPosting();
-
-
-
-		// 🔁 Check for quest resolution
-		foreach (var quest in QuestManager.Instance.GetAcceptedQuests())
+		if (!quest.IsComplete && ClockManager.CurrentTime >= quest.ExpectedReturn)
 		{
-			if (!quest.IsComplete && ClockManager.CurrentTime >= quest.ExpectedReturn)
+			var result = QuestSimulator.Simulate(quest);
+			quest.IsComplete = true;
+			quest.Failed = !result.Success;
+
+			AddGold(result.GoldEarned);
+
+			foreach (var adventurer in quest.AssignedAdventurers)
 			{
-				var result = QuestSimulator.Simulate(quest);
-				quest.IsComplete = true;
-				quest.Failed = !result.Success;
-
-				AddGold(result.GoldEarned);
-
-				foreach (var adventurer in quest.AssignedAdventurers)
-				{
-					adventurer.GainXP(result.ExpGained);
-				}
-
-				DisplayAdventurers();
-
-				QuestManager.Instance.LogQuestResult(quest, result);
+				adventurer.GainXP(result.ExpGained);
 			}
-		}
 
-		foreach (var q in QuestManager.Instance.GetAcceptedQuests())
-		{
-			GameLog.Debug($"🔍 Active Quest: {q.QuestId} | {q.Title} | Accepted: {q.IsAccepted}");
+			DisplayAdventurers();
+
+			QuestManager.Instance.LogQuestResult(quest, result);
 		}
 	}
 
+	foreach (var q in QuestManager.Instance.GetAcceptedQuests())
+	{
+		GameLog.Debug($"🔍 Active Quest: {q.QuestId} | {q.Title} | Accepted: {q.IsAccepted}");
+	}
 
-
-
+	// 🕒 Check for guests who should leave
+	GuestManager.Instance.TickGuests(ClockManager.CurrentTime);
+}
 
 
 private void StartNewDay(DateTime currentDate)
@@ -230,16 +226,19 @@ private void StartNewDay(DateTime currentDate)
 		foreach (var className in ClassTemplate.GetAllClassNames())
 		{
 			var guest = GuestManager.SpawnNewNPC(NPCRole.Adventurer, className);
-			if (guest != null)
-			{
-				guest.IsOnStreet = true;
-				guest.IsElsewhere = false;
-				guest.LocationCode = (int)GuestLocation.StreetOutside;
+if (guest != null)
+{
+	guest.SetState(NPCState.Elsewhere); // ✅ Start as Elsewhere
+	guest.VisitDay = ClockManager.CurrentDay;
+	guest.VisitHour = GD.RandRange(7, 22); // 9AM–8PM range
+	guest.WaitDuration = GD.RandRange(2, 4);
 
-				GuestManager.QueueGuest(guest);
-				if (!AllVillagers.Contains(guest))
-					AllVillagers.Add(guest);
-			}
+	GuestManager.QueueGuest(guest);
+
+	if (!AllVillagers.Contains(guest))
+		AllVillagers.Add(guest);
+}
+
 		}
 
 		// 🧓 Spawn 4 informants (quest givers)
@@ -248,11 +247,11 @@ private void StartNewDay(DateTime currentDate)
 			var guest = GuestManager.SpawnNewNPC(NPCRole.QuestGiver);
 			if (guest != null)
 			{
-				guest.IsOnStreet = true;
-				guest.IsElsewhere = false;
-				guest.LocationCode = (int)GuestLocation.StreetOutside;
-
+				guest.SetState(NPCState.Elsewhere);
+				guest.VisitDay = ClockManager.CurrentDay;
+				guest.VisitHour = GD.RandRange(6, 18);
 				GuestManager.QueueGuest(guest);
+
 				if (!AllVillagers.Contains(guest))
 					AllVillagers.Add(guest);
 			}
@@ -270,23 +269,16 @@ private void StartNewDay(DateTime currentDate)
 
 		// 🧍 Only persistent guests return
 		bool isPersistent = guest.BoundNPC != null;
-		bool isQuestBound = guest.IsAssignedToQuest || guest.IsOnQuest;
-		bool isInStaging = guest.LocationCode == (int)GuestLocation.Staging;
-		bool isDeployed = guest.LocationCode >= (int)GuestLocation.DeployedBase;
+		bool isQuestBound = guest.CurrentState == NPCState.StagingArea || guest.CurrentState == NPCState.AssignedToQuest;
+		bool isDeployed = guest.CurrentState == NPCState.AssignedToQuest;
+		bool isElsewhere = guest.CurrentState == NPCState.Elsewhere;
 
-		if (guest != null && isPersistent && guest.IsElsewhere && !isQuestBound && !isInStaging && !isDeployed)
+		if (guest != null && isPersistent && isElsewhere && !isQuestBound && !isDeployed)
 		{
 			guest.VisitDay = ClockManager.CurrentDay;
 			guest.VisitHour = GD.RandRange(6, 18);
-			guest.IsOnStreet = true;
-			guest.IsElsewhere = false;
-			guest.LocationCode = (int)GuestLocation.StreetOutside;
-
 			GuestManager.QueueGuest(guest);
 			GameLog.Debug($"🔁 {guest.Name} is returning to town today.");
-
-			if (!AllVillagers.Contains(guest))
-				AllVillagers.Add(guest);
 		}
 	}
 
@@ -295,9 +287,6 @@ private void StartNewDay(DateTime currentDate)
 	UpdateFloorLabel();
 	RecheckSeating();
 }
-
-
-
 
 
 
@@ -330,52 +319,47 @@ private void StartNewDay(DateTime currentDate)
 	foreach (var child in FloorSlots.GetChildren())
 		child.QueueFree();
 
-	// ✅ Sanitize: remove any ghost guests still marked as on floor but not in AllVillagers
+	// ✅ Sanitize: show guests currently on the tavern floor and not seated
 	var floorList = AllVillagers
 		.Where(g =>
 			g != null &&
-			g.IsInside &&
-			g.AssignedTable == null &&
-			g.LocationCode == (int)GuestLocation.TavernFloor)
+			g.CurrentState == NPCState.TavernFloor &&
+			g.AssignedTable == null)
 		.ToList();
 
 	// Render exactly MaxFloorGuests number of slots
-for (int i = 0; i < TavernStats.Instance.MaxFloorGuests; i++)
-{
-	var guest = floorList.ElementAtOrDefault(i);
-
-	var card = GuestCardScene.Instantiate<GuestCard>();
-	card.SetMouseFilter(Control.MouseFilterEnum.Stop);
-
-	if (guest != null && guest.BoundNPC != null)
+	for (int i = 0; i < TavernStats.Instance.MaxFloorGuests; i++)
 	{
-		card.BoundGuest = guest;
-		card.BoundNPC = guest.BoundNPC;
+		var guest = floorList.ElementAtOrDefault(i);
 
-		string name = guest.BoundNPC.FirstName;
-		string roleLabel = guest.BoundNPC.ClassName;
+		var card = GuestCardScene.Instantiate<GuestCard>();
+		card.SetMouseFilter(Control.MouseFilterEnum.Stop);
 
-		card.GetNode<Label>("VBoxContainer/NameLabel").Text = name;
-		card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"{guest.BoundNPC.Level} {roleLabel}";
+		if (guest != null && guest.BoundNPC != null)
+		{
+			card.BoundGuest = guest;
+			card.BoundNPC = guest.BoundNPC;
+
+			string name = guest.BoundNPC.FirstName;
+			string roleLabel = guest.BoundNPC.ClassName;
+
+			card.GetNode<Label>("VBoxContainer/NameLabel").Text = name;
+			card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"{guest.BoundNPC.Level} {roleLabel}";
+		}
+		else
+		{
+			card.SetEmptySlot();
+		}
+
+		FloorSlots.AddChild(card);
 	}
-	else
+
+	// Update all table panels to reflect current seating
+	foreach (var table in tables)
 	{
-		card.SetEmptySlot();
+		table.LinkedPanel?.UpdateSeatSlots();
 	}
-
-	FloorSlots.AddChild(card);
 }
-
-// Update all table panels to reflect current seating
-foreach (var table in tables)
-{
-	table.LinkedPanel?.UpdateSeatSlots();
-}
-
-}
-
-
-
 
 	public void OnGuestSeated(Guest guest)
 	{
@@ -556,39 +540,33 @@ foreach (var table in tables)
 public void RecheckQuestPosting()
 {
 	foreach (var guest in AllVillagers)
-{
-	if (guest.BoundNPC == null || guest.BoundNPC.Role != NPCRole.QuestGiver)
-		continue;
-
-	if (guest.BoundNPC.HasPostedToday)
-		continue;
-
-	if (guest.IsInside &&
-		!guest.IsOnStreet &&
-		!guest.IsElsewhere &&
-		guest.AssignedTable == null &&
-		guest.LocationCode == (int)GuestLocation.TavernFloor &&
-		!guest.IsAssignedToQuest &&
-		!guest.IsOnQuest &&
-		guest.BoundNPC.PostedQuest == null)
 	{
-		if (QuestManager.Instance.CanAddQuest())
+		if (guest.BoundNPC == null || guest.BoundNPC.Role != NPCRole.QuestGiver)
+			continue;
+
+		if (guest.BoundNPC.HasPostedToday)
+			continue;
+
+		if (guest.CurrentState == NPCState.TavernFloor &&
+			guest.AssignedTable == null &&
+			!guest.IsAssignedToQuest &&
+			!guest.IsOnQuest &&
+			guest.BoundNPC.PostedQuest == null)
 		{
-			var quest = QuestGenerator.GenerateFromGiver(guest.BoundNPC, guest);
-			if (quest != null)
+			if (QuestManager.Instance.CanAddQuest())
 			{
-				QuestManager.Instance.AddQuest(quest);
-				guest.BoundNPC.PostedQuest = quest;
-				guest.BoundNPC.HasPostedToday = true;
-				GameLog.Info($"🧾 {guest.Name} posted a new quest: '{quest.Title}'");
+				var quest = QuestGenerator.GenerateFromGiver(guest.BoundNPC, guest);
+				if (quest != null)
+				{
+					QuestManager.Instance.AddQuest(quest);
+					guest.BoundNPC.PostedQuest = quest;
+					guest.BoundNPC.HasPostedToday = true;
+					GameLog.Info($"🧾 {guest.Name} posted a new quest: '{quest.Title}'");
+				}
 			}
 		}
 	}
 }
-
-}
-
-
 
 
 
@@ -619,30 +597,28 @@ public void RecheckQuestPosting()
 		TavernLevelLabel.TooltipText = $"{TavernStats.Instance.Exp} / {TavernStats.Instance.ExpToNextLevel} EXP";
 }
 
-	private bool TrySeatGuest(Guest guest)
+public bool TrySeatGuest(Guest guest)
 {
-	foreach (var table in GetAvailableTables())
+	// ✅ Only seat if the guest is inside and not already seated
+	if (guest == null || guest.AssignedTable != null || guest.CurrentState != NPCState.TavernFloor)
+		return false;
+
+	foreach (var table in tables)
 	{
-		if (!table.HasFreeSeat())
-			continue;
-
-		int index = table.AssignGuest(guest);
-
-		if (index >= 0)
+		if (table.HasFreeSeat())
 		{
-			guest.AssignedTable = table;
-			guest.SeatIndex = index;
-
-			OnGuestSeated(guest);
-			return true;
-		}
-		else
-		{
-			GameLog.Debug($"⚠️ {guest.Name} could not be seated at {table.TableName} — seat assignment failed.");
+			int seatIndex = table.AssignGuest(guest);
+			if (seatIndex >= 0)
+			{
+				GameLog.Debug($"🪑 {guest.Name} took a seat at {table.TableName}.");
+				return true;
+			}
 		}
 	}
+
 	return false;
 }
+
 public int GetPurchasedCount(string itemName)
 {
 	if (PurchasedItems.TryGetValue(itemName, out var count))
@@ -651,25 +627,18 @@ public int GetPurchasedCount(string itemName)
 	return 0;
 }
 
-
-
-	public void UpdateFloorLabel()
+public void UpdateFloorLabel()
 {
 	int onFloor = AllVillagers.Count(g =>
 		g != null &&
-		g.IsInside &&
+		g.CurrentState == NPCState.TavernFloor &&
 		g.AssignedTable == null &&
 		!g.IsOnQuest &&
-		!g.IsAssignedToQuest &&
-		g.LocationCode == (int)GuestLocation.TavernFloor &&
-		!g.IsElsewhere &&
-		!g.IsOnStreet
+		!g.IsAssignedToQuest
 	);
 
 	TavernFloorLabel.Text = $"{onFloor}/{TavernStats.Instance.MaxFloorGuests}";
 }
-
-
 
 
 	public void OnGuestEntered(Guest guest)
@@ -685,57 +654,58 @@ public int GetPurchasedCount(string itemName)
 		DisplayAdventurers();
 	}
 
-	public void AdmitGuestToTavern(Guest guest)
+public void AdmitGuestToTavern(Guest guest)
 {
-	// 🚶 Set guest state *before* evaluating eligibility
-	guest.SetLocation(inside: true, onStreet: false, elsewhere: false);
-	guest.LocationCode = (int)GuestLocation.TavernFloor;
-
-	// 🧍 Ensure guest is tracked
-	if (!AllVillagers.Contains(guest))
-		AllVillagers.Add(guest);
-
-	// 🔒 Enforce standing guest limit (now includes this guest)
-	int standingGuests = AllVillagers.Count(g =>
-		g != null &&
-		g.IsInside &&
-		g.AssignedTable == null &&
-		!g.IsOnQuest &&
-		!g.IsAssignedToQuest &&
-		!g.IsElsewhere &&
-		!g.IsOnStreet &&
-		g.LocationCode == (int)GuestLocation.TavernFloor
-	);
-
-	if (standingGuests > TavernStats.Instance.MaxFloorGuests)
+	// 🧍 Skip if already inside the tavern
+	if (guest.IsInside)
 	{
-		GameLog.Info($"⛔ Someone tries to enter... but the tavern floor is full.");
+		GameLog.Debug($"⛔ Guest {guest.Name} is already inside. Skipping admission.");
 		return;
 	}
 
-	// 🎯 Quest givers must stand first to post quests
-	if (guest.BoundNPC != null && guest.BoundNPC.Role == NPCRole.QuestGiver)
+	// 🔒 Enforce guest cap (standing guests only)
+	int standingGuests = AllVillagers.Count(g =>
+		g != null &&
+		g.CurrentState == NPCState.TavernFloor &&
+		g.AssignedTable == null &&
+		!g.IsOnQuest &&
+		!g.IsAssignedToQuest
+	);
+
+	if (standingGuests >= TavernStats.Instance.MaxFloorGuests)
+	{
+		GameLog.Debug($"⛔ Guest {guest.Name} was denied entry (tavern floor full).");
+		return;
+	}
+
+	// ✅ Proceed with admission: now safe to set state
+	guest.SetState(NPCState.TavernFloor);
+
+	// 🧠 Register in AllVillagers list if new
+	if (!AllVillagers.Contains(guest))
+		AllVillagers.Add(guest);
+
+	// 🎯 Quest givers must stand to post quests
+	if (guest.BoundNPC?.Role == NPCRole.QuestGiver)
 	{
 		GameLog.Debug($"📜 {guest.Name} entered to post a quest.");
+
 		if (!floorGuests.Contains(guest))
 			floorGuests.Add(guest);
 
-		// ✅ Recheck board posting
 		RecheckQuestPosting();
 	}
 	else
 	{
-		// 🪑 Try to seat normal adventurers
+		// 🪑 Try to seat adventurers
 		if (TrySeatGuest(guest))
 		{
 			GameLog.Debug($"✅ {guest.Name} was seated immediately.");
 			return;
 		}
-		else
-		{
-			if (!floorGuests.Contains(guest))
-				floorGuests.Add(guest);
-		}
+
+		if (!floorGuests.Contains(guest))
+			floorGuests.Add(guest);
 	}
 
 	GameLog.Info($"🏠 {guest.Name} entered the tavern.");
@@ -749,22 +719,28 @@ public int GetPurchasedCount(string itemName)
 
 
 
-
-
 	public void NotifyGuestLeft(Guest guest)
+{
+	// ✅ Always attempt to clear them from floor
+	if (floorGuests.Contains(guest))
+		floorGuests.Remove(guest);
+
+	UpdateFloorLabel();
+
+	// ✅ Ensure proper seat cleanup
+	if (guest.AssignedTable != null)
 	{
-		if (floorGuests.Contains(guest))
-		{
-			floorGuests.Remove(guest);
-			UpdateFloorLabel();
-
-			// ✅ Clear seat properly
-			if (guest.AssignedTable != null)
-				guest.AssignedTable.RemoveGuest(guest);
-
-			DisplayAdventurers();
-		}
+		guest.AssignedTable.RemoveGuest(guest);
 	}
+	else if (guest.SeatIndex != null)
+	{
+		GameLog.Debug($"⚠️ {guest.Name} had a seat index but no table assigned. Forcing seat cleanup.");
+		guest.SeatIndex = null;
+	}
+
+	DisplayAdventurers();
+}
+
 
 
 	public void RecheckSeating()
@@ -786,27 +762,21 @@ public int GetPurchasedCount(string itemName)
 	}
 }
 
-
-	public List<Guest> GetGuestsInside()
+public List<Guest> GetGuestsInside()
 {
-	// Remove any nulls or guests that are no longer marked IsInside
-	floorGuests = floorGuests.Where(g => g != null && g.IsInside).ToList();
+	// ✅ Clean up invalid entries
+	floorGuests = floorGuests
+		.Where(g => g != null && g.CurrentState == NPCState.TavernFloor)
+		.ToList();
 
-	// Repair any inconsistencies (force IsInside to true)
+	// 🩹 Optional: Repair any legacy inconsistencies
 	foreach (var guest in floorGuests)
 	{
-		guest.IsInside = true;
-		guest.IsOnStreet = false;
-		guest.IsElsewhere = false;
-		guest.LocationCode = 2;
+		guest.SetState(NPCState.TavernFloor);
 	}
 
 	return floorGuests;
 }
-
-
-
-
 
 	#endregion
 	#region Shop

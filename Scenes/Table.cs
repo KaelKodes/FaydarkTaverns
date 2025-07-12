@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FaydarkTaverns.Objects;
 
 public partial class Table : Panel
 {
@@ -50,52 +51,46 @@ public partial class Table : Panel
 	}
 
 	public int AssignGuest(Guest guest)
-{
-	for (int i = 0; i < SeatedGuests.Count; i++)
 	{
-		if (SeatedGuests[i] == null)
+		for (int i = 0; i < SeatedGuests.Count; i++)
 		{
-			SeatedGuests[i] = guest;
-			guest.SeatIndex = i;
-			guest.AssignedTable = this;
+			if (SeatedGuests[i] == null)
+			{
+				SeatedGuests[i] = guest;
+				guest.SeatIndex = i;
+				guest.AssignedTable = this;
 
-			// ✅ Set location to TableBase + TableId (use unique ID if you add it later)
-			guest.LocationCode = (int)GuestLocation.TableBase; // Can be expanded later to +TableId
+				// ✅ Set state to seated
+				guest.SetState(NPCState.Seats);
 
-			UpdateSeatVisual(i, guest);
+				UpdateSeatVisual(i, guest);
 
-			if (LinkedPanel != null)
-				LinkedPanel.UpdateSeatSlots();
+				LinkedPanel?.UpdateSeatSlots();
+				TavernManager.Instance.DisplayAdventurers();
+				TavernManager.Instance.UpdateFloorLabel();
 
-			TavernManager.Instance.DisplayAdventurers();
-			TavernManager.Instance.UpdateFloorLabel();
+				return i;
+			}
+		}
+		return -1;
+	}
 
-			return i;
+	public void RemoveGuest(Guest guest)
+	{
+		int index = SeatedGuests.IndexOf(guest);
+		if (index >= 0)
+		{
+			SeatedGuests[index] = null;
+			guest.AssignedTable = null;
+			guest.SeatIndex = -1;
+
+			// ✅ Reset to idle state on tavern floor
+			guest.SetState(NPCState.TavernFloor);
+
+			UpdateSeatVisual(index, null);
+			LinkedPanel?.UpdateSeatSlots();
 		}
 	}
-	return -1;
-}
-
-public void RemoveGuest(Guest guest)
-{
-	int index = SeatedGuests.IndexOf(guest);
-	if (index >= 0)
-	{
-		SeatedGuests[index] = null;
-		guest.AssignedTable = null;
-		guest.SeatIndex = -1;
-
-		// ✅ Set location back to limbo; use TavernFloor later if needed
-		guest.LocationCode = (int)GuestLocation.InTown;
-
-		UpdateSeatVisual(index, null);
-
-		LinkedPanel?.UpdateSeatSlots();
-	}
-}
-
-
-
 
 	private void UpdateSeatVisual(int index, Guest guest)
 	{

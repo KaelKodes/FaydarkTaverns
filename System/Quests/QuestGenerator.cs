@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using FaydarkTaverns.Objects;
 
-
 public static class QuestGenerator
 {
 	private static readonly Random rng = new();
@@ -29,31 +28,30 @@ public static class QuestGenerator
 	};
 
 	public static Quest GenerateQuest(int id)
-{
-	QuestType type = GetRandomEnum<QuestType>();
-	Region region = GetRandomEnum<Region>();
+	{
+		QuestType type = GetRandomEnum<QuestType>();
+		Region region = GetRandomEnum<Region>();
 
-	int travelTime = GetTravelTimeFromElderstone(region);
-	int taskTime = rng.Next(60, 180); // Task Time: 1–3 hours
-	int deadline = travelTime * 2 + taskTime + rng.Next(30, 120); // Add padding for deadline
+		int travelTime = GetTravelTimeFromElderstone(region);
+		int taskTime = rng.Next(60, 180); // Task Time: 1–3 hours
+		int deadline = travelTime * 2 + taskTime + rng.Next(30, 120); // Add padding for deadline
 
-	List<int> optimalRoles = GetOptimalRoles(type);
+		List<int> optimalRoles = GetOptimalRoles(type);
 
-	return new Quest
-{
-	QuestId = id,
-	Title = GenerateQuestTitle(type, region),
-	Type = type,
-	Region = region,
-	TravelHours = travelTime,
-	TaskHours = taskTime / 60, // Convert minutes to hours if taskTime is in minutes
-	Description = SampleDescriptions[rng.Next(SampleDescriptions.Count)],
-	Quirk = rng.NextDouble() < 0.3 ? SampleQuirks[rng.Next(SampleQuirks.Count)] : null,
-	OptimalRoles = optimalRoles,
-	Reward = rng.Next(30, 80)
-};
-}
-
+		return new Quest
+		{
+			QuestId = id,
+			Title = GenerateQuestTitle(type, region),
+			Type = type,
+			Region = region,
+			TravelHours = travelTime,
+			TaskHours = taskTime / 60,
+			Description = SampleDescriptions[rng.Next(SampleDescriptions.Count)],
+			Quirk = rng.NextDouble() < 0.3 ? SampleQuirks[rng.Next(SampleQuirks.Count)] : null,
+			OptimalRoles = optimalRoles,
+			Reward = rng.Next(30, 80)
+		};
+	}
 
 	private static string GenerateQuestTitle(QuestType type, Region region)
 	{
@@ -109,38 +107,37 @@ public static class QuestGenerator
 			_ => 4
 		};
 	}
+
 	public static Quest GenerateFromGiver(NPCData giver, Guest guest)
-{
-	if (giver == null || guest == null)
 	{
-		GameLog.Debug("⚠️ Tried to generate a quest from a null giver or guest.");
-		return null;
+		if (giver == null || guest == null)
+		{
+			GameLog.Debug("⚠️ Tried to generate a quest from a null giver or guest.");
+			return null;
+		}
+
+		// ✅ New logic: only generate if the guest is actively standing on the tavern floor
+		bool validState = guest.CurrentState == NPCState.TavernFloor &&
+						  guest.AssignedTable == null;
+
+		if (!validState)
+		{
+			GameLog.Debug($"⛔ {guest.Name} tried to post a quest from invalid state: {guest.CurrentState}");
+			return null;
+		}
+
+		if (giver.PostedQuest != null)
+		{
+			GameLog.Debug($"⛔ {giver.Name} already has a posted quest.");
+			return giver.PostedQuest;
+		}
+
+		var quest = GenerateQuest(QuestManager.Instance.GetNextQuestId());
+		quest.PostedBy = giver;
+		giver.PostedQuest = quest;
+		giver.QuestsPosted++;
+
+		GameLog.Debug($"🧾 [SAFE-GEN] {giver.Name} generated a new quest: '{quest.Title}'");
+		return quest;
 	}
-
-	// 🔒 Sanity check: guest must be valid and on the tavern floor
-	if (!guest.IsInside || guest.IsOnStreet || guest.IsElsewhere || guest.AssignedTable != null || guest.LocationCode != (int)GuestLocation.TavernFloor)
-	{
-		GameLog.Debug($"⛔ {guest.Name} tried to post a quest from outside or invalid state.");
-		return null;
-	}
-
-	if (giver.PostedQuest != null)
-	{
-		GameLog.Debug($"⛔ {giver.Name} already has a posted quest.");
-		return giver.PostedQuest;
-	}
-
-	var quest = GenerateQuest(QuestManager.Instance.GetNextQuestId());
-	quest.PostedBy = giver;
-	giver.PostedQuest = quest;
-	giver.QuestsPosted++;
-
-	GameLog.Debug($"🧾 [SAFE-GEN] {giver.Name} generated a new quest: '{quest.Title}'");
-	return quest;
-}
-
-
-
-
-	
 }

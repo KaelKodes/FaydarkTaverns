@@ -12,6 +12,9 @@ namespace FaydarkTaverns.Objects
 		public string Name => $"{FirstName} {LastName}";
 		public string Gender { get; set; }
 		public int PortraitId { get; set; }
+		public int VisitHour { get; set; } = -1; // -1 means not set
+		public int VisitDay { get; set; } = -1;
+
 
 		// Role & State
 		public NPCRole Role { get; set; }
@@ -48,6 +51,13 @@ namespace FaydarkTaverns.Objects
 
 		public Quest ActiveQuest { get; set; } = null;
 		public Quest PostedQuest { get; set; } = null;
+		
+		// Timers
+		public float EntryPatience { get; set; }
+		public float TavernLingerTime { get; set; }
+		public float SeatRetryInterval { get; set; }
+		public float SocializeDuration { get; set; }
+
 
 		// Utility Methods
 		public void GainXP(int amount)

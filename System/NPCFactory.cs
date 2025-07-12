@@ -46,10 +46,28 @@ public static class NPCFactory
 		LastName = last,
 		State = NPCState.Elsewhere,
 		Level = 1,
-		Xp = 0
+		Xp = 0,
+		VisitHour = GetDefaultVisitHour(),
+		VisitDay = -1, // Will be set when they are scheduled
+
+		// Timing Behavior Stats
+		EntryPatience = Range(8f, 20f),
+		TavernLingerTime = Range(75f, 150f),
+		SeatRetryInterval = Range(5f, 10f),
+		SocializeDuration = Range(10f, 25f)
+
 	};
+
 	return npc;
 }
+
+
+// 🎯 9AM to 9PM default visiting range — expand this later for class quirks
+private static int GetDefaultVisitHour()
+{
+	return random.Next(7, 22); // (7AM to 10 PM)
+}
+
 
 
 	public static void AssignAdventurerStats(NPCData npc, ClassTemplate template)
@@ -117,4 +135,11 @@ public static class NPCFactory
 	{
 		return random.Next(-50, 51);
 	}
+	private static float Range(float min, float max)
+{
+	return (float)(random.NextDouble() * (max - min) + min);
+}
+
+	
+	
 }

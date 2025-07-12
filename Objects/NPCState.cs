@@ -8,7 +8,7 @@ namespace FaydarkTaverns.Objects
 		TavernFloor,       // Actively roaming the tavern
 		Seats,             // Seated and engaging
 		Lodging,           // Resting in the tavern's rooms
-		AssignedToQuest,   // Currently on a quest
-		Departed           // Removed or permanently left
+		AssignedToQuest,   // Currently WAITING to leave for a quest
+		Deployed           // Deployed on a quest
 	}
 }

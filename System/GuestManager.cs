@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using FaydarkTaverns.Objects;
 
-
 public partial class GuestManager : Node
 {
 	public static List<Guest> guestsOutside = new();
@@ -13,45 +12,52 @@ public partial class GuestManager : Node
 	public int GuestsInsideCount() => guestsInside.Count;
 	public int GuestsOutsideCount() => guestsOutside.Count;
 	public static GuestManager Instance { get; private set; }
-	private bool hasAnnouncedOpen = false;
-
+	public static List<Guest> GuestsOutside => guestsOutside;
+	public static List<Guest> GuestsInside => guestsInside;
+	public static event Action<Guest> OnGuestLeft;
+	public static event Action<Guest> OnGuestAdmitted;
 	
+
+
+
+	private bool hasAnnouncedOpen = false;
+	private bool hasAnnouncedLastCall = false;
+	private bool hasClosedTavern = false;
+
+
 	public override void _Ready()
-{
-
-	var timer = new Timer
 	{
-		WaitTime = 3.0f,
-		Autostart = true,
-		OneShot = false
-	};
-	AddChild(timer);
-	timer.Timeout += () => TickGuests(ClockManager.CurrentTime);
-}
-
+		Instance = this;
+		var timer = new Timer
+		{
+			WaitTime = 3.0f,
+			Autostart = true,
+			OneShot = false
+		};
+		AddChild(timer);
+		timer.Timeout += () => TickGuests(ClockManager.CurrentTime);
+	}
 
 public static void QueueGuest(Guest guest)
 {
-	guest.SetLocation(inside: false, onStreet: true, elsewhere: false);
+	if (Instance == null)
+	{
+		GameLog.Debug("⚠️ GuestManager.Instance is null. Cannot queue guest.");
+		return;
+	}
 
-	// Prevent duplicate addition
-	if (!guestsOutside.Contains(guest))
-	{
-		guestsOutside.Add(guest);
-		GameLog.Debug($"🚶 {guest.Name} is walking by.");
-	}
-	else
-	{
-		GameLog.Debug($"⚠️ {guest.Name} is already queued outside. Skipping duplicate.");
-	}
+	Instance.QueueGuestInternal(guest);
 }
 
-
+private void QueueGuestInternal(Guest guest)
+{
+	if (!guestsOutside.Contains(guest))
+		guestsOutside.Add(guest);
+}
 
 
 public void TickGuests(DateTime currentTime)
 {
-	// ⛔ Prevent logic if game is paused
 	if (ClockManager.TimeMultiplier == 0f)
 		return;
 
@@ -62,159 +68,226 @@ public void TickGuests(DateTime currentTime)
 	{
 		GameLog.Info("🌞 The tavern is now open for the day!");
 		hasAnnouncedOpen = true;
+
+		// 🔁 Reset flags for new day
+		hasAnnouncedLastCall = false;
+		hasClosedTavern = false;
 	}
 
-	// 🍻 Last Call warning (fires once at 02:00)
-	if (currentHour == 2)
+	// 🍻 Last Call warning (once)
+	if (currentHour == 2 && !hasAnnouncedLastCall)
+	{
 		GameLog.Info("🍻 Last Call! The tavern will close at 03:00.");
+		hasAnnouncedLastCall = true;
+	}
 
-	// 🚪 Close the tavern at exactly 03:00 and remove all guests
-	if (currentHour == 3)
+	// 🚪 Tavern closes at 03:00 (once)
+	if (currentHour == 3 && !hasClosedTavern)
 	{
 		for (int i = guestsInside.Count - 1; i >= 0; i--)
 		{
 			var guest = guestsInside[i];
-			RemoveGuest(guest);
+			RemoveGuest(guest); // Force kick — still valid
 		}
 
 		GameLog.Info("🚪 The tavern has closed for the day.");
-		hasAnnouncedOpen = false; // Reset for next morning
+		hasAnnouncedOpen = false;
+		hasClosedTavern = true;
 		return;
 	}
 
-	// ✅ Try to admit or remove guests from the street
+	// 🚶 Move Elsewhere guests to StreetOutside at visit time
+	for (int i = 0; i < guestsOutside.Count; i++)
+	{
+		var guest = guestsOutside[i];
+		if (guest.CurrentState == NPCState.Elsewhere &&
+			guest.VisitDay <= ClockManager.CurrentDay &&
+			currentHour >= guest.VisitHour)
+		{
+			guest.SetState(NPCState.StreetOutside);
+			GameLog.Debug($"🚶 {guest.Name} arrived outside the tavern (VisitHour={guest.VisitHour}).");
+		}
+	}
+
+	// ✅ Entry logic for StreetOutside guests
 	for (int i = guestsOutside.Count - 1; i >= 0; i--)
 	{
 		var guest = guestsOutside[i];
 
 		bool itIsTheirDay = guest.VisitDay <= ClockManager.CurrentDay;
-		bool itIsTimeToEnter = ClockManager.CurrentTime.Hour >= guest.VisitHour;
-		bool theyHaveWaitedTooLong = ClockManager.CurrentTime.Hour > guest.VisitHour + guest.WaitDuration;
+		bool itIsTimeToEnter = currentHour >= guest.VisitHour;
+		bool theyHaveWaitedTooLong = currentHour > guest.VisitHour + guest.WaitDuration;
 
 		if (itIsTheirDay && itIsTimeToEnter)
 		{
-			int standingGuests = TavernManager.Instance.GetGuestsInside().Count;
-			if (standingGuests < TavernStats.Instance.MaxFloorGuests)
-			{
-				AdmitGuest(guest); // handles removal
-			}
-			else
-			{
-				GameLog.Debug($"⛔ Someone tries to enter... but the tavern floor is full.");
-			}
+			TryAdmitGuest(guest);
 		}
 		else if (itIsTheirDay && theyHaveWaitedTooLong)
 		{
 			guestsOutside.RemoveAt(i);
-			guest.SetLocation(false, false, true); // Elsewhere
-			GameLog.Info($"😞 {guest.Name} has left the area.");
+			guest.SetState(NPCState.Elsewhere);
+			GameLog.Debug($"{guest.Name} waited too long and left the street.");
 		}
 	}
 
-	// ✅ Remove guests who overstayed their floor/table time
+	// 🕓 Departure debug (leave handled by TimerManager)
 	for (int i = guestsInside.Count - 1; i >= 0; i--)
 	{
 		var guest = guestsInside[i];
+		GameLog.Debug($"🕓 Checking {guest.Name} | Departure: {guest.DepartureTime} | ShouldLeave: {guest.ShouldLeave}");
 
-		if (guest.DepartureTime.HasValue && ClockManager.CurrentTime >= guest.DepartureTime.Value)
+		if (!guest.DepartureTime.HasValue)
 		{
-			RemoveGuest(guest);
+			GameLog.Debug($"⚠️ {guest.Name} has no DepartureTime set.");
 		}
 	}
 }
 
-
-
-
-	public void AdmitGuest(Guest guest)
-{
-	guest.SetLocation(inside: true, onStreet: false, elsewhere: false);
-	guest.Admit(); // handles DepartureTime, OnAdmitted event
-
-	TavernManager.Instance.AdmitGuestToTavern(guest);
-guestsOutside.Remove(guest);
-
-if (!guestsInside.Contains(guest))
-	guestsInside.Add(guest);
-
-}
-
-
-
-	public void RemoveGuest(Guest guest)
+private void AdmitGuest(Guest guest)
 {
 	if (guest == null)
 		return;
 
-	// 🪑 Remove from table if seated
+	// ⏳ Schedule departure
+	guest.DepartureTime = ClockManager.CurrentTime.AddMinutes(guest.TavernLingerTime);
+	TimerManager.Instance.ScheduleEvent(guest.DepartureTime.Value, () => Leave(guest));
+	//GameLog.Debug($"⏳ {guest.Name} scheduled to leave at {guest.DepartureTime.Value}");
+
+	// 📣 Notify systems of pending admission
+	OnGuestAdmitted?.Invoke(guest);
+
+	// 🏠 Let TavernManager handle full admission flow
+	TavernManager.Instance.AdmitGuestToTavern(guest);
+
+	// 🧹 Update tracking lists
+	guestsOutside.Remove(guest);
+
+	if (!guestsInside.Contains(guest))
+		guestsInside.Add(guest);
+}
+
+public void RemoveGuest(Guest guest)
+{
+	if (guest == null)
+		return;
+
+	GameLog.Info($"❌ Forcibly removing {guest.Name} from the tavern.");
+
+	// 🪑 Unseat if needed
 	if (guest.AssignedTable != null)
 	{
 		guest.AssignedTable.RemoveGuest(guest);
 		guest.AssignedTable = null;
-		guest.SeatIndex = null;
 	}
+	guest.SeatIndex = null;
 
-	// 📦 Remove from inside list
-	if (guestsInside.Contains(guest))
-		guestsInside.Remove(guest);
-		guest.DepartureTime = null;
-		guest.StayDuration = 0;
+	// 📦 Clean from lists (safe even if not present)
+	guestsInside.Remove(guest);
+	guestsOutside.Remove(guest);
 
+	// ⏳ Reset lifecycle state
+	guest.DepartureTime = null;
+	guest.StayDuration = 0;
+	guest.SetState(NPCState.Elsewhere);
 
-	// 🎯 Tell TavernManager this guest left
-	TavernManager.Instance.OnGuestRemoved(guest);
-
-	// 🔁 Queue to return another day
+	// 🔁 Guest will return another day
 	QueueGuest(guest);
-	guest.SetLocation(false, false, true); // Marks them as Elsewhere
 
-	GameLog.Info($"😞 {guest.Name} has left the tavern.");
-
-	// 🔄 Refresh visuals
-	TavernManager.Instance.DisplayAdventurers();
-	TavernManager.Instance.UpdateFloorLabel();
+	// 🎯 Tell systems to clean up any UI or linked panels
+	TavernManager.Instance.OnGuestRemoved(guest);
 }
 
-// Guest Spawning
+	// Guest Spawning
 public static Guest SpawnNewNPC(NPCRole role, string className = "Warrior")
 {
 	var npc = NPCFactory.CreateBaseNPC();
 	npc.Role = role;
 
-// Set portrait now that role is known
-NPCFactory.AssignPortrait(npc);
+	// Set portrait now that role is known
+	NPCFactory.AssignPortrait(npc);
 
-// Apply role-based stat logic
-switch (role)
-{
-	case NPCRole.Adventurer:
-		var template = ClassTemplate.GetTemplateByName(className);
-		NPCFactory.AssignAdventurerStats(npc, template);
-		break;
+	// Apply role-based stat logic
+	switch (role)
+	{
+		case NPCRole.Adventurer:
+			var template = ClassTemplate.GetTemplateByName(className);
+			NPCFactory.AssignAdventurerStats(npc, template);
+			break;
 
-	case NPCRole.QuestGiver:
-		NPCFactory.AssignInformantStats(npc);
-		break;
-}
+		case NPCRole.QuestGiver:
+			NPCFactory.AssignInformantStats(npc);
+			break;
+	}
 
+	// 📈 Calculate renown-based linger bonus
+	float renownBoost = Mathf.Clamp(TavernStats.Instance.Renown / 100f, 0f, 0.5f);
+	float adjustedLingerTime = npc.TavernLingerTime * (1f + renownBoost);
 
 	var guest = new Guest
 	{
 		Name = npc.Name,
 		Gender = (Gender)Enum.Parse(typeof(Gender), npc.Gender),
 		VisitDay = ClockManager.CurrentDay,
-		VisitHour = GD.RandRange(6, 18),
+		VisitHour = GD.RandRange(7, 22),
 		WaitDuration = GD.RandRange(1, 2),
 		StayDuration = GD.RandRange(4, 8),
 		PortraitId = npc.PortraitId,
-		BoundNPC = npc
+		BoundNPC = npc,
+
+		EntryPatience = npc.EntryPatience,
+		TavernLingerTime = adjustedLingerTime,
+		SeatRetryInterval = npc.SeatRetryInterval,
+		SocializeDuration = npc.SocializeDuration
 	};
 
+	GameLog.Debug($"🛋️ {guest.Name} will linger {adjustedLingerTime:F1} minutes (Renown={TavernStats.Instance.Renown})");
+
+	guest.SetState(NPCState.Elsewhere);
 	return guest;
 }
 
 
+// Handles guests leaving on their own, not by user
+public void Leave(Guest guest)
+{
+	if (guest == null)
+		return;
+
+	GameLog.Info($"🚶 {guest.Name} heads home.");
+
+	if (guestsInside.Contains(guest))
+		guestsInside.Remove(guest);
+
+	if (guestsOutside.Contains(guest))
+		guestsOutside.Remove(guest);
+
+	TavernManager.Instance.NotifyGuestLeft(guest);
+
+	// 🪑 Remove from table
+	if (guest.AssignedTable != null)
+	{
+		guest.AssignedTable.RemoveGuest(guest);
+		guest.AssignedTable = null;
+	}
+	guest.SeatIndex = null;
+
+	guest.DepartureTime = null;
+	guest.SetState(NPCState.Elsewhere);
+	GameLog.Debug($"✅ {guest.Name} left the tavern at {ClockManager.CurrentTime}. DepartureTime was {guest.DepartureTime}");
 
 
+	OnGuestLeft?.Invoke(guest);
+}
+
+private void TryAdmitGuest(Guest guest)
+{
+	if (guest == null || guest.CurrentState != NPCState.StreetOutside)
+		return;
+
+	if (TavernManager.Instance.GetGuestsInside().Count >= TavernStats.Instance.MaxFloorGuests)
+		return;
+
+	AdmitGuest(guest); // ✅ Let the real admission logic handle everything
+}
 
 }

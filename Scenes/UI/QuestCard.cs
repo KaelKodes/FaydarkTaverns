@@ -2,6 +2,8 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FaydarkTaverns.Objects;
+
 
 public partial class QuestCard : Panel
 {
@@ -285,11 +287,8 @@ public override void _DropData(Vector2 atPosition, Variant data)
 		}
 
 		// 🎯 Update guest quest assignment state
-		guest.IsAssignedToQuest = true;
-		guest.IsOnQuest = false;
-		guest.IsInside = false;
+		guest.SetState(NPCState.StagingArea);
 		guest.DepartureTime = null;
-		guest.LocationCode = (int)GuestLocation.Staging;
 
 		GameLog.Info($"🧭 {guest.Name} has been assigned to '{quest.Title}' and awaits departure.");
 	}
@@ -303,13 +302,6 @@ public override void _DropData(Vector2 atPosition, Variant data)
 	TavernManager.Instance?.DisplayAdventurers();
 	TavernManager.Instance?.UpdateFloorLabel();
 }
-
-
-
-
-
-
-
 
 private void UnassignFromSlot(int index)
 {
@@ -337,23 +329,17 @@ private void UnassignFromSlot(int index)
 				Gender = (Gender)(new Random().Next(0, 2)),
 				PortraitId = adventurer.PortraitId,
 				BoundNPC = adventurer,
-				IsOnQuest = false,
-				IsAssignedToQuest = false,
-				IsInside = false,
 				VisitDay = ClockManager.CurrentDay,
 				VisitHour = ClockManager.CurrentTime.Hour,
 				WaitDuration = 1,
-				StayDuration = 4,
-				LocationCode = (int)GuestLocation.StreetOutside
+				StayDuration = 4
 			};
 
 			GameLog.Debug($"⚠️ Reconstructed guest for unassigned adventurer: {guest.Name}");
 		}
 
-		// 🔄 Reset state
-		guest.IsOnQuest = false;
-		guest.IsAssignedToQuest = false;
-		guest.IsInside = false;
+		// 🔄 Reset state and remove seating
+		guest.SetState(NPCState.StreetOutside);
 		guest.AssignedTable = null;
 		guest.SeatIndex = null;
 		guest.DepartureTime = null;
@@ -374,9 +360,6 @@ private void UnassignFromSlot(int index)
 		TavernManager.Instance.DisplayAdventurers();
 	}
 }
-
-
-
 
 
 	public override void _GuiInput(InputEvent @event)

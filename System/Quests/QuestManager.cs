@@ -131,31 +131,46 @@ public void DismissQuest(Quest quest)
 	GameLog.Info($"🗑️ Dismissed quest: {quest.Title}");
 }
 
-
 public void UnassignAdventurer(Quest quest, NPCData npc)
 {
-	if (quest.AssignedAdventurers.Contains(npc))
+	if (!quest.AssignedAdventurers.Contains(npc))
+		return;
+
+	quest.AssignedAdventurers.Remove(npc);
+
+	var guest = TavernManager.Instance.AllVillagers
+		.FirstOrDefault(g => g.BoundNPC != null && g.BoundNPC == npc);
+
+	if (guest != null)
 	{
-		quest.AssignedAdventurers.Remove(npc);
-
-		var guest = TavernManager.Instance.AllVillagers
-			.FirstOrDefault(g => g.BoundNPC != null && g.BoundNPC == npc);
-
-		if (guest != null)
+		// ✅ Prevent duplication in queue
+		if (GuestManager.GuestsOutside.Contains(guest) ||
+			GuestManager.GuestsInside.Contains(guest))
 		{
-			guest.IsOnQuest = false;
-			guest.IsAssignedToQuest = false;
-			guest.DepartureTime = null;
-			guest.AssignedTable = null;
-			guest.SeatIndex = null;
-			guest.LocationCode = (int)GuestLocation.StreetOutside;
-
-			TavernManager.Instance.AdmitGuestToTavern(guest);
+			GameLog.Debug($"⚠️ {guest.Name} already tracked. Skipping duplicate add.");
+			return;
 		}
+
+		// 🧹 Clear tavern-specific assignments
+		guest.AssignedTable = null;
+		guest.SeatIndex = null;
+
+		// 🚪 Update state
+		guest.SetState(NPCState.StreetOutside);
+
+		// ⏳ Ensure they’ll leave eventually
+		int fallbackDuration = 3;
+		guest.DepartureTime = ClockManager.CurrentTime.AddHours(guest.StayDuration > 0 ? guest.StayDuration : fallbackDuration);
+
+		// 🧭 Queue for reintegration
+		GuestManager.QueueGuest(guest);
+		GameLog.Info($"👋 {guest.Name} was unassigned and returned to the street.");
 	}
 }
 
-private void HandleQuestReturn(Quest quest)
+
+
+public void HandleQuestReturn(Quest quest)
 {
 	foreach (var adventurer in quest.AssignedAdventurers)
 	{
@@ -168,31 +183,29 @@ private void HandleQuestReturn(Quest quest)
 			continue;
 		}
 
-		guest.IsOnQuest = false;
-		guest.IsAssignedToQuest = false;
-		guest.IsInside = false;
-		guest.IsOnStreet = false;
-		guest.IsElsewhere = false;
-		guest.DepartureTime = null;
+		// ✅ Safety check: prevent re-adding if already tracked
+		if (GuestManager.GuestsOutside.Contains(guest) ||
+			GuestManager.GuestsInside.Contains(guest))
+		{
+			GameLog.Debug($"⚠️ {guest.Name} already tracked. Skipping duplicate add.");
+			continue;
+		}
+
+		// ✅ Reset guest state
 		guest.AssignedTable = null;
 		guest.SeatIndex = null;
-		guest.LocationCode = (int)GuestLocation.InTown;
 
-		if (TavernManager.Instance.GetGuestsInside().Count < TavernStats.Instance.MaxFloorGuests)
-		{
-			TavernManager.Instance.AdmitGuestToTavern(guest);
-			GameLog.Info($"🧭 {guest.Name} has returned from '{quest.Title}' and entered the tavern.");
-		}
-		else
-		{
-			guest.IsOnStreet = true;
-			guest.LocationCode = (int)GuestLocation.StreetOutside;
-			GuestManager.QueueGuest(guest);
-			GameLog.Info($"🧭 {guest.Name} has returned from '{quest.Title}' and waits outside.");
-		}
+		guest.SetState(NPCState.StreetOutside);
+
+		// ⏳ Set DepartureTime for auto-leave
+		int fallbackDuration = 3;
+		guest.DepartureTime = ClockManager.CurrentTime.AddHours(guest.StayDuration > 0 ? guest.StayDuration : fallbackDuration);
+
+		// ✅ Add to outside queue
+		GuestManager.QueueGuest(guest);
+		GameLog.Info($"🧭 {guest.Name} has returned from '{quest.Title}' and waits outside.");
 	}
 }
-
 
 
 
