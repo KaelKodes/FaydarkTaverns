@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://bp53yv3ypaa5j"]
+[gd_scene load_steps=31 format=3 uid="uid://bp53yv3ypaa5j"]
 
 [ext_resource type="Script" uid="uid://hacx1tuggxkp" path="res://Scenes/QuestBoardPanel.cs" id="1_7ljul"]
 [ext_resource type="Script" uid="uid://bw4esvijflh3" path="res://Scenes/TavernManager.cs" id="1_v6xsb"]
@@ -22,6 +22,11 @@
 [ext_resource type="Texture2D" uid="uid://c10ix5ub2nk33" path="res://Assets/UI/Cursors/IdleCursor.png" id="20_31se6"]
 [ext_resource type="Texture2D" uid="uid://ctj5ywaei1oec" path="res://Assets/UI/Cursors/GrabCursor.png" id="21_vy8gr"]
 [ext_resource type="Texture2D" uid="uid://daquq11f4fwy0" path="res://Assets/UI/Cursors/PointCursor.png" id="22_abkob"]
+[ext_resource type="Texture2D" uid="uid://dqrf2qcouoqfh" path="res://Assets/UI/Buttons/ActiveTab.png" id="23_m6qgr"]
+[ext_resource type="Script" uid="uid://cdnel2ogdqpca" path="res://Scenes/AudioPanelManager.cs" id="23_vy8gr"]
+[ext_resource type="Texture2D" uid="uid://hjhwiuyh0eoo" path="res://Assets/UI/Buttons/InactiveTab.png" id="24_e0xf5"]
+[ext_resource type="Texture2D" uid="uid://ck07m4ymrsgus" path="res://Assets/UI/Buttons/Audio.png" id="25_yj0io"]
+[ext_resource type="Script" uid="uid://cy12bvwpnd4qw" path="res://Scenes/MusicManager.cs" id="27_e0xf5"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_esg4o"]
 
@@ -393,11 +398,12 @@ scroll_following = true
 
 [node name="UIAudio" type="Node" parent="." node_paths=PackedStringArray("AudioPlayer")]
 script = ExtResource("16_kk1q5")
-AudioPlayer = NodePath("AudioStreamPlayer")
+AudioPlayer = NodePath("UIStreamPlayer")
 HoverSound = ExtResource("17_rf4u6")
 ClickSound = ExtResource("18_udw8w")
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="UIAudio"]
+[node name="UIStreamPlayer" type="AudioStreamPlayer" parent="UIAudio"]
+bus = &"Interface"
 
 [node name="UICursor" type="Node" parent="."]
 script = ExtResource("19_udw8w")
@@ -409,6 +415,101 @@ PointCursor = ExtResource("22_abkob")
 position = Vector2i(750, 100)
 visible = false
 content_scale_mode = 1
+
+[node name="MusicManager" type="Node" parent="." node_paths=PackedStringArray("MusicPlayer")]
+process_mode = 1
+script = ExtResource("27_e0xf5")
+MusicPlayer = NodePath("MusicStreamPlayer")
+
+[node name="AudioButton" type="TextureButton" parent="MusicManager"]
+offset_left = 1840.0
+offset_top = 643.0
+offset_right = 1893.0
+offset_bottom = 691.0
+size_flags_horizontal = 4
+texture_normal = ExtResource("23_m6qgr")
+texture_pressed = ExtResource("24_e0xf5")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Icon" type="TextureRect" parent="MusicManager/AudioButton"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 5.0
+offset_right = 44.0
+offset_bottom = 45.0
+texture = ExtResource("25_yj0io")
+
+[node name="AudioPanelManager" type="Panel" parent="MusicManager" node_paths=PackedStringArray("AudioButton", "AudioPanel", "MusicSlider", "InterfaceSlider")]
+process_mode = 1
+z_index = 2
+offset_left = 1662.0
+offset_top = 506.0
+offset_right = 1823.0
+offset_bottom = 660.0
+script = ExtResource("23_vy8gr")
+AudioButton = NodePath("../AudioButton")
+AudioPanel = NodePath(".")
+MusicSlider = NodePath("VBoxContainer/MusicSlider")
+InterfaceSlider = NodePath("VBoxContainer/InterfaceSlider")
+
+[node name="TextureRect" type="TextureRect" parent="MusicManager/AudioPanelManager"]
+z_index = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 17.0
+offset_bottom = 34.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("23_m6qgr")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MusicManager/AudioPanelManager"]
+z_index = 2
+layout_mode = 0
+offset_left = 16.0
+offset_top = 9.0
+offset_right = 163.0
+offset_bottom = 157.0
+
+[node name="Label" type="Label" parent="MusicManager/AudioPanelManager/VBoxContainer"]
+z_index = 2
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0.982343, 0.982342, 0.982342, 1)
+theme_override_constants/shadow_offset_x = 8
+theme_override_constants/outline_size = 1
+theme_override_constants/shadow_outline_size = 4
+text = "Volume Control"
+horizontal_alignment = 1
+
+[node name="MusicLabel" type="Label" parent="MusicManager/AudioPanelManager/VBoxContainer"]
+z_index = 2
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Music Volume:"
+horizontal_alignment = 1
+
+[node name="MusicSlider" type="HSlider" parent="MusicManager/AudioPanelManager/VBoxContainer"]
+z_index = 2
+layout_mode = 2
+
+[node name="InterfaceLabel" type="Label" parent="MusicManager/AudioPanelManager/VBoxContainer"]
+z_index = 2
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Interface Volume:"
+horizontal_alignment = 1
+
+[node name="InterfaceSlider" type="HSlider" parent="MusicManager/AudioPanelManager/VBoxContainer"]
+z_index = 2
+layout_mode = 2
+
+[node name="MusicStreamPlayer" type="AudioStreamPlayer" parent="MusicManager"]
+process_mode = 1
+bus = &"Music"
+playback_type = 1
 
 [connection signal="pressed" from="TavernDisplay/ControlPanel/TopBar/Button1x" to="QuestBoardPanel" method="OnSpeed1xPressed"]
 [connection signal="pressed" from="TavernDisplay/ControlPanel/TopBar/Button2x" to="QuestBoardPanel" method="OnSpeed2xPressed"]

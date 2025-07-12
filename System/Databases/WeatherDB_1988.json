@@ -1,0 +1,2564 @@
+[
+  {
+    "month": 1,
+    "day": 1,
+    "high": 33,
+    "low": 21,
+    "effect": "Snowy"
+  },
+  {
+    "month": 1,
+    "day": 2,
+    "high": 30,
+    "low": 25,
+    "effect": "Snowy"
+  },
+  {
+    "month": 1,
+    "day": 3,
+    "high": 37,
+    "low": 21,
+    "effect": "Snowy"
+  },
+  {
+    "month": 1,
+    "day": 4,
+    "high": 36,
+    "low": 21,
+    "effect": "Snowy"
+  },
+  {
+    "month": 1,
+    "day": 5,
+    "high": 39,
+    "low": 16,
+    "effect": "Snowy"
+  },
+  {
+    "month": 1,
+    "day": 6,
+    "high": 35,
+    "low": 25,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 1,
+    "day": 7,
+    "high": 31,
+    "low": 17,
+    "effect": "Sunny"
+  },
+  {
+    "month": 1,
+    "day": 8,
+    "high": 38,
+    "low": 19,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 1,
+    "day": 9,
+    "high": 35,
+    "low": 24,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 1,
+    "day": 10,
+    "high": 37,
+    "low": 18,
+    "effect": "Snowy"
+  },
+  {
+    "month": 1,
+    "day": 11,
+    "high": 33,
+    "low": 21,
+    "effect": "Snowy"
+  },
+  {
+    "month": 1,
+    "day": 12,
+    "high": 36,
+    "low": 22,
+    "effect": "Sunny"
+  },
+  {
+    "month": 1,
+    "day": 13,
+    "high": 31,
+    "low": 19,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 1,
+    "day": 14,
+    "high": 29,
+    "low": 19,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 1,
+    "day": 15,
+    "high": 36,
+    "low": 22,
+    "effect": "Snowy"
+  },
+  {
+    "month": 1,
+    "day": 16,
+    "high": 29,
+    "low": 18,
+    "effect": "Snowy"
+  },
+  {
+    "month": 1,
+    "day": 17,
+    "high": 30,
+    "low": 24,
+    "effect": "Snowy"
+  },
+  {
+    "month": 1,
+    "day": 18,
+    "high": 37,
+    "low": 18,
+    "effect": "Sunny"
+  },
+  {
+    "month": 1,
+    "day": 19,
+    "high": 34,
+    "low": 24,
+    "effect": "Snowy"
+  },
+  {
+    "month": 1,
+    "day": 20,
+    "high": 29,
+    "low": 17,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 1,
+    "day": 21,
+    "high": 39,
+    "low": 18,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 1,
+    "day": 22,
+    "high": 29,
+    "low": 15,
+    "effect": "Sunny"
+  },
+  {
+    "month": 1,
+    "day": 23,
+    "high": 36,
+    "low": 23,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 1,
+    "day": 24,
+    "high": 29,
+    "low": 21,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 1,
+    "day": 25,
+    "high": 37,
+    "low": 17,
+    "effect": "Snowy"
+  },
+  {
+    "month": 1,
+    "day": 26,
+    "high": 36,
+    "low": 20,
+    "effect": "Snowy"
+  },
+  {
+    "month": 1,
+    "day": 27,
+    "high": 29,
+    "low": 19,
+    "effect": "Snowy"
+  },
+  {
+    "month": 1,
+    "day": 28,
+    "high": 30,
+    "low": 22,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 1,
+    "day": 29,
+    "high": 31,
+    "low": 25,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 1,
+    "day": 30,
+    "high": 32,
+    "low": 24,
+    "effect": "Snowy"
+  },
+  {
+    "month": 1,
+    "day": 31,
+    "high": 37,
+    "low": 18,
+    "effect": "Sunny"
+  },
+  {
+    "month": 2,
+    "day": 1,
+    "high": 41,
+    "low": 27,
+    "effect": "Snowy"
+  },
+  {
+    "month": 2,
+    "day": 2,
+    "high": 34,
+    "low": 28,
+    "effect": "Sunny"
+  },
+  {
+    "month": 2,
+    "day": 3,
+    "high": 38,
+    "low": 25,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 2,
+    "day": 4,
+    "high": 39,
+    "low": 18,
+    "effect": "Sunny"
+  },
+  {
+    "month": 2,
+    "day": 5,
+    "high": 43,
+    "low": 24,
+    "effect": "Snowy"
+  },
+  {
+    "month": 2,
+    "day": 6,
+    "high": 42,
+    "low": 22,
+    "effect": "Sunny"
+  },
+  {
+    "month": 2,
+    "day": 7,
+    "high": 39,
+    "low": 20,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 2,
+    "day": 8,
+    "high": 37,
+    "low": 25,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 2,
+    "day": 9,
+    "high": 38,
+    "low": 25,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 2,
+    "day": 10,
+    "high": 40,
+    "low": 22,
+    "effect": "Sunny"
+  },
+  {
+    "month": 2,
+    "day": 11,
+    "high": 37,
+    "low": 26,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 2,
+    "day": 12,
+    "high": 36,
+    "low": 26,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 2,
+    "day": 13,
+    "high": 37,
+    "low": 27,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 2,
+    "day": 14,
+    "high": 40,
+    "low": 26,
+    "effect": "Snowy"
+  },
+  {
+    "month": 2,
+    "day": 15,
+    "high": 43,
+    "low": 22,
+    "effect": "Snowy"
+  },
+  {
+    "month": 2,
+    "day": 16,
+    "high": 38,
+    "low": 28,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 2,
+    "day": 17,
+    "high": 35,
+    "low": 19,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 2,
+    "day": 18,
+    "high": 40,
+    "low": 21,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 2,
+    "day": 19,
+    "high": 37,
+    "low": 27,
+    "effect": "Snowy"
+  },
+  {
+    "month": 2,
+    "day": 20,
+    "high": 41,
+    "low": 21,
+    "effect": "Snowy"
+  },
+  {
+    "month": 2,
+    "day": 21,
+    "high": 39,
+    "low": 20,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 2,
+    "day": 22,
+    "high": 43,
+    "low": 24,
+    "effect": "Sunny"
+  },
+  {
+    "month": 2,
+    "day": 23,
+    "high": 36,
+    "low": 27,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 2,
+    "day": 24,
+    "high": 41,
+    "low": 18,
+    "effect": "Snowy"
+  },
+  {
+    "month": 2,
+    "day": 25,
+    "high": 39,
+    "low": 22,
+    "effect": "Snowy"
+  },
+  {
+    "month": 2,
+    "day": 26,
+    "high": 38,
+    "low": 19,
+    "effect": "Sunny"
+  },
+  {
+    "month": 2,
+    "day": 27,
+    "high": 33,
+    "low": 22,
+    "effect": "Sunny"
+  },
+  {
+    "month": 2,
+    "day": 28,
+    "high": 33,
+    "low": 18,
+    "effect": "Snowy"
+  },
+  {
+    "month": 2,
+    "day": 29,
+    "high": 33,
+    "low": 28,
+    "effect": "Sunny"
+  },
+  {
+    "month": 3,
+    "day": 1,
+    "high": 50,
+    "low": 27,
+    "effect": "Sunny"
+  },
+  {
+    "month": 3,
+    "day": 2,
+    "high": 48,
+    "low": 27,
+    "effect": "Sunny"
+  },
+  {
+    "month": 3,
+    "day": 3,
+    "high": 47,
+    "low": 35,
+    "effect": "Rainy"
+  },
+  {
+    "month": 3,
+    "day": 4,
+    "high": 51,
+    "low": 30,
+    "effect": "Snowy"
+  },
+  {
+    "month": 3,
+    "day": 5,
+    "high": 50,
+    "low": 37,
+    "effect": "Rainy"
+  },
+  {
+    "month": 3,
+    "day": 6,
+    "high": 43,
+    "low": 27,
+    "effect": "Snowy"
+  },
+  {
+    "month": 3,
+    "day": 7,
+    "high": 43,
+    "low": 33,
+    "effect": "Sunny"
+  },
+  {
+    "month": 3,
+    "day": 8,
+    "high": 47,
+    "low": 37,
+    "effect": "Sunny"
+  },
+  {
+    "month": 3,
+    "day": 9,
+    "high": 43,
+    "low": 27,
+    "effect": "Rainy"
+  },
+  {
+    "month": 3,
+    "day": 10,
+    "high": 51,
+    "low": 35,
+    "effect": "Rainy"
+  },
+  {
+    "month": 3,
+    "day": 11,
+    "high": 51,
+    "low": 28,
+    "effect": "Snowy"
+  },
+  {
+    "month": 3,
+    "day": 12,
+    "high": 53,
+    "low": 27,
+    "effect": "Rainy"
+  },
+  {
+    "month": 3,
+    "day": 13,
+    "high": 48,
+    "low": 30,
+    "effect": "Sunny"
+  },
+  {
+    "month": 3,
+    "day": 14,
+    "high": 43,
+    "low": 28,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 3,
+    "day": 15,
+    "high": 43,
+    "low": 37,
+    "effect": "Sunny"
+  },
+  {
+    "month": 3,
+    "day": 16,
+    "high": 49,
+    "low": 37,
+    "effect": "Sunny"
+  },
+  {
+    "month": 3,
+    "day": 17,
+    "high": 46,
+    "low": 37,
+    "effect": "Snowy"
+  },
+  {
+    "month": 3,
+    "day": 18,
+    "high": 46,
+    "low": 29,
+    "effect": "Rainy"
+  },
+  {
+    "month": 3,
+    "day": 19,
+    "high": 52,
+    "low": 31,
+    "effect": "Sunny"
+  },
+  {
+    "month": 3,
+    "day": 20,
+    "high": 43,
+    "low": 33,
+    "effect": "Sunny"
+  },
+  {
+    "month": 3,
+    "day": 21,
+    "high": 53,
+    "low": 37,
+    "effect": "Sunny"
+  },
+  {
+    "month": 3,
+    "day": 22,
+    "high": 51,
+    "low": 27,
+    "effect": "Snowy"
+  },
+  {
+    "month": 3,
+    "day": 23,
+    "high": 43,
+    "low": 36,
+    "effect": "Snowy"
+  },
+  {
+    "month": 3,
+    "day": 24,
+    "high": 53,
+    "low": 28,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 3,
+    "day": 25,
+    "high": 43,
+    "low": 33,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 3,
+    "day": 26,
+    "high": 48,
+    "low": 29,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 3,
+    "day": 27,
+    "high": 48,
+    "low": 33,
+    "effect": "Sunny"
+  },
+  {
+    "month": 3,
+    "day": 28,
+    "high": 45,
+    "low": 31,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 3,
+    "day": 29,
+    "high": 49,
+    "low": 28,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 3,
+    "day": 30,
+    "high": 48,
+    "low": 30,
+    "effect": "Rainy"
+  },
+  {
+    "month": 3,
+    "day": 31,
+    "high": 48,
+    "low": 30,
+    "effect": "Rainy"
+  },
+  {
+    "month": 4,
+    "day": 1,
+    "high": 63,
+    "low": 43,
+    "effect": "Sunny"
+  },
+  {
+    "month": 4,
+    "day": 2,
+    "high": 59,
+    "low": 37,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 4,
+    "day": 3,
+    "high": 60,
+    "low": 40,
+    "effect": "Sunny"
+  },
+  {
+    "month": 4,
+    "day": 4,
+    "high": 60,
+    "low": 47,
+    "effect": "Sunny"
+  },
+  {
+    "month": 4,
+    "day": 5,
+    "high": 64,
+    "low": 41,
+    "effect": "Sunny"
+  },
+  {
+    "month": 4,
+    "day": 6,
+    "high": 64,
+    "low": 37,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 4,
+    "day": 7,
+    "high": 56,
+    "low": 37,
+    "effect": "Sunny"
+  },
+  {
+    "month": 4,
+    "day": 8,
+    "high": 57,
+    "low": 43,
+    "effect": "Sunny"
+  },
+  {
+    "month": 4,
+    "day": 9,
+    "high": 57,
+    "low": 38,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 4,
+    "day": 10,
+    "high": 60,
+    "low": 45,
+    "effect": "Rainy"
+  },
+  {
+    "month": 4,
+    "day": 11,
+    "high": 65,
+    "low": 47,
+    "effect": "Sunny"
+  },
+  {
+    "month": 4,
+    "day": 12,
+    "high": 64,
+    "low": 44,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 4,
+    "day": 13,
+    "high": 59,
+    "low": 41,
+    "effect": "Sunny"
+  },
+  {
+    "month": 4,
+    "day": 14,
+    "high": 60,
+    "low": 47,
+    "effect": "Rainy"
+  },
+  {
+    "month": 4,
+    "day": 15,
+    "high": 59,
+    "low": 46,
+    "effect": "Sunny"
+  },
+  {
+    "month": 4,
+    "day": 16,
+    "high": 63,
+    "low": 45,
+    "effect": "Rainy"
+  },
+  {
+    "month": 4,
+    "day": 17,
+    "high": 56,
+    "low": 37,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 4,
+    "day": 18,
+    "high": 58,
+    "low": 37,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 4,
+    "day": 19,
+    "high": 64,
+    "low": 41,
+    "effect": "Rainy"
+  },
+  {
+    "month": 4,
+    "day": 20,
+    "high": 60,
+    "low": 44,
+    "effect": "Rainy"
+  },
+  {
+    "month": 4,
+    "day": 21,
+    "high": 60,
+    "low": 46,
+    "effect": "Sunny"
+  },
+  {
+    "month": 4,
+    "day": 22,
+    "high": 58,
+    "low": 44,
+    "effect": "Sunny"
+  },
+  {
+    "month": 4,
+    "day": 23,
+    "high": 55,
+    "low": 46,
+    "effect": "Sunny"
+  },
+  {
+    "month": 4,
+    "day": 24,
+    "high": 57,
+    "low": 39,
+    "effect": "Sunny"
+  },
+  {
+    "month": 4,
+    "day": 25,
+    "high": 64,
+    "low": 41,
+    "effect": "Rainy"
+  },
+  {
+    "month": 4,
+    "day": 26,
+    "high": 55,
+    "low": 44,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 4,
+    "day": 27,
+    "high": 56,
+    "low": 40,
+    "effect": "Sunny"
+  },
+  {
+    "month": 4,
+    "day": 28,
+    "high": 56,
+    "low": 44,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 4,
+    "day": 29,
+    "high": 62,
+    "low": 37,
+    "effect": "Sunny"
+  },
+  {
+    "month": 4,
+    "day": 30,
+    "high": 55,
+    "low": 38,
+    "effect": "Rainy"
+  },
+  {
+    "month": 5,
+    "day": 1,
+    "high": 74,
+    "low": 57,
+    "effect": "Rainy"
+  },
+  {
+    "month": 5,
+    "day": 2,
+    "high": 65,
+    "low": 55,
+    "effect": "Rainy"
+  },
+  {
+    "month": 5,
+    "day": 3,
+    "high": 65,
+    "low": 51,
+    "effect": "Sunny"
+  },
+  {
+    "month": 5,
+    "day": 4,
+    "high": 70,
+    "low": 50,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 5,
+    "day": 5,
+    "high": 66,
+    "low": 50,
+    "effect": "Rainy"
+  },
+  {
+    "month": 5,
+    "day": 6,
+    "high": 68,
+    "low": 50,
+    "effect": "Rainy"
+  },
+  {
+    "month": 5,
+    "day": 7,
+    "high": 70,
+    "low": 55,
+    "effect": "Rainy"
+  },
+  {
+    "month": 5,
+    "day": 8,
+    "high": 67,
+    "low": 52,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 5,
+    "day": 9,
+    "high": 73,
+    "low": 49,
+    "effect": "Sunny"
+  },
+  {
+    "month": 5,
+    "day": 10,
+    "high": 74,
+    "low": 55,
+    "effect": "Rainy"
+  },
+  {
+    "month": 5,
+    "day": 11,
+    "high": 67,
+    "low": 47,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 5,
+    "day": 12,
+    "high": 72,
+    "low": 48,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 5,
+    "day": 13,
+    "high": 69,
+    "low": 51,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 5,
+    "day": 14,
+    "high": 75,
+    "low": 49,
+    "effect": "Rainy"
+  },
+  {
+    "month": 5,
+    "day": 15,
+    "high": 66,
+    "low": 56,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 5,
+    "day": 16,
+    "high": 67,
+    "low": 48,
+    "effect": "Rainy"
+  },
+  {
+    "month": 5,
+    "day": 17,
+    "high": 65,
+    "low": 47,
+    "effect": "Rainy"
+  },
+  {
+    "month": 5,
+    "day": 18,
+    "high": 74,
+    "low": 50,
+    "effect": "Sunny"
+  },
+  {
+    "month": 5,
+    "day": 19,
+    "high": 68,
+    "low": 48,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 5,
+    "day": 20,
+    "high": 68,
+    "low": 50,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 5,
+    "day": 21,
+    "high": 75,
+    "low": 50,
+    "effect": "Sunny"
+  },
+  {
+    "month": 5,
+    "day": 22,
+    "high": 75,
+    "low": 49,
+    "effect": "Sunny"
+  },
+  {
+    "month": 5,
+    "day": 23,
+    "high": 73,
+    "low": 49,
+    "effect": "Sunny"
+  },
+  {
+    "month": 5,
+    "day": 24,
+    "high": 68,
+    "low": 52,
+    "effect": "Rainy"
+  },
+  {
+    "month": 5,
+    "day": 25,
+    "high": 69,
+    "low": 53,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 5,
+    "day": 26,
+    "high": 72,
+    "low": 50,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 5,
+    "day": 27,
+    "high": 66,
+    "low": 56,
+    "effect": "Rainy"
+  },
+  {
+    "month": 5,
+    "day": 28,
+    "high": 65,
+    "low": 55,
+    "effect": "Sunny"
+  },
+  {
+    "month": 5,
+    "day": 29,
+    "high": 67,
+    "low": 51,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 5,
+    "day": 30,
+    "high": 66,
+    "low": 56,
+    "effect": "Sunny"
+  },
+  {
+    "month": 5,
+    "day": 31,
+    "high": 70,
+    "low": 56,
+    "effect": "Rainy"
+  },
+  {
+    "month": 6,
+    "day": 1,
+    "high": 73,
+    "low": 62,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 6,
+    "day": 2,
+    "high": 76,
+    "low": 58,
+    "effect": "Rainy"
+  },
+  {
+    "month": 6,
+    "day": 3,
+    "high": 82,
+    "low": 57,
+    "effect": "Sunny"
+  },
+  {
+    "month": 6,
+    "day": 4,
+    "high": 81,
+    "low": 55,
+    "effect": "Rainy"
+  },
+  {
+    "month": 6,
+    "day": 5,
+    "high": 73,
+    "low": 58,
+    "effect": "Sunny"
+  },
+  {
+    "month": 6,
+    "day": 6,
+    "high": 80,
+    "low": 63,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 6,
+    "day": 7,
+    "high": 78,
+    "low": 63,
+    "effect": "Sunny"
+  },
+  {
+    "month": 6,
+    "day": 8,
+    "high": 75,
+    "low": 63,
+    "effect": "Rainy"
+  },
+  {
+    "month": 6,
+    "day": 9,
+    "high": 77,
+    "low": 55,
+    "effect": "Rainy"
+  },
+  {
+    "month": 6,
+    "day": 10,
+    "high": 78,
+    "low": 62,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 6,
+    "day": 11,
+    "high": 80,
+    "low": 61,
+    "effect": "Sunny"
+  },
+  {
+    "month": 6,
+    "day": 12,
+    "high": 81,
+    "low": 55,
+    "effect": "Rainy"
+  },
+  {
+    "month": 6,
+    "day": 13,
+    "high": 75,
+    "low": 55,
+    "effect": "Sunny"
+  },
+  {
+    "month": 6,
+    "day": 14,
+    "high": 83,
+    "low": 59,
+    "effect": "Sunny"
+  },
+  {
+    "month": 6,
+    "day": 15,
+    "high": 79,
+    "low": 55,
+    "effect": "Rainy"
+  },
+  {
+    "month": 6,
+    "day": 16,
+    "high": 82,
+    "low": 62,
+    "effect": "Sunny"
+  },
+  {
+    "month": 6,
+    "day": 17,
+    "high": 80,
+    "low": 59,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 6,
+    "day": 18,
+    "high": 73,
+    "low": 61,
+    "effect": "Sunny"
+  },
+  {
+    "month": 6,
+    "day": 19,
+    "high": 77,
+    "low": 58,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 6,
+    "day": 20,
+    "high": 83,
+    "low": 64,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 6,
+    "day": 21,
+    "high": 79,
+    "low": 55,
+    "effect": "Sunny"
+  },
+  {
+    "month": 6,
+    "day": 22,
+    "high": 80,
+    "low": 56,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 6,
+    "day": 23,
+    "high": 83,
+    "low": 64,
+    "effect": "Sunny"
+  },
+  {
+    "month": 6,
+    "day": 24,
+    "high": 78,
+    "low": 58,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 6,
+    "day": 25,
+    "high": 81,
+    "low": 65,
+    "effect": "Sunny"
+  },
+  {
+    "month": 6,
+    "day": 26,
+    "high": 81,
+    "low": 56,
+    "effect": "Sunny"
+  },
+  {
+    "month": 6,
+    "day": 27,
+    "high": 82,
+    "low": 56,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 6,
+    "day": 28,
+    "high": 79,
+    "low": 55,
+    "effect": "Rainy"
+  },
+  {
+    "month": 6,
+    "day": 29,
+    "high": 76,
+    "low": 64,
+    "effect": "Sunny"
+  },
+  {
+    "month": 6,
+    "day": 30,
+    "high": 74,
+    "low": 60,
+    "effect": "Sunny"
+  },
+  {
+    "month": 7,
+    "day": 1,
+    "high": 88,
+    "low": 61,
+    "effect": "Sunny"
+  },
+  {
+    "month": 7,
+    "day": 2,
+    "high": 83,
+    "low": 65,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 7,
+    "day": 3,
+    "high": 83,
+    "low": 66,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 7,
+    "day": 4,
+    "high": 88,
+    "low": 60,
+    "effect": "Sunny"
+  },
+  {
+    "month": 7,
+    "day": 5,
+    "high": 80,
+    "low": 70,
+    "effect": "Sunny"
+  },
+  {
+    "month": 7,
+    "day": 6,
+    "high": 81,
+    "low": 62,
+    "effect": "Rainy"
+  },
+  {
+    "month": 7,
+    "day": 7,
+    "high": 83,
+    "low": 62,
+    "effect": "Sunny"
+  },
+  {
+    "month": 7,
+    "day": 8,
+    "high": 81,
+    "low": 64,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 7,
+    "day": 9,
+    "high": 81,
+    "low": 67,
+    "effect": "Rainy"
+  },
+  {
+    "month": 7,
+    "day": 10,
+    "high": 88,
+    "low": 60,
+    "effect": "Sunny"
+  },
+  {
+    "month": 7,
+    "day": 11,
+    "high": 85,
+    "low": 64,
+    "effect": "Sunny"
+  },
+  {
+    "month": 7,
+    "day": 12,
+    "high": 79,
+    "low": 69,
+    "effect": "Rainy"
+  },
+  {
+    "month": 7,
+    "day": 13,
+    "high": 85,
+    "low": 66,
+    "effect": "Rainy"
+  },
+  {
+    "month": 7,
+    "day": 14,
+    "high": 81,
+    "low": 61,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 7,
+    "day": 15,
+    "high": 80,
+    "low": 66,
+    "effect": "Rainy"
+  },
+  {
+    "month": 7,
+    "day": 16,
+    "high": 78,
+    "low": 61,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 7,
+    "day": 17,
+    "high": 85,
+    "low": 64,
+    "effect": "Rainy"
+  },
+  {
+    "month": 7,
+    "day": 18,
+    "high": 83,
+    "low": 61,
+    "effect": "Sunny"
+  },
+  {
+    "month": 7,
+    "day": 19,
+    "high": 82,
+    "low": 67,
+    "effect": "Rainy"
+  },
+  {
+    "month": 7,
+    "day": 20,
+    "high": 88,
+    "low": 62,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 7,
+    "day": 21,
+    "high": 80,
+    "low": 64,
+    "effect": "Sunny"
+  },
+  {
+    "month": 7,
+    "day": 22,
+    "high": 82,
+    "low": 69,
+    "effect": "Rainy"
+  },
+  {
+    "month": 7,
+    "day": 23,
+    "high": 80,
+    "low": 65,
+    "effect": "Rainy"
+  },
+  {
+    "month": 7,
+    "day": 24,
+    "high": 83,
+    "low": 62,
+    "effect": "Rainy"
+  },
+  {
+    "month": 7,
+    "day": 25,
+    "high": 85,
+    "low": 69,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 7,
+    "day": 26,
+    "high": 80,
+    "low": 65,
+    "effect": "Rainy"
+  },
+  {
+    "month": 7,
+    "day": 27,
+    "high": 81,
+    "low": 62,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 7,
+    "day": 28,
+    "high": 79,
+    "low": 66,
+    "effect": "Rainy"
+  },
+  {
+    "month": 7,
+    "day": 29,
+    "high": 80,
+    "low": 60,
+    "effect": "Sunny"
+  },
+  {
+    "month": 7,
+    "day": 30,
+    "high": 85,
+    "low": 67,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 7,
+    "day": 31,
+    "high": 88,
+    "low": 64,
+    "effect": "Sunny"
+  },
+  {
+    "month": 8,
+    "day": 1,
+    "high": 78,
+    "low": 66,
+    "effect": "Rainy"
+  },
+  {
+    "month": 8,
+    "day": 2,
+    "high": 79,
+    "low": 58,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 8,
+    "day": 3,
+    "high": 86,
+    "low": 60,
+    "effect": "Sunny"
+  },
+  {
+    "month": 8,
+    "day": 4,
+    "high": 77,
+    "low": 68,
+    "effect": "Sunny"
+  },
+  {
+    "month": 8,
+    "day": 5,
+    "high": 78,
+    "low": 59,
+    "effect": "Rainy"
+  },
+  {
+    "month": 8,
+    "day": 6,
+    "high": 82,
+    "low": 61,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 8,
+    "day": 7,
+    "high": 78,
+    "low": 58,
+    "effect": "Rainy"
+  },
+  {
+    "month": 8,
+    "day": 8,
+    "high": 77,
+    "low": 60,
+    "effect": "Sunny"
+  },
+  {
+    "month": 8,
+    "day": 9,
+    "high": 79,
+    "low": 64,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 8,
+    "day": 10,
+    "high": 76,
+    "low": 60,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 8,
+    "day": 11,
+    "high": 84,
+    "low": 63,
+    "effect": "Sunny"
+  },
+  {
+    "month": 8,
+    "day": 12,
+    "high": 83,
+    "low": 67,
+    "effect": "Sunny"
+  },
+  {
+    "month": 8,
+    "day": 13,
+    "high": 85,
+    "low": 66,
+    "effect": "Rainy"
+  },
+  {
+    "month": 8,
+    "day": 14,
+    "high": 84,
+    "low": 64,
+    "effect": "Rainy"
+  },
+  {
+    "month": 8,
+    "day": 15,
+    "high": 84,
+    "low": 67,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 8,
+    "day": 16,
+    "high": 77,
+    "low": 62,
+    "effect": "Sunny"
+  },
+  {
+    "month": 8,
+    "day": 17,
+    "high": 81,
+    "low": 68,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 8,
+    "day": 18,
+    "high": 81,
+    "low": 68,
+    "effect": "Sunny"
+  },
+  {
+    "month": 8,
+    "day": 19,
+    "high": 82,
+    "low": 62,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 8,
+    "day": 20,
+    "high": 81,
+    "low": 61,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 8,
+    "day": 21,
+    "high": 77,
+    "low": 68,
+    "effect": "Sunny"
+  },
+  {
+    "month": 8,
+    "day": 22,
+    "high": 79,
+    "low": 67,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 8,
+    "day": 23,
+    "high": 85,
+    "low": 65,
+    "effect": "Rainy"
+  },
+  {
+    "month": 8,
+    "day": 24,
+    "high": 80,
+    "low": 59,
+    "effect": "Sunny"
+  },
+  {
+    "month": 8,
+    "day": 25,
+    "high": 83,
+    "low": 63,
+    "effect": "Sunny"
+  },
+  {
+    "month": 8,
+    "day": 26,
+    "high": 86,
+    "low": 66,
+    "effect": "Rainy"
+  },
+  {
+    "month": 8,
+    "day": 27,
+    "high": 76,
+    "low": 61,
+    "effect": "Rainy"
+  },
+  {
+    "month": 8,
+    "day": 28,
+    "high": 83,
+    "low": 68,
+    "effect": "Sunny"
+  },
+  {
+    "month": 8,
+    "day": 29,
+    "high": 79,
+    "low": 65,
+    "effect": "Rainy"
+  },
+  {
+    "month": 8,
+    "day": 30,
+    "high": 83,
+    "low": 65,
+    "effect": "Sunny"
+  },
+  {
+    "month": 8,
+    "day": 31,
+    "high": 78,
+    "low": 63,
+    "effect": "Rainy"
+  },
+  {
+    "month": 9,
+    "day": 1,
+    "high": 73,
+    "low": 60,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 9,
+    "day": 2,
+    "high": 78,
+    "low": 59,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 9,
+    "day": 3,
+    "high": 78,
+    "low": 55,
+    "effect": "Rainy"
+  },
+  {
+    "month": 9,
+    "day": 4,
+    "high": 74,
+    "low": 52,
+    "effect": "Rainy"
+  },
+  {
+    "month": 9,
+    "day": 5,
+    "high": 71,
+    "low": 53,
+    "effect": "Sunny"
+  },
+  {
+    "month": 9,
+    "day": 6,
+    "high": 70,
+    "low": 57,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 9,
+    "day": 7,
+    "high": 75,
+    "low": 60,
+    "effect": "Sunny"
+  },
+  {
+    "month": 9,
+    "day": 8,
+    "high": 70,
+    "low": 57,
+    "effect": "Rainy"
+  },
+  {
+    "month": 9,
+    "day": 9,
+    "high": 72,
+    "low": 52,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 9,
+    "day": 10,
+    "high": 71,
+    "low": 57,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 9,
+    "day": 11,
+    "high": 71,
+    "low": 51,
+    "effect": "Sunny"
+  },
+  {
+    "month": 9,
+    "day": 12,
+    "high": 74,
+    "low": 59,
+    "effect": "Rainy"
+  },
+  {
+    "month": 9,
+    "day": 13,
+    "high": 76,
+    "low": 58,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 9,
+    "day": 14,
+    "high": 69,
+    "low": 61,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 9,
+    "day": 15,
+    "high": 77,
+    "low": 52,
+    "effect": "Sunny"
+  },
+  {
+    "month": 9,
+    "day": 16,
+    "high": 79,
+    "low": 58,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 9,
+    "day": 17,
+    "high": 70,
+    "low": 60,
+    "effect": "Rainy"
+  },
+  {
+    "month": 9,
+    "day": 18,
+    "high": 79,
+    "low": 59,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 9,
+    "day": 19,
+    "high": 77,
+    "low": 55,
+    "effect": "Rainy"
+  },
+  {
+    "month": 9,
+    "day": 20,
+    "high": 74,
+    "low": 61,
+    "effect": "Rainy"
+  },
+  {
+    "month": 9,
+    "day": 21,
+    "high": 77,
+    "low": 58,
+    "effect": "Sunny"
+  },
+  {
+    "month": 9,
+    "day": 22,
+    "high": 72,
+    "low": 53,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 9,
+    "day": 23,
+    "high": 69,
+    "low": 59,
+    "effect": "Rainy"
+  },
+  {
+    "month": 9,
+    "day": 24,
+    "high": 69,
+    "low": 55,
+    "effect": "Rainy"
+  },
+  {
+    "month": 9,
+    "day": 25,
+    "high": 69,
+    "low": 58,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 9,
+    "day": 26,
+    "high": 70,
+    "low": 53,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 9,
+    "day": 27,
+    "high": 72,
+    "low": 60,
+    "effect": "Sunny"
+  },
+  {
+    "month": 9,
+    "day": 28,
+    "high": 75,
+    "low": 59,
+    "effect": "Sunny"
+  },
+  {
+    "month": 9,
+    "day": 29,
+    "high": 76,
+    "low": 59,
+    "effect": "Sunny"
+  },
+  {
+    "month": 9,
+    "day": 30,
+    "high": 78,
+    "low": 59,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 10,
+    "day": 1,
+    "high": 64,
+    "low": 41,
+    "effect": "Sunny"
+  },
+  {
+    "month": 10,
+    "day": 2,
+    "high": 63,
+    "low": 40,
+    "effect": "Rainy"
+  },
+  {
+    "month": 10,
+    "day": 3,
+    "high": 57,
+    "low": 48,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 10,
+    "day": 4,
+    "high": 57,
+    "low": 46,
+    "effect": "Rainy"
+  },
+  {
+    "month": 10,
+    "day": 5,
+    "high": 63,
+    "low": 41,
+    "effect": "Sunny"
+  },
+  {
+    "month": 10,
+    "day": 6,
+    "high": 65,
+    "low": 42,
+    "effect": "Sunny"
+  },
+  {
+    "month": 10,
+    "day": 7,
+    "high": 63,
+    "low": 40,
+    "effect": "Sunny"
+  },
+  {
+    "month": 10,
+    "day": 8,
+    "high": 57,
+    "low": 44,
+    "effect": "Sunny"
+  },
+  {
+    "month": 10,
+    "day": 9,
+    "high": 62,
+    "low": 48,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 10,
+    "day": 10,
+    "high": 63,
+    "low": 42,
+    "effect": "Sunny"
+  },
+  {
+    "month": 10,
+    "day": 11,
+    "high": 63,
+    "low": 44,
+    "effect": "Sunny"
+  },
+  {
+    "month": 10,
+    "day": 12,
+    "high": 62,
+    "low": 48,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 10,
+    "day": 13,
+    "high": 62,
+    "low": 41,
+    "effect": "Sunny"
+  },
+  {
+    "month": 10,
+    "day": 14,
+    "high": 58,
+    "low": 43,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 10,
+    "day": 15,
+    "high": 58,
+    "low": 45,
+    "effect": "Rainy"
+  },
+  {
+    "month": 10,
+    "day": 16,
+    "high": 63,
+    "low": 40,
+    "effect": "Rainy"
+  },
+  {
+    "month": 10,
+    "day": 17,
+    "high": 60,
+    "low": 47,
+    "effect": "Rainy"
+  },
+  {
+    "month": 10,
+    "day": 18,
+    "high": 66,
+    "low": 45,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 10,
+    "day": 19,
+    "high": 67,
+    "low": 45,
+    "effect": "Sunny"
+  },
+  {
+    "month": 10,
+    "day": 20,
+    "high": 65,
+    "low": 45,
+    "effect": "Sunny"
+  },
+  {
+    "month": 10,
+    "day": 21,
+    "high": 57,
+    "low": 41,
+    "effect": "Rainy"
+  },
+  {
+    "month": 10,
+    "day": 22,
+    "high": 57,
+    "low": 47,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 10,
+    "day": 23,
+    "high": 67,
+    "low": 43,
+    "effect": "Sunny"
+  },
+  {
+    "month": 10,
+    "day": 24,
+    "high": 63,
+    "low": 42,
+    "effect": "Sunny"
+  },
+  {
+    "month": 10,
+    "day": 25,
+    "high": 66,
+    "low": 45,
+    "effect": "Sunny"
+  },
+  {
+    "month": 10,
+    "day": 26,
+    "high": 60,
+    "low": 49,
+    "effect": "Sunny"
+  },
+  {
+    "month": 10,
+    "day": 27,
+    "high": 59,
+    "low": 43,
+    "effect": "Sunny"
+  },
+  {
+    "month": 10,
+    "day": 28,
+    "high": 58,
+    "low": 50,
+    "effect": "Sunny"
+  },
+  {
+    "month": 10,
+    "day": 29,
+    "high": 60,
+    "low": 40,
+    "effect": "Rainy"
+  },
+  {
+    "month": 10,
+    "day": 30,
+    "high": 57,
+    "low": 45,
+    "effect": "Rainy"
+  },
+  {
+    "month": 10,
+    "day": 31,
+    "high": 67,
+    "low": 47,
+    "effect": "Rainy"
+  },
+  {
+    "month": 11,
+    "day": 1,
+    "high": 50,
+    "low": 30,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 11,
+    "day": 2,
+    "high": 52,
+    "low": 37,
+    "effect": "Snowy"
+  },
+  {
+    "month": 11,
+    "day": 3,
+    "high": 47,
+    "low": 35,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 11,
+    "day": 4,
+    "high": 48,
+    "low": 35,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 11,
+    "day": 5,
+    "high": 52,
+    "low": 32,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 11,
+    "day": 6,
+    "high": 51,
+    "low": 38,
+    "effect": "Rainy"
+  },
+  {
+    "month": 11,
+    "day": 7,
+    "high": 51,
+    "low": 32,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 11,
+    "day": 8,
+    "high": 50,
+    "low": 29,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 11,
+    "day": 9,
+    "high": 46,
+    "low": 31,
+    "effect": "Rainy"
+  },
+  {
+    "month": 11,
+    "day": 10,
+    "high": 48,
+    "low": 34,
+    "effect": "Rainy"
+  },
+  {
+    "month": 11,
+    "day": 11,
+    "high": 48,
+    "low": 35,
+    "effect": "Rainy"
+  },
+  {
+    "month": 11,
+    "day": 12,
+    "high": 52,
+    "low": 36,
+    "effect": "Snowy"
+  },
+  {
+    "month": 11,
+    "day": 13,
+    "high": 51,
+    "low": 39,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 11,
+    "day": 14,
+    "high": 45,
+    "low": 38,
+    "effect": "Rainy"
+  },
+  {
+    "month": 11,
+    "day": 15,
+    "high": 48,
+    "low": 36,
+    "effect": "Rainy"
+  },
+  {
+    "month": 11,
+    "day": 16,
+    "high": 49,
+    "low": 33,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 11,
+    "day": 17,
+    "high": 46,
+    "low": 33,
+    "effect": "Rainy"
+  },
+  {
+    "month": 11,
+    "day": 18,
+    "high": 53,
+    "low": 30,
+    "effect": "Rainy"
+  },
+  {
+    "month": 11,
+    "day": 19,
+    "high": 43,
+    "low": 30,
+    "effect": "Rainy"
+  },
+  {
+    "month": 11,
+    "day": 20,
+    "high": 43,
+    "low": 39,
+    "effect": "Snowy"
+  },
+  {
+    "month": 11,
+    "day": 21,
+    "high": 43,
+    "low": 34,
+    "effect": "Rainy"
+  },
+  {
+    "month": 11,
+    "day": 22,
+    "high": 47,
+    "low": 37,
+    "effect": "Rainy"
+  },
+  {
+    "month": 11,
+    "day": 23,
+    "high": 52,
+    "low": 37,
+    "effect": "Rainy"
+  },
+  {
+    "month": 11,
+    "day": 24,
+    "high": 43,
+    "low": 35,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 11,
+    "day": 25,
+    "high": 44,
+    "low": 38,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 11,
+    "day": 26,
+    "high": 44,
+    "low": 30,
+    "effect": "Snowy"
+  },
+  {
+    "month": 11,
+    "day": 27,
+    "high": 49,
+    "low": 33,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 11,
+    "day": 28,
+    "high": 47,
+    "low": 30,
+    "effect": "Rainy"
+  },
+  {
+    "month": 11,
+    "day": 29,
+    "high": 52,
+    "low": 32,
+    "effect": "Snowy"
+  },
+  {
+    "month": 11,
+    "day": 30,
+    "high": 46,
+    "low": 32,
+    "effect": "Rainy"
+  },
+  {
+    "month": 12,
+    "day": 1,
+    "high": 34,
+    "low": 26,
+    "effect": "Sunny"
+  },
+  {
+    "month": 12,
+    "day": 2,
+    "high": 41,
+    "low": 26,
+    "effect": "Sunny"
+  },
+  {
+    "month": 12,
+    "day": 3,
+    "high": 40,
+    "low": 29,
+    "effect": "Snowy"
+  },
+  {
+    "month": 12,
+    "day": 4,
+    "high": 33,
+    "low": 22,
+    "effect": "Snowy"
+  },
+  {
+    "month": 12,
+    "day": 5,
+    "high": 31,
+    "low": 21,
+    "effect": "Snowy"
+  },
+  {
+    "month": 12,
+    "day": 6,
+    "high": 34,
+    "low": 26,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 12,
+    "day": 7,
+    "high": 31,
+    "low": 28,
+    "effect": "Sunny"
+  },
+  {
+    "month": 12,
+    "day": 8,
+    "high": 33,
+    "low": 29,
+    "effect": "Snowy"
+  },
+  {
+    "month": 12,
+    "day": 9,
+    "high": 36,
+    "low": 28,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 12,
+    "day": 10,
+    "high": 34,
+    "low": 28,
+    "effect": "Sunny"
+  },
+  {
+    "month": 12,
+    "day": 11,
+    "high": 36,
+    "low": 25,
+    "effect": "Snowy"
+  },
+  {
+    "month": 12,
+    "day": 12,
+    "high": 39,
+    "low": 28,
+    "effect": "Sunny"
+  },
+  {
+    "month": 12,
+    "day": 13,
+    "high": 32,
+    "low": 20,
+    "effect": "Snowy"
+  },
+  {
+    "month": 12,
+    "day": 14,
+    "high": 31,
+    "low": 27,
+    "effect": "Sunny"
+  },
+  {
+    "month": 12,
+    "day": 15,
+    "high": 39,
+    "low": 25,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 12,
+    "day": 16,
+    "high": 38,
+    "low": 22,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 12,
+    "day": 17,
+    "high": 34,
+    "low": 26,
+    "effect": "Snowy"
+  },
+  {
+    "month": 12,
+    "day": 18,
+    "high": 34,
+    "low": 19,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 12,
+    "day": 19,
+    "high": 37,
+    "low": 26,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 12,
+    "day": 20,
+    "high": 34,
+    "low": 27,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 12,
+    "day": 21,
+    "high": 39,
+    "low": 22,
+    "effect": "Snowy"
+  },
+  {
+    "month": 12,
+    "day": 22,
+    "high": 40,
+    "low": 22,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 12,
+    "day": 23,
+    "high": 33,
+    "low": 27,
+    "effect": "Sunny"
+  },
+  {
+    "month": 12,
+    "day": 24,
+    "high": 34,
+    "low": 24,
+    "effect": "Snowy"
+  },
+  {
+    "month": 12,
+    "day": 25,
+    "high": 34,
+    "low": 29,
+    "effect": "Sunny"
+  },
+  {
+    "month": 12,
+    "day": 26,
+    "high": 34,
+    "low": 21,
+    "effect": "Snowy"
+  },
+  {
+    "month": 12,
+    "day": 27,
+    "high": 41,
+    "low": 29,
+    "effect": "Cloudy"
+  },
+  {
+    "month": 12,
+    "day": 28,
+    "high": 32,
+    "low": 27,
+    "effect": "Sunny"
+  },
+  {
+    "month": 12,
+    "day": 29,
+    "high": 34,
+    "low": 22,
+    "effect": "Sunny"
+  },
+  {
+    "month": 12,
+    "day": 30,
+    "high": 41,
+    "low": 21,
+    "effect": "Sunny"
+  },
+  {
+    "month": 12,
+    "day": 31,
+    "high": 32,
+    "low": 24,
+    "effect": "Cloudy"
+  }
+]

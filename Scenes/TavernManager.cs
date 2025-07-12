@@ -416,11 +416,18 @@ if (guest != null)
 
 
 	private void TogglePause()
-	{
-		bool paused = ClockManager.TimeMultiplier == 0;
-		SetTimeMultiplier(paused ? 1 : 0);
-		PauseButton.Text = paused ? "Pause" : "Play";
-	}
+{
+	bool wasPaused = ClockManager.TimeMultiplier == 0;
+	bool nowPaused = !wasPaused;
+
+	SetTimeMultiplier(nowPaused ? 0 : 1);
+	PauseButton.Text = nowPaused ? "Play" : "Pause";
+
+	MusicManager musicManager = GetNode<MusicManager>("../MusicManager");
+	musicManager.TogglePause(nowPaused);
+}
+
+
 
 	public static void SetTimeMultiplier(int multiplier)
 	{

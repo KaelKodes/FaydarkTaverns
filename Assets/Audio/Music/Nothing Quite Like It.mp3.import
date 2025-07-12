@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bq1lk2okaarr8"
+path="res://.godot/imported/Nothing Quite Like It.mp3-0adad13118ebeec02ae8f183d816cc29.mp3str"
+
+[deps]
+
+source_file="res://Assets/Audio/Music/Nothing Quite Like It.mp3"
+dest_files=["res://.godot/imported/Nothing Quite Like It.mp3-0adad13118ebeec02ae8f183d816cc29.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
