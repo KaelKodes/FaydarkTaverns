@@ -1,0 +1,177 @@
+[
+  {
+    "id": "peasants_stew",
+    "name": "Peasant's Stew",
+    "flavor_profiles": [
+      "Savory"
+    ],
+    "quality": "cheap",
+    "category": "food",
+    "base_price": 3,
+    "description": "A simple meat-and-vegetable stew, mostly potatoes."
+  },
+  {
+    "id": "hunters_broth",
+    "name": "Hunter's Broth",
+    "flavor_profiles": [
+      "Savory",
+      "Earthy"
+    ],
+    "quality": "average",
+    "category": "food",
+    "base_price": 7,
+    "description": "Hearty stew with fresh game and wild roots."
+  },
+  {
+    "id": "golden_elk_ragu",
+    "name": "Golden Elk Ragu",
+    "flavor_profiles": [
+      "Savory",
+      "Smoky"
+    ],
+    "quality": "high",
+    "category": "food",
+    "base_price": 14,
+    "description": "A slow-roasted elk stew with fire-charred onions and aged stock."
+  },
+  {
+    "id": "crumbly_sugar_biscuit",
+    "name": "Crumbly Sugar Biscuit",
+    "flavor_profiles": [
+      "Sweet"
+    ],
+    "quality": "cheap",
+    "category": "food",
+    "base_price": 2,
+    "description": "Dry and overly sweet, but beloved by children."
+  },
+  {
+    "id": "autumn_berry_tart",
+    "name": "Autumn Berry Tart",
+    "flavor_profiles": [
+      "Sweet",
+      "Fruity"
+    ],
+    "quality": "average",
+    "category": "food",
+    "base_price": 6,
+    "description": "A golden crust filled with local berries and honey glaze."
+  },
+  {
+    "id": "royal_custard_crown",
+    "name": "Royal Custard Crown",
+    "flavor_profiles": [
+      "Sweet",
+      "Creamy"
+    ],
+    "quality": "high",
+    "category": "food",
+    "base_price": 12,
+    "description": "A multilayered cream dessert served with candied petals."
+  },
+  {
+    "id": "firestick_jerky",
+    "name": "Firestick Jerky",
+    "flavor_profiles": [
+      "Spicy"
+    ],
+    "quality": "cheap",
+    "category": "food",
+    "base_price": 3,
+    "description": "Chewy meat sticks laced with hot peppers."
+  },
+  {
+    "id": "dragonspice_chili",
+    "name": "Dragonspice Chili",
+    "flavor_profiles": [
+      "Spicy",
+      "Savory"
+    ],
+    "quality": "average",
+    "category": "food",
+    "base_price": 8,
+    "description": "A fiery mix of beans, meat, and wildfire sauce."
+  },
+  {
+    "id": "hellboar_ribs",
+    "name": "Hellboar Ribs",
+    "flavor_profiles": [
+      "Spicy",
+      "Smoky"
+    ],
+    "quality": "high",
+    "category": "food",
+    "base_price": 15,
+    "description": "Char-grilled ribs smothered in molten chili glaze."
+  },
+  {
+    "id": "stoneground_flatbread",
+    "name": "Stoneground Flatbread",
+    "flavor_profiles": [
+      "Earthy"
+    ],
+    "quality": "cheap",
+    "category": "food",
+    "base_price": 2,
+    "description": "Dense flatbread made with coarse flour and forest grains."
+  },
+  {
+    "id": "foragers_pie",
+    "name": "Forager's Pie",
+    "flavor_profiles": [
+      "Earthy",
+      "Savory"
+    ],
+    "quality": "average",
+    "category": "food",
+    "base_price": 7,
+    "description": "A warm pie stuffed with mushrooms and root vegetables."
+  },
+  {
+    "id": "druids_table",
+    "name": "Druid's Table",
+    "flavor_profiles": [
+      "Earthy",
+      "Herbal"
+    ],
+    "quality": "high",
+    "category": "food",
+    "base_price": 11,
+    "description": "Forest greens, wild grains, and enchanted truffle oil."
+  },
+  {
+    "id": "pickled_bits_plate",
+    "name": "Pickled Bits Plate",
+    "flavor_profiles": [
+      "Sour"
+    ],
+    "quality": "cheap",
+    "category": "food",
+    "base_price": 2,
+    "description": "A mix of sharp pickled roots and eggs."
+  },
+  {
+    "id": "sour_apple_pork",
+    "name": "Sour Apple Pork",
+    "flavor_profiles": [
+      "Sour",
+      "Savory"
+    ],
+    "quality": "average",
+    "category": "food",
+    "base_price": 7,
+    "description": "Grilled pork with tangy green apple glaze."
+  },
+  {
+    "id": "vinegar_cured_quail",
+    "name": "Vinegar-Cured Quail",
+    "flavor_profiles": [
+      "Sour",
+      "Dry"
+    ],
+    "quality": "high",
+    "category": "food",
+    "base_price": 13,
+    "description": "Delicately cured quail with a reduction of wine vinegar."
+  }
+]

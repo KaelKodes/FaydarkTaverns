@@ -1,6 +1,7 @@
 [gd_scene load_steps=31 format=3 uid="uid://bp53yv3ypaa5j"]
 
 [ext_resource type="Script" uid="uid://hacx1tuggxkp" path="res://Scenes/QuestBoardPanel.cs" id="1_7ljul"]
+[ext_resource type="Texture2D" uid="uid://ofetq83brqll" path="res://Assets/UI/Bkg/ChatGPT Image Jul 13, 2025, 11_38_13 PM.png" id="1_e0xf5"]
 [ext_resource type="Script" uid="uid://bw4esvijflh3" path="res://Scenes/TavernManager.cs" id="1_v6xsb"]
 [ext_resource type="PackedScene" uid="uid://w7he4xk8qe6k" path="res://Scenes/UI/QuestCard.tscn" id="2_6wg6o"]
 [ext_resource type="Script" uid="uid://x4id2gkwvhxq" path="res://System/TimerManager.cs" id="2_t546b"]
@@ -11,7 +12,6 @@
 [ext_resource type="Script" uid="uid://i7n3efuy43nr" path="res://System/ClockManager.cs" id="7_6462i"]
 [ext_resource type="Texture2D" uid="uid://dq375fefrr82l" path="res://Assets/UI/Bkg/ClearPanel.png" id="8_3yx2a"]
 [ext_resource type="Script" uid="uid://b77bsiakfj8qa" path="res://Scenes/FurniturePanel.cs" id="9_wnxq3"]
-[ext_resource type="Texture2D" uid="uid://du5bi4nrmosy8" path="res://Assets/UI/Bkg/TavernView.png" id="11_20rui"]
 [ext_resource type="Texture2D" uid="uid://bdfjo5q8ltm3j" path="res://Assets/UI/Bkg/Panel.png" id="12_slrnj"]
 [ext_resource type="Texture2D" uid="uid://b3o0xw4hwlcru" path="res://Assets/UI/Bkg/Candle.png" id="13_wlqhj"]
 [ext_resource type="Script" uid="uid://qi56yy8o3hs4" path="res://System/Sound/UIInteractButton.cs" id="14_udw8w"]
@@ -55,7 +55,7 @@ offset_left = 3.0
 offset_top = 1.0
 offset_right = 1912.0
 offset_bottom = 1080.0
-texture = ExtResource("11_20rui")
+texture = ExtResource("1_e0xf5")
 
 [node name="TavernFloorLabel" type="Label" parent="."]
 z_index = 5
@@ -82,7 +82,7 @@ script = ExtResource("7_6462i")
 [node name="TimerManager" type="Node" parent="."]
 script = ExtResource("2_t546b")
 
-[node name="TavernManager" type="Node" parent="." node_paths=PackedStringArray("TimeLabel", "GoldLabel", "PauseButton", "Button1x", "Button2x", "Button4x", "Button8x", "ShopButton", "TavernRenownDisplay", "TavernLevelDisplay", "TavernLevelLabel", "floorLabel", "AdventurerListContainer", "TavernFloorPanel", "FloorSlots", "TavernFloorLabel")]
+[node name="TavernManager" type="Node" parent="." node_paths=PackedStringArray("TimeLabel", "GoldLabel", "PauseButton", "Button1x", "Button2x", "Button4x", "Button8x", "ShopButton", "TavernRenownDisplay", "TavernLevelDisplay", "TavernLevelLabel", "AdventurerListContainer", "TavernFloorPanel", "FloorSlots", "TavernFloorLabel")]
 script = ExtResource("1_v6xsb")
 TimeLabel = NodePath("../TavernDisplay/ControlPanel/TimeLabel")
 GoldLabel = NodePath("../TavernDisplay/ControlPanel/GoldLabel")
@@ -96,7 +96,6 @@ QuestBoardPath = NodePath("../QuestBoardPanel/ScrollContainer/QuestBoard")
 TavernRenownDisplay = NodePath("../TavernDisplay/TavernRenown/VBoxContainer/TavernRenownDisplay")
 TavernLevelDisplay = NodePath("../TavernDisplay/TavernLevelControl/VBoxContainer/TavernLevelDisplay")
 TavernLevelLabel = NodePath("../TavernDisplay/TavernLevelControl/VBoxContainer/TavernLevelLabel")
-floorLabel = NodePath("../TavernFloorLabel")
 AdventurerListContainer = NodePath("../AdventurerRosterPanel/AdventurerListContainer")
 TavernFloorPanel = NodePath("../AdventurerRosterPanel/AdventurerListContainer/TavernFloorPanel")
 FloorSlots = NodePath("../AdventurerRosterPanel/AdventurerListContainer/TavernFloorPanel/FloorSlots")

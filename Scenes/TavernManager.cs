@@ -2,9 +2,8 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using FaydarkTaverns.Objects;
-
-
 
 
 public partial class TavernManager : Node
@@ -20,26 +19,21 @@ public partial class TavernManager : Node
 	[Export] public Button ShopButton;
 	[Export] public Control ShopPanel;
 	[Export] public NodePath QuestBoardPath;
-	//[Export] private int TavernSignLevel = 0;
+
 	[Export] public Label TavernRenownDisplay;
 	[Export] public Label TavernLevelDisplay;           // shows current level (e.g. "1")
 	[Export] public Label TavernLevelLabel;             // shows static text "Tavern Level"
-	//[Export] public int MaxFloorGuests = 5;
-	[Export] private Label floorLabel;
+	//[Export] private Label floorLabel;
 	[Export] public VBoxContainer AdventurerListContainer;
 	[Export] public VBoxContainer TavernFloorPanel;
 	[Export] public VBoxContainer FloorSlots;
 	[Export] public Label TavernFloorLabel;
-	//[Export] public int Renown = 0;
 
 
 	public List<Guest> floorGuests = new();
 	public static TavernManager Instance { get; private set; }
 	private ClockManager Clock => GetNode<ClockManager>("/root/ClockManager");
 	private Dictionary<string, int> tableCounters = new();
-
-
-
 
 
 	private bool isPaused = false;
@@ -51,8 +45,6 @@ public partial class TavernManager : Node
 	public static int TavernLevel { get; private set; } = 1;
 	public static int TavernExp { get; private set; } = 0;
 	public static int ExpToNextLevel => TavernLevel * 10;
-
-
 
 
 	public static int Gold => currentGold;
@@ -82,8 +74,6 @@ public partial class TavernManager : Node
 	private FurniturePanel furniturePanel;
 
 
-
-
 	// --- Chaos! ---
 	public override void _Ready()
 	{
@@ -95,10 +85,7 @@ public partial class TavernManager : Node
 			GD.PrintErr("❌ Multiple TavernManager instances detected!");
 			return;
 		}
-		if (floorLabel == null)
-			GD.PrintErr("❌ floorLabel not found!");
-
-
+		
 		Instance = this;
 
 		// Wire up UI
@@ -155,7 +142,10 @@ public partial class TavernManager : Node
 			var panel = GetNode<FurniturePanel>(FurniturePanelPath); // ✅ Uses the actual FurniturePanel class
 			furniturePanel = panel;
 		}
-
+		
+		//load DBs
+		FoodDrinkDatabase.LoadData();
+		GD.Print($"Loaded {FoodDrinkDatabase.AllFood.Count} food items and {FoodDrinkDatabase.AllDrinks.Count} drinks.");
 
 
 		UpdateTimeLabel();
@@ -315,11 +305,11 @@ if (guest != null)
 		return;
 	}
 
-	// Clear all floor slot contents
+	// Clear all current guest cards
 	foreach (var child in FloorSlots.GetChildren())
 		child.QueueFree();
 
-	// ✅ Sanitize: show guests currently on the tavern floor and not seated
+	// Get all guests who are on the floor and not seated
 	var floorList = AllVillagers
 		.Where(g =>
 			g != null &&
@@ -327,7 +317,7 @@ if (guest != null)
 			g.AssignedTable == null)
 		.ToList();
 
-	// Render exactly MaxFloorGuests number of slots
+	// Display up to the allowed number of floor guests
 	for (int i = 0; i < TavernStats.Instance.MaxFloorGuests; i++)
 	{
 		var guest = floorList.ElementAtOrDefault(i);
@@ -340,11 +330,16 @@ if (guest != null)
 			card.BoundGuest = guest;
 			card.BoundNPC = guest.BoundNPC;
 
-			string name = guest.BoundNPC.FirstName;
-			string roleLabel = guest.BoundNPC.ClassName;
+			// Set name and class labels
+			card.GetNode<Label>("VBoxContainer/NameLabel").Text = guest.BoundNPC.FirstName;
+			card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"{guest.BoundNPC.Level} {guest.BoundNPC.ClassName}";
 
-			card.GetNode<Label>("VBoxContainer/NameLabel").Text = name;
-			card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"{guest.BoundNPC.Level} {roleLabel}";
+			// ✅ Hook up hunger/thirst requests via C# events
+			card.ServeFoodRequested += OnServeFoodRequestedFromCard;
+			card.ServeDrinkRequested += OnServeDrinkRequestedFromCard;
+
+			// Update bubble display
+			card.CallDeferred(nameof(card.UpdateBubbleDisplay));
 		}
 		else
 		{
@@ -354,21 +349,66 @@ if (guest != null)
 		FloorSlots.AddChild(card);
 	}
 
-	// Update all table panels to reflect current seating
+	// Refresh each table panel UI
+	foreach (var table in tables)
+		table.LinkedPanel?.UpdateSeatSlots();
+}
+
+
+
+	public void OnGuestSeated(Guest guest)
+{
+	if (floorGuests.Contains(guest))
+		floorGuests.Remove(guest);
+
+	UpdateFloorLabel();
+	DisplayAdventurers();
+
+	// ✅ Refresh chat bubble display if seated guest has a visible card at the table
 	foreach (var table in tables)
 	{
-		table.LinkedPanel?.UpdateSeatSlots();
+		if (table.LinkedPanel == null)
+			continue;
+
+		foreach (var child in table.LinkedPanel.GetChildren())
+		{
+			if (child is GuestCard guestCard && guestCard.BoundGuest == guest)
+			{
+				guestCard.UpdateBubbleDisplay();
+			}
+		}
 	}
 }
 
-	public void OnGuestSeated(Guest guest)
-	{
-		if (floorGuests.Contains(guest))
-			floorGuests.Remove(guest);
 
-		UpdateFloorLabel();
-		DisplayAdventurers();
-	}
+// Called when a GuestCard emits the ServeFoodRequested signal
+public void OnServeFoodRequestedFromCard(Node source)
+{
+	if (source is GuestCard card)
+		OnServeFoodRequested(card.BoundNPC);
+}
+
+public void OnServeDrinkRequestedFromCard(Node source)
+{
+	if (source is GuestCard card)
+		OnServeDrinkRequested(card.BoundNPC);
+}
+
+// Sends info to the ServeMenuUI
+private void OnServeFoodRequested(NPCData npc)
+{
+	GameLog.Debug($"🍽️ {npc.FirstName} requested food!");
+	// TODO: Open food UI here
+}
+
+private void OnServeDrinkRequested(NPCData npc)
+{
+	GameLog.Debug($"🍷 {npc.FirstName} requested drink!");
+	// TODO: Open drink UI here
+}
+
+
+
 
 
 	#endregion

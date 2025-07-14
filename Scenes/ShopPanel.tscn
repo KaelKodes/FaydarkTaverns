@@ -1,30 +1,54 @@
-[gd_scene load_steps=3 format=3 uid="uid://bg6we31odfnlk"]
+[gd_scene load_steps=5 format=3 uid="uid://bg6we31odfnlk"]
 
 [ext_resource type="Script" uid="uid://dg7cq0725bmjt" path="res://Scenes/ShopPanel.cs" id="1_yqe7u"]
-[ext_resource type="Script" uid="uid://qi56yy8o3hs4" path="res://System/Sound/UIInteractButton.cs" id="2_s3syp"]
+[ext_resource type="Texture2D" uid="uid://dqrf2qcouoqfh" path="res://Assets/UI/Buttons/ActiveTab.png" id="2_c361v"]
+[ext_resource type="Texture2D" uid="uid://hjhwiuyh0eoo" path="res://Assets/UI/Buttons/InactiveTab.png" id="3_4inv5"]
+[ext_resource type="Script" uid="uid://b8lhdmo7btbjy" path="res://System/Sound/UIInteractTextureButton.cs" id="4_4inv5"]
 
 [node name="ShopPanel" type="Window" node_paths=PackedStringArray("ItemListContainer", "CartContainer", "TotalLabel", "ConfirmButton", "CloseButton", "TabTables", "TabDecorations", "TabSupplies", "TabUpgrade")]
+transparent_bg = true
 title = "Tavern Shop"
 initial_position = 1
-size = Vector2i(325, 335)
-visible = false
+size = Vector2i(325, 375)
+transparent = true
 min_size = Vector2i(275, 335)
 content_scale_mode = 2
+content_scale_aspect = 4
 script = ExtResource("1_yqe7u")
 ItemListContainer = NodePath("VBoxContainer/VBoxContainer/ShopItemContainer")
 CartContainer = NodePath("VBoxContainer/CartContainer")
 TotalLabel = NodePath("VBoxContainer/HBoxContainer/Total")
-ConfirmButton = NodePath("VBoxContainer/HBoxContainer/ConfirmPurchase")
+ConfirmButton = NodePath("VBoxContainer/ConfirmPurchase")
 CloseButton = NodePath("VBoxContainer/Close")
 TabTables = NodePath("VBoxContainer/Tabs/Tables")
 TabDecorations = NodePath("VBoxContainer/Tabs/Decorations")
 TabSupplies = NodePath("VBoxContainer/Tabs/Supplies")
 TabUpgrade = NodePath("VBoxContainer/Tabs/Upgrades")
+activeTexture = ExtResource("2_c361v")
+inactiveTexture = ExtResource("3_4inv5")
+metadata/_edit_horizontal_guides_ = [420.0]
+
+[node name="TextureRect" type="TextureRect" parent="."]
+anchors_preset = -1
+anchor_left = -0.105
+anchor_top = -0.078
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 34.125
+offset_top = 26.13
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource("2_c361v")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -1.0
+offset_top = 19.0
+offset_right = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -34,29 +58,93 @@ size_flags_vertical = 3
 layout_mode = 2
 alignment = 1
 
-[node name="Tables" type="Button" parent="VBoxContainer/Tabs"]
+[node name="Tables" type="TextureButton" parent="VBoxContainer/Tabs"]
 layout_mode = 2
+size_flags_horizontal = 3
 tooltip_text = "Allows More Room!"
-text = "Tables"
-script = ExtResource("2_s3syp")
+texture_normal = ExtResource("3_4inv5")
+texture_pressed = ExtResource("2_c361v")
+texture_focused = ExtResource("2_c361v")
+script = ExtResource("4_4inv5")
 
-[node name="Decorations" type="Button" parent="VBoxContainer/Tabs"]
+[node name="Label" type="Label" parent="VBoxContainer/Tabs/Tables"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_right = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 10
+text = "Tables"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Decorations" type="TextureButton" parent="VBoxContainer/Tabs"]
 layout_mode = 2
 tooltip_text = "Increase Renown!"
+texture_normal = ExtResource("3_4inv5")
+texture_pressed = ExtResource("2_c361v")
+texture_focused = ExtResource("2_c361v")
+script = ExtResource("4_4inv5")
+
+[node name="Label" type="Label" parent="VBoxContainer/Tabs/Decorations"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 10
 text = "Decorations"
-script = ExtResource("2_s3syp")
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="Supplies" type="Button" parent="VBoxContainer/Tabs"]
+[node name="Supplies" type="TextureButton" parent="VBoxContainer/Tabs"]
 layout_mode = 2
+size_flags_horizontal = 3
 tooltip_text = "Feed the Masses!"
-text = "Supplies"
-script = ExtResource("2_s3syp")
+texture_normal = ExtResource("3_4inv5")
+texture_pressed = ExtResource("2_c361v")
+texture_focused = ExtResource("2_c361v")
+script = ExtResource("4_4inv5")
 
-[node name="Upgrades" type="Button" parent="VBoxContainer/Tabs"]
+[node name="Label" type="Label" parent="VBoxContainer/Tabs/Supplies"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -4.0
+offset_right = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 10
+text = "Supplies"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Upgrades" type="TextureButton" parent="VBoxContainer/Tabs"]
 layout_mode = 2
 tooltip_text = "Improve the Tavern!"
+texture_normal = ExtResource("3_4inv5")
+texture_pressed = ExtResource("2_c361v")
+texture_focused = ExtResource("2_c361v")
+script = ExtResource("4_4inv5")
+
+[node name="Label" type="Label" parent="VBoxContainer/Tabs/Upgrades"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_right = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 10
 text = "Upgrades"
-script = ExtResource("2_s3syp")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -88,12 +176,46 @@ layout_mode = 2
 text = "Total:"
 horizontal_alignment = 1
 
-[node name="ConfirmPurchase" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="ConfirmPurchase" type="TextureButton" parent="VBoxContainer"]
+custom_minimum_size = Vector2(75, 30)
 layout_mode = 2
-text = "Confirm Purchase"
-script = ExtResource("2_s3syp")
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource("2_c361v")
+texture_pressed = ExtResource("3_4inv5")
+ignore_texture_size = true
+stretch_mode = 0
+script = ExtResource("4_4inv5")
 
-[node name="Close" type="Button" parent="VBoxContainer"]
+[node name="Label" type="Label" parent="VBoxContainer/ConfirmPurchase"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Confirm"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Close" type="TextureButton" parent="VBoxContainer"]
+custom_minimum_size = Vector2(75, 30)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+texture_normal = ExtResource("2_c361v")
+texture_pressed = ExtResource("3_4inv5")
+ignore_texture_size = true
+stretch_mode = 0
+script = ExtResource("4_4inv5")
+
+[node name="Label" type="Label" parent="VBoxContainer/Close"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 text = "Close"
-script = ExtResource("2_s3syp")
+horizontal_alignment = 1
+vertical_alignment = 1

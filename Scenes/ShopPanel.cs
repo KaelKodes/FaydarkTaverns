@@ -8,16 +8,21 @@ public partial class ShopPanel : Window
 	[Export] public VBoxContainer ItemListContainer;
 	[Export] public VBoxContainer CartContainer;
 	[Export] public Label TotalLabel;
-	[Export] public Button ConfirmButton;
-	[Export] public Button CloseButton;
+	[Export] public TextureButton ConfirmButton;
+	[Export] public TextureButton CloseButton;
 
-	[Export] public Button TabTables;
-	[Export] public Button TabDecorations;
-	[Export] public Button TabSupplies;
-	[Export] public Button TabUpgrade;
+	[Export] public TextureButton TabTables;
+	[Export] public TextureButton TabDecorations;
+	[Export] public TextureButton TabSupplies;
+	[Export] public TextureButton TabUpgrade;
+	[Export] public Texture2D activeTexture;
+	[Export] public Texture2D inactiveTexture;
+
 
 
 	private ShopCategory activeCategory = ShopCategory.Tables;
+	private TextureButton activeTab;
+
 	private Dictionary<string, int> cart = new();
 
 	public override void _Ready()
@@ -40,6 +45,22 @@ public partial class ShopPanel : Window
 		activeCategory = category;
 		RefreshShop();
 	}
+	private void SetActiveTab(TextureButton tab)
+{
+	// Reset previous tab to normal texture
+	if (activeTab != null)
+	{
+		activeTab.TextureNormal = inactiveTexture;
+		activeTab.TexturePressed = inactiveTexture;
+	}
+
+	// Set new active tab
+	activeTab = tab;
+	activeTab.TextureNormal = activeTexture;
+	activeTab.TexturePressed = activeTexture;
+}
+
+
 
 	private void RefreshShop()
 {

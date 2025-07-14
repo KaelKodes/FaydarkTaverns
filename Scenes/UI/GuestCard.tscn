@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://ch7r0s51qa60a"]
+[gd_scene load_steps=6 format=3 uid="uid://ch7r0s51qa60a"]
 
 [ext_resource type="Script" uid="uid://ctgsvgv1is7jt" path="res://Scenes/UI/GuestCard.cs" id="1_4rk5c"]
 [ext_resource type="Texture2D" uid="uid://dgsmrh4xjsgis" path="res://Assets/UI/ClassPortraits/Informant/InformantM3.jpg" id="2_vu3ij"]
 [ext_resource type="Script" uid="uid://qi56yy8o3hs4" path="res://System/Sound/UIInteractButton.cs" id="3_h1sue"]
+[ext_resource type="Texture2D" uid="uid://c0v03h0xh71ym" path="res://Assets/UI/ChatBubbles/HungryBubble.png" id="4_h1sue"]
+[ext_resource type="Texture2D" uid="uid://c2s5hfq4t3wsr" path="res://Assets/UI/ChatBubbles/ThirstyBubble.png" id="5_c174f"]
 
 [node name="GuestCard" type="Panel"]
 z_index = 1
@@ -12,6 +14,7 @@ scale = Vector2(1.00344, 0.776052)
 size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("1_4rk5c")
+metadata/_edit_horizontal_guides_ = [10.0]
 
 [node name="Background" type="ColorRect" parent="."]
 z_index = 2
@@ -86,3 +89,32 @@ text_overrun_behavior = 3
 visible = false
 layout_mode = 2
 horizontal_alignment = 1
+
+[node name="BubbleControl" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HungryBubble" type="TextureButton" parent="BubbleControl"]
+visible = false
+z_index = 4
+layout_mode = 0
+offset_left = -5.0
+offset_top = -22.0
+offset_right = 35.0
+offset_bottom = 18.0
+texture_normal = ExtResource("4_h1sue")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="ThirstyBubble" type="TextureButton" parent="BubbleControl"]
+visible = false
+z_index = 4
+layout_mode = 0
+offset_left = 37.0
+offset_top = -21.5771
+offset_right = 77.0
+offset_bottom = 19.4229
+texture_normal = ExtResource("5_c174f")
+ignore_texture_size = true
+stretch_mode = 0

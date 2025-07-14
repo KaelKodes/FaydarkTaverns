@@ -7,6 +7,16 @@ public partial class GuestCard : Panel
 	public Guest BoundGuest { get; set; }
 	public NPCData BoundNPC { get; set; }
 
+	private TextureButton HungryBubble;
+	private TextureButton ThirstyBubble;
+	public event Action<GuestCard> ServeFoodRequested;
+	public event Action<GuestCard> ServeDrinkRequested;
+
+
+
+
+
+
 	private static GuestCard _currentlyDraggedCard = null;
 	public static bool IsDraggingAdventurer() => _currentlyDraggedCard != null;
 	public static GuestCard GetCurrentlyDraggedCard() => _currentlyDraggedCard;
@@ -14,11 +24,12 @@ public partial class GuestCard : Panel
 	private ColorRect background;
 
 	public override void _Ready()
-	{
-		background = GetNodeOrNull<ColorRect>("Background");
-		SetMouseFilter(MouseFilterEnum.Stop);
+{
+	background = GetNodeOrNull<ColorRect>("Background");
+	SetMouseFilter(MouseFilterEnum.Stop);
 
-		if (BoundNPC != null)
+	// Role-based background color
+	if (BoundNPC != null)
 	{
 		if (BoundNPC.Role == NPCRole.Adventurer)
 			SetDefaultColor();
@@ -30,59 +41,88 @@ public partial class GuestCard : Panel
 
 	SetCardLabels();
 
-		var removeButton = GetNode<Button>("KickButton");
-		removeButton.Text = "❌";
-		removeButton.FocusMode = Control.FocusModeEnum.None;
-		removeButton.Pressed += OnRemovePressed;
+	// Setup Kick Button
+	var removeButton = GetNode<Button>("KickButton");
+	removeButton.Text = "❌";
+	removeButton.FocusMode = Control.FocusModeEnum.None;
+	removeButton.Pressed += OnRemovePressed;
 
-		var transparentStyle = new StyleBoxFlat { BgColor = new Color(0, 0, 0, 0) };
-		removeButton.AddThemeStyleboxOverride("normal", transparentStyle);
-		removeButton.AddThemeStyleboxOverride("hover", transparentStyle);
-		removeButton.AddThemeStyleboxOverride("pressed", transparentStyle);
+	var transparentStyle = new StyleBoxFlat { BgColor = new Color(0, 0, 0, 0) };
+	removeButton.AddThemeStyleboxOverride("normal", transparentStyle);
+	removeButton.AddThemeStyleboxOverride("hover", transparentStyle);
+	removeButton.AddThemeStyleboxOverride("pressed", transparentStyle);
 
-		removeButton.MouseEntered += () => removeButton.Text = "🥾";
-		removeButton.MouseExited += () => removeButton.Text = "❌";
+	removeButton.MouseEntered += () => removeButton.Text = "🥾";
+	removeButton.MouseExited += () => removeButton.Text = "❌";
 
-		var portrait = GetNodeOrNull<TextureRect>("MarginContainer/Portrait");
-		if (portrait != null)
-		{
-			portrait.Position += new Vector2(25, 0);
+	// ✅ Setup Hunger/Thirst Bubbles (safe + null-checked)
+	HungryBubble = GetNodeOrNull<TextureButton>("BubbleControl/HungryBubble");
+	ThirstyBubble = GetNodeOrNull<TextureButton>("BubbleControl/ThirstyBubble");
 
-			Gender gender = BoundGuest?.Gender ?? Gender.Male;
-			string className = BoundNPC?.ClassName ?? "Informant";
-			int portraitId = BoundNPC?.PortraitId ?? 1;
-
-			string initial = gender == Gender.Male ? "M" : "F";
-			string assetPath = $"res://Assets/UI/ClassPortraits/{className}/{className}{initial}{portraitId}.jpg";
-			portrait.Texture = ResourceLoader.Load<Texture2D>(assetPath);
-		}
-
-		MouseEntered += () =>
-		{
-			if (!IsDraggingAdventurer())
-			{
-				UIAudio.Instance.PlayHover();
-				UICursor.Instance.SetPoint();
-			}
-		};
-		MouseExited += () =>
-		{
-			if (!IsDraggingAdventurer())
-				UICursor.Instance.SetIdle();
-		};
-
-		FocusEntered += () => UIAudio.Instance.PlayHover();
-
-		GuiInput += @event =>
-		{
-			if (@event is InputEventMouseButton mouseEvent &&
-				mouseEvent.ButtonIndex == MouseButton.Left &&
-				mouseEvent.Pressed)
-			{
-				UIAudio.Instance.PlayClick();
-			}
-		};
+	if (HungryBubble != null)
+	{
+		HungryBubble.Pressed += OnHungryBubblePressed;
+		HungryBubble.Visible = false;
 	}
+	else
+	{
+		GD.PrintErr("❌ HungryBubble not found in GuestCard!");
+	}
+
+	if (ThirstyBubble != null)
+	{
+		ThirstyBubble.Pressed += OnThirstyBubblePressed;
+		ThirstyBubble.Visible = false;
+	}
+	else
+	{
+		GD.PrintErr("❌ ThirstyBubble not found in GuestCard!");
+	}
+
+	// Portrait logic
+	var portrait = GetNodeOrNull<TextureRect>("MarginContainer/Portrait");
+	if (portrait != null)
+	{
+		portrait.Position += new Vector2(25, 0);
+
+		Gender gender = BoundGuest?.Gender ?? Gender.Male;
+		string className = BoundNPC?.ClassName ?? "Informant";
+		int portraitId = BoundNPC?.PortraitId ?? 1;
+
+		string initial = gender == Gender.Male ? "M" : "F";
+		string assetPath = $"res://Assets/UI/ClassPortraits/{className}/{className}{initial}{portraitId}.jpg";
+		portrait.Texture = ResourceLoader.Load<Texture2D>(assetPath);
+	}
+
+	// Mouse/hover/click feedback
+	MouseEntered += () =>
+	{
+		if (!IsDraggingAdventurer())
+		{
+			UIAudio.Instance.PlayHover();
+			UICursor.Instance.SetPoint();
+		}
+	};
+
+	MouseExited += () =>
+	{
+		if (!IsDraggingAdventurer())
+			UICursor.Instance.SetIdle();
+	};
+
+	FocusEntered += () => UIAudio.Instance.PlayHover();
+
+	GuiInput += @event =>
+	{
+		if (@event is InputEventMouseButton mouseEvent &&
+			mouseEvent.ButtonIndex == MouseButton.Left &&
+			mouseEvent.Pressed)
+		{
+			UIAudio.Instance.PlayClick();
+		}
+	};
+}
+
 
 	private void OnRemovePressed()
 	{
@@ -221,5 +261,51 @@ public partial class GuestCard : Panel
 
 		return card;
 	}
+
+// Hunger Display
+public void UpdateBubbleDisplay()
+{
+	if (BoundNPC == null)
+		return;
+
+	GameLog.Debug($"🧪 {BoundNPC.FirstName} UpdateBubbleDisplay → Hungry={BoundNPC.IsHungry}, Thirsty={BoundNPC.IsThirsty}");
+
+	if (HungryBubble == null)
+		GD.PrintErr("❌ HungryBubble node is null.");
+	if (ThirstyBubble == null)
+		GD.PrintErr("❌ ThirstyBubble node is null.");
+
+	bool isSeated = BoundGuest?.AssignedTable != null;
+
+	// Show food bubble only if seated
+	if (HungryBubble != null)
+		HungryBubble.Visible = BoundNPC.IsHungry && isSeated;
+
+	// Show drink bubble always if thirsty
+	if (ThirstyBubble != null)
+		ThirstyBubble.Visible = BoundNPC.IsThirsty;
+}
+
+
+
+
+private void OnHungryBubblePressed()
+{
+	ServeFoodRequested?.Invoke(this);
+	HungryBubble.Visible = false;
+}
+
+private void OnThirstyBubblePressed()
+{
+	ServeDrinkRequested?.Invoke(this);
+	ThirstyBubble.Visible = false;
+}
+
+
+
+
+
+
+
 
 }

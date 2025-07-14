@@ -1,0 +1,212 @@
+[
+  {
+    "name": "Bitterroot Ale",
+    "flavor_profiles": [
+      "Hoppy"
+    ],
+    "quality": "cheap",
+    "category": "drink",
+    "base_price": 2,
+    "description": "A rough brew with sharp bitterness and little refinement.",
+    "id": "bitterroot_ale"
+  },
+  {
+    "name": "Deep Forest IPA",
+    "flavor_profiles": [
+      "Hoppy",
+      "Herbal"
+    ],
+    "quality": "average",
+    "category": "drink",
+    "base_price": 6,
+    "description": "A strong ale with pine and nettle notes, favored by woodsmen.",
+    "id": "deep_forest_ipa"
+  },
+  {
+    "name": "Imperial Hopstorm",
+    "flavor_profiles": [
+      "Hoppy",
+      "Strong"
+    ],
+    "quality": "high",
+    "category": "drink",
+    "base_price": 10,
+    "description": "A premium IPA with overwhelming flavor and strong finish.",
+    "id": "imperial_hopstorm"
+  },
+  {
+    "name": "Mulberry Juice",
+    "flavor_profiles": [
+      "Fruity"
+    ],
+    "quality": "cheap",
+    "category": "drink",
+    "base_price": 2,
+    "description": "A sweet and slightly tangy juice, common among peasants.",
+    "id": "mulberry_juice"
+  },
+  {
+    "name": "Crisp Orchard Cider",
+    "flavor_profiles": [
+      "Fruity",
+      "Sweet"
+    ],
+    "quality": "average",
+    "category": "drink",
+    "base_price": 5,
+    "description": "Balanced apple cider, slightly effervescent and smooth.",
+    "id": "crisp_orchard_cider"
+  },
+  {
+    "name": "Elven Berrywine",
+    "flavor_profiles": [
+      "Fruity",
+      "Smooth"
+    ],
+    "quality": "high",
+    "category": "drink",
+    "base_price": 11,
+    "description": "Delicate berrywine, aged and enchanted by elven vintners.",
+    "id": "elven_berrywine"
+  },
+  {
+    "name": "Gutburner Gin",
+    "flavor_profiles": [
+      "Strong"
+    ],
+    "quality": "cheap",
+    "category": "drink",
+    "base_price": 3,
+    "description": "Hard-hitting and poorly distilled. Popular with mercenaries.",
+    "id": "gutburner_gin"
+  },
+  {
+    "name": "Dwarven Emberbrew",
+    "flavor_profiles": [
+      "Strong",
+      "Smoky"
+    ],
+    "quality": "average",
+    "category": "drink",
+    "base_price": 7,
+    "description": "A powerful spirit aged in volcanic stone casks.",
+    "id": "dwarven_emberbrew"
+  },
+  {
+    "name": "Godsbane Whiskey",
+    "flavor_profiles": [
+      "Strong",
+      "Dry"
+    ],
+    "quality": "high",
+    "category": "drink",
+    "base_price": 14,
+    "description": "A legendary dark spirit said to silence bards and kings alike.",
+    "id": "godsbane_whiskey"
+  },
+  {
+    "name": "Corktown Red",
+    "flavor_profiles": [
+      "Dry"
+    ],
+    "quality": "cheap",
+    "category": "drink",
+    "base_price": 2,
+    "description": "A bland red wine with minimal sweetness or scent.",
+    "id": "corktown_red"
+  },
+  {
+    "name": "Suncliff White",
+    "flavor_profiles": [
+      "Dry",
+      "Fruity"
+    ],
+    "quality": "average",
+    "category": "drink",
+    "base_price": 6,
+    "description": "Clean and dry white wine with a hint of citrus.",
+    "id": "suncliff_white"
+  },
+  {
+    "name": "Silvervine Reserve",
+    "flavor_profiles": [
+      "Dry",
+      "Smooth"
+    ],
+    "quality": "high",
+    "category": "drink",
+    "base_price": 12,
+    "description": "A noble wine prized for its clarity and crispness.",
+    "id": "silvervine_reserve"
+  },
+  {
+    "name": "Breadmilk",
+    "flavor_profiles": [
+      "Smooth"
+    ],
+    "quality": "cheap",
+    "category": "drink",
+    "base_price": 1,
+    "description": "A watery blend of milk and malt, usually served lukewarm.",
+    "id": "breadmilk"
+  },
+  {
+    "name": "Velvet Stout",
+    "flavor_profiles": [
+      "Smooth",
+      "Sweet"
+    ],
+    "quality": "average",
+    "category": "drink",
+    "base_price": 5,
+    "description": "A dark ale with a creamy finish and hints of caramel.",
+    "id": "velvet_stout"
+  },
+  {
+    "name": "Creamshade Liqueur",
+    "flavor_profiles": [
+      "Smooth",
+      "Creamy"
+    ],
+    "quality": "high",
+    "category": "drink",
+    "base_price": 10,
+    "description": "A decadent dessert drink with hints of vanilla and almond.",
+    "id": "creamshade_liqueur"
+  },
+  {
+    "name": "Greenmead",
+    "flavor_profiles": [
+      "Sour"
+    ],
+    "quality": "cheap",
+    "category": "drink",
+    "base_price": 2,
+    "description": "A strange sour mead brewed with wild apples.",
+    "id": "greenmead"
+  },
+  {
+    "name": "Bitter Lemon Ale",
+    "flavor_profiles": [
+      "Sour",
+      "Hoppy"
+    ],
+    "quality": "average",
+    "category": "drink",
+    "base_price": 6,
+    "description": "Tart and bitter with an herbal punch.",
+    "id": "bitter_lemon_ale"
+  },
+  {
+    "name": "Stormcatcher Lambic",
+    "flavor_profiles": [
+      "Sour",
+      "Fruity"
+    ],
+    "quality": "high",
+    "category": "drink",
+    "base_price": 13,
+    "description": "A rare and expensive fermented fruit beer with a wild tang.",
+    "id": "stormcatcher_lambic"
+  }
+]

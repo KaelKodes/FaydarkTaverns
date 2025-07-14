@@ -14,6 +14,7 @@ public partial class GuestManager : Node
 	public static GuestManager Instance { get; private set; }
 	public static List<Guest> GuestsOutside => guestsOutside;
 	public static List<Guest> GuestsInside => guestsInside;
+	public List<Guest> AllKnownGuests { get; private set; } = new();
 	public static event Action<Guest> OnGuestLeft;
 	public static event Action<Guest> OnGuestAdmitted;
 	
@@ -72,6 +73,7 @@ public void TickGuests(DateTime currentTime)
 		// 🔁 Reset flags for new day
 		hasAnnouncedLastCall = false;
 		hasClosedTavern = false;
+		AssignDailyHungerAndThirst();
 	}
 
 	// 🍻 Last Call warning (once)
@@ -134,7 +136,7 @@ public void TickGuests(DateTime currentTime)
 	for (int i = guestsInside.Count - 1; i >= 0; i--)
 	{
 		var guest = guestsInside[i];
-		GameLog.Debug($"🕓 Checking {guest.Name} | Departure: {guest.DepartureTime} | ShouldLeave: {guest.ShouldLeave}");
+		//GameLog.Debug($"🕓 Checking {guest.Name} | Departure: {guest.DepartureTime} | ShouldLeave: {guest.ShouldLeave}");
 
 		if (!guest.DepartureTime.HasValue)
 		{
@@ -289,5 +291,47 @@ private void TryAdmitGuest(Guest guest)
 
 	AdmitGuest(guest); // ✅ Let the real admission logic handle everything
 }
+
+private void AssignDailyHungerAndThirst()
+{
+	if (TavernManager.Instance == null)
+	{
+		GD.PrintErr("❌ TavernManager.Instance not found!");
+		return;
+	}
+
+	foreach (var guest in TavernManager.Instance.AllVillagers)
+	{
+		if (guest?.BoundNPC == null)
+			continue;
+
+		guest.BoundNPC.HasEatenToday = false;
+		guest.BoundNPC.HasDrankToday = false;
+
+		int roll = (int)(GD.Randi() % 100);
+
+		if (roll < 45)
+		{
+			guest.BoundNPC.IsHungry = true;
+			guest.BoundNPC.IsThirsty = false;
+		}
+		else if (roll < 90)
+		{
+			guest.BoundNPC.IsHungry = false;
+			guest.BoundNPC.IsThirsty = true;
+		}
+		else
+		{
+			guest.BoundNPC.IsHungry = true;
+			guest.BoundNPC.IsThirsty = true;
+		}
+
+		GameLog.Debug($"🍽️ {guest.Name} rolled: Hungry={guest.BoundNPC.IsHungry}, Thirsty={guest.BoundNPC.IsThirsty}");
+	}
+}
+
+
+
+
 
 }

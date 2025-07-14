@@ -14,6 +14,31 @@ namespace FaydarkTaverns.Objects
 		public int PortraitId { get; set; }
 		public int VisitHour { get; set; } = -1; // -1 means not set
 		public int VisitDay { get; set; } = -1;
+		
+		// --- Food & Drink Preferences ---
+public string FavoriteFoodGroup { get; set; }
+public string HatedFoodGroup { get; set; }
+public string FavoriteDrinkGroup { get; set; }
+public string HatedDrinkGroup { get; set; }
+
+// --- Regional Affinities ---
+public Region BirthRegion { get; set; }
+public Region HatedRegion { get; set; }
+
+// --- Quest Affinities ---
+public QuestType FavoriteQuestType { get; set; }
+public QuestType HatedQuestType { get; set; }
+
+// --- Social Preferences ---
+public string FavoriteClass { get; set; }
+public string HatedClass { get; set; }
+
+// --- Tavern Triggers ---
+public bool IsHungry { get; set; } = false;
+public bool IsThirsty { get; set; } = false;
+public bool HasEatenToday { get; set; } = false;
+public bool HasDrankToday { get; set; } = false;
+
 
 
 		// Role & State
@@ -32,6 +57,22 @@ namespace FaydarkTaverns.Objects
 		public int Distance { get; set; }
 		public int HealingUse { get; set; }
 		public int Focus { get; set; }
+		
+		// --- Adventurer Role Skill Stats ---
+public int Athletics { get; set; }
+public int Tracking { get; set; }
+public int LockPicking { get; set; }
+public int Buffing { get; set; }
+public int Debuffing { get; set; }
+public int Transport { get; set; }
+public int Taming { get; set; }
+public int SpellResearch { get; set; }
+public int Investigation { get; set; }
+public int Tank { get; set; }
+public int pDPS { get; set; }
+public int mDPS { get; set; }
+public int Healer { get; set; }
+
 
 		// Adventurer Progression
 		public int Level { get; set; } = 1;

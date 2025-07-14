@@ -16,7 +16,7 @@ public partial class SeatSlot : Panel
 		hasBackground = background != null;
 
 		if (!hasBackground)
-			GD.Print($"ℹ️ SeatSlot at {GetPath()} has no Background. Skipping color updates.");
+			GameLog.Debug($"ℹ️ SeatSlot at {GetPath()} has no Background. Skipping color updates.");
 		else
 			SetEmpty();
 	}

@@ -51,29 +51,42 @@ public partial class Table : Panel
 	}
 
 	public int AssignGuest(Guest guest)
+{
+	for (int i = 0; i < SeatedGuests.Count; i++)
 	{
-		for (int i = 0; i < SeatedGuests.Count; i++)
+		if (SeatedGuests[i] == null)
 		{
-			if (SeatedGuests[i] == null)
+			SeatedGuests[i] = guest;
+			guest.SeatIndex = i;
+			guest.AssignedTable = this;
+
+			// ✅ Set state to seated
+			guest.SetState(NPCState.Seats);
+
+			UpdateSeatVisual(i, guest);
+
+			// ✅ Refresh the GuestCard (if exists) after sitting
+			LinkedPanel?.UpdateSeatSlots();
+
+			// 🔥 Update bubble for seated guest card
+			if (LinkedPanel != null)
 			{
-				SeatedGuests[i] = guest;
-				guest.SeatIndex = i;
-				guest.AssignedTable = this;
-
-				// ✅ Set state to seated
-				guest.SetState(NPCState.Seats);
-
-				UpdateSeatVisual(i, guest);
-
-				LinkedPanel?.UpdateSeatSlots();
-				TavernManager.Instance.DisplayAdventurers();
-				TavernManager.Instance.UpdateFloorLabel();
-
-				return i;
+				foreach (var child in LinkedPanel.GetChildren())
+				{
+					if (child is GuestCard card && card.BoundGuest == guest)
+						card.UpdateBubbleDisplay();
+				}
 			}
+
+			TavernManager.Instance.DisplayAdventurers();
+			TavernManager.Instance.UpdateFloorLabel();
+
+			return i;
 		}
-		return -1;
 	}
+	return -1;
+}
+
 
 	public void RemoveGuest(Guest guest)
 	{

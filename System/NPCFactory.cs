@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using FaydarkTaverns.Objects;
 
 public static class NPCFactory
@@ -32,7 +33,7 @@ public static class NPCFactory
 };
 
 
-	public static NPCData CreateBaseNPC()
+public static NPCData CreateBaseNPC()
 {
 	string gender = GetRandomGender();
 	string first = GenerateFirstName(gender);
@@ -48,18 +49,48 @@ public static class NPCFactory
 		Level = 1,
 		Xp = 0,
 		VisitHour = GetDefaultVisitHour(),
-		VisitDay = -1, // Will be set when they are scheduled
+		VisitDay = -1,
 
-		// Timing Behavior Stats
 		EntryPatience = Range(8f, 20f),
 		TavernLingerTime = Range(75f, 150f),
 		SeatRetryInterval = Range(5f, 10f),
 		SocializeDuration = Range(10f, 25f)
-
 	};
+
+	// --- Food & Drink Flavor Tags (official from JSON) ---
+	string[] foodFlavors = { "Savory", "Sweet", "Spicy", "Earthy", "Sour", "Bitter", "Salty", "Smoky", "Creamy", "Funky" };
+	string[] drinkFlavors = { "Hoppy", "Fruity", "Strong", "Dry", "Smooth", "Sour", "Sweet", "Spiced", "Herbal", "Smoky" };
+
+	string[] allClassNames = ClassTemplate.GetDefaultClassTemplates().Keys.ToArray();
+	Array regions = Enum.GetValues(typeof(Region));
+	Array questTypes = Enum.GetValues(typeof(QuestType));
+
+	// Assign Food & Drink Preferences
+	npc.FavoriteFoodGroup = foodFlavors[random.Next(foodFlavors.Length)];
+	do { npc.HatedFoodGroup = foodFlavors[random.Next(foodFlavors.Length)]; }
+	while (npc.HatedFoodGroup == npc.FavoriteFoodGroup);
+
+	npc.FavoriteDrinkGroup = drinkFlavors[random.Next(drinkFlavors.Length)];
+	do { npc.HatedDrinkGroup = drinkFlavors[random.Next(drinkFlavors.Length)]; }
+	while (npc.HatedDrinkGroup == npc.FavoriteDrinkGroup);
+
+	// Assign Regional Affinities
+	npc.BirthRegion = (Region)regions.GetValue(random.Next(regions.Length));
+	do { npc.HatedRegion = (Region)regions.GetValue(random.Next(regions.Length)); }
+	while (npc.HatedRegion == npc.BirthRegion);
+
+	// Assign Quest & Class Preferences
+	npc.FavoriteQuestType = (QuestType)questTypes.GetValue(random.Next(questTypes.Length));
+	do { npc.HatedQuestType = (QuestType)questTypes.GetValue(random.Next(questTypes.Length)); }
+	while (npc.HatedQuestType == npc.FavoriteQuestType);
+
+	npc.FavoriteClass = allClassNames[random.Next(allClassNames.Length)];
+	do { npc.HatedClass = allClassNames[random.Next(allClassNames.Length)]; }
+	while (npc.HatedClass == npc.FavoriteClass);
 
 	return npc;
 }
+
 
 
 // 🎯 9AM to 9PM default visiting range — expand this later for class quirks
@@ -70,23 +101,39 @@ private static int GetDefaultVisitHour()
 
 
 
-	public static void AssignAdventurerStats(NPCData npc, ClassTemplate template)
-	{
-		npc.ClassName = template.ClassName;
+public static void AssignAdventurerStats(NPCData npc, ClassTemplate template)
+{
+	npc.ClassName = template.ClassName;
 
-		npc.Strength = RandomizeStat(template.Strength);
-		npc.Dexterity = RandomizeStat(template.Dexterity);
-		npc.Constitution = RandomizeStat(template.Constitution);
-		npc.Intelligence = RandomizeStat(template.Intelligence);
+	npc.Strength = RandomizeStat(template.Strength);
+	npc.Dexterity = RandomizeStat(template.Dexterity);
+	npc.Constitution = RandomizeStat(template.Constitution);
+	npc.Intelligence = RandomizeStat(template.Intelligence);
 
-		npc.Aggression = RandomTrait();
-		npc.Distance = RandomTrait();
-		npc.HealingUse = RandomTrait();
-		npc.Focus = RandomTrait();
+	npc.Aggression = RandomTrait();
+	npc.Distance = RandomTrait();
+	npc.HealingUse = RandomTrait();
+	npc.Focus = RandomTrait();
 
-		npc.Level = 1;
-		npc.Xp = 0;
-	}
+	npc.Athletics = template.Athletics;
+	npc.Tracking = template.Tracking;
+	npc.LockPicking = template.LockPicking;
+	npc.Buffing = template.Buffing;
+	npc.Debuffing = template.Debuffing;
+	npc.Transport = template.Transport;
+	npc.Taming = template.Taming;
+	npc.SpellResearch = template.SpellResearch;
+	npc.Investigation = template.Investigation;
+
+	npc.Tank = template.Tank;
+	npc.pDPS = template.pDPS;
+	npc.mDPS = template.mDPS;
+	npc.Healer = template.Healer;
+
+	npc.Level = 1;
+	npc.Xp = 0;
+}
+
 
 	public static void AssignInformantStats(NPCData npc)
 	{

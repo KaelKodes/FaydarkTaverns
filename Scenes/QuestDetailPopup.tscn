@@ -13,6 +13,7 @@ expand_margin_bottom = 35.0
 
 [node name="QuestDetailPopup" type="Window" node_paths=PackedStringArray("TitleLabel", "RegionLabel", "TypeLabel", "RewardLabel", "TimeLabel", "OptimalRolesLabel", "DescriptionLabel", "AcceptButton", "CloseButton", "DismissButton", "RetryDialog")]
 transparent_bg = true
+position = Vector2i(0, 36)
 size = Vector2i(234, 267)
 wrap_controls = true
 content_scale_aspect = 4
@@ -37,9 +38,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -93.0
-offset_top = -117.0
+offset_top = -123.5
 offset_right = 93.0
-offset_bottom = 127.0
+offset_bottom = 135.5
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
