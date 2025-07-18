@@ -4,6 +4,8 @@ using FaydarkTaverns.Objects;
 
 public partial class GuestCard : Panel
 {
+	[Export] public PackedScene NPCDetailPopupScene;
+
 	public Guest BoundGuest { get; set; }
 	public NPCData BoundNPC { get; set; }
 
@@ -12,16 +14,21 @@ public partial class GuestCard : Panel
 	public event Action<GuestCard> ServeFoodRequested;
 	public event Action<GuestCard> ServeDrinkRequested;
 
+	private ColorRect background;
 
 
-
-
-
+	// Mouse 
 	private static GuestCard _currentlyDraggedCard = null;
+	private NPCDetailPopup _currentPopup;
+
 	public static bool IsDraggingAdventurer() => _currentlyDraggedCard != null;
 	public static GuestCard GetCurrentlyDraggedCard() => _currentlyDraggedCard;
+	private Vector2 _clickStartPos;
+	private bool    _didDrag;
+	private const float DragThreshold = 10f;
 
-	private ColorRect background;
+
+	
 
 	public override void _Ready()
 {
@@ -112,15 +119,8 @@ public partial class GuestCard : Panel
 
 	FocusEntered += () => UIAudio.Instance.PlayHover();
 
-	GuiInput += @event =>
-	{
-		if (@event is InputEventMouseButton mouseEvent &&
-			mouseEvent.ButtonIndex == MouseButton.Left &&
-			mouseEvent.Pressed)
-		{
-			UIAudio.Instance.PlayClick();
-		}
-	};
+	GuiInput += OnGuiInput;
+
 }
 
 
@@ -192,27 +192,27 @@ public partial class GuestCard : Panel
 	}
 
 	public override Variant _GetDragData(Vector2 atPosition)
+{
+	// Only allow dragging if this card is an Adventurer
+	if (BoundNPC == null || BoundNPC.Role != NPCRole.Adventurer)
+		return new Variant(); 
+
+	// ── Existing drag logic ──
+	_currentlyDraggedCard = this;
+	UICursor.Instance.SetGrab();
+
+	var preview = new Label
 	{
-		if (BoundNPC == null || BoundGuest == null)
-		{
-			GD.Print($"❌ Invalid drag: BoundNPC or BoundGuest is null.");
-			return new Variant();
-		}
+		Text                = BoundNPC.Name,
+		Modulate            = new Color(1,1,1,0.9f),
+		SizeFlagsHorizontal = SizeFlags.ExpandFill,
+		HorizontalAlignment = HorizontalAlignment.Center
+	};
 
-		_currentlyDraggedCard = this;
-		UICursor.Instance.SetGrab();
+	SetDragPreview(preview);
+	return this;
+}
 
-		var preview = new Label
-		{
-			Text = BoundNPC.Name,
-			Modulate = new Color(1, 1, 1, 0.9f),
-			SizeFlagsHorizontal = SizeFlags.ExpandFill,
-			HorizontalAlignment = HorizontalAlignment.Center
-		};
-
-		SetDragPreview(preview);
-		return this;
-	}
 
 	public override void _DropData(Vector2 atPosition, Variant data)
 	{
@@ -301,7 +301,58 @@ private void OnThirstyBubblePressed()
 	ThirstyBubble.Visible = false;
 }
 
+ private void ToggleNpcDetails()
+{
+	// If it’s already open, close it
+	if (_currentPopup != null && _currentPopup.IsInsideTree())
+	{
+		_currentPopup.QueueFree();
+		_currentPopup = null;
+		return;
+	}
 
+	// Otherwise, instantiate and show
+	if (BoundNPC == null || NPCDetailPopupScene == null)
+		return;
+
+	_currentPopup = NPCDetailPopupScene.Instantiate<NPCDetailPopup>();
+	GetTree().Root.AddChild(_currentPopup);
+	_currentPopup.SetNPC(BoundNPC);
+	_currentPopup.Show();
+}
+
+	
+	private void OnGuiInput(InputEvent @event)
+{
+	if (@event is InputEventMouseButton mb && mb.ButtonIndex == MouseButton.Left)
+	{
+		if (mb.Pressed)
+		{
+			UIAudio.Instance.PlayClick();
+			_didDrag = false;
+			_clickStartPos = mb.Position;
+		}
+		else
+		{
+			// on release: only open popup if no drag happened
+			if (!_didDrag)
+				ToggleNpcDetails();
+			_didDrag = false;
+		}
+		GetViewport().SetInputAsHandled();
+	}
+	else if (@event is InputEventMouseMotion mm)
+{
+	// while left is held, if moved enough, mark as drag
+	if (mm.ButtonMask.HasFlag(MouseButtonMask.Left) &&
+		!_didDrag &&
+		mm.Position.DistanceTo(_clickStartPos) > DragThreshold)
+	{
+		_didDrag = true;
+	}
+}
+
+}
 
 
 

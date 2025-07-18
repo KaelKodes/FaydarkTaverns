@@ -28,30 +28,35 @@ public static class QuestGenerator
 	};
 
 	public static Quest GenerateQuest(int id)
+{
+	QuestType type   = GetRandomEnum<QuestType>();
+	Region    region = GetRandomEnum<Region>();
+
+	int travelTime = GetTravelTimeFromElderstone(region);
+	int taskTime   = rng.Next(60, 180); // Task Time: 1–3 hours
+	int deadline   = travelTime * 2 + taskTime + rng.Next(30, 120);
+
+	return new Quest
 	{
-		QuestType type = GetRandomEnum<QuestType>();
-		Region region = GetRandomEnum<Region>();
+		QuestId     = id,
+		Title       = GenerateQuestTitle(type, region),
+		Type        = type,
+		Region      = region,
+		TravelHours = travelTime,
+		TaskHours   = taskTime / 60,
+		Description = SampleDescriptions[rng.Next(SampleDescriptions.Count)],
+		Quirk       = rng.NextDouble() < 0.3 
+					   ? SampleQuirks[rng.Next(SampleQuirks.Count)] 
+					   : null,
 
-		int travelTime = GetTravelTimeFromElderstone(region);
-		int taskTime = rng.Next(60, 180); // Task Time: 1–3 hours
-		int deadline = travelTime * 2 + taskTime + rng.Next(30, 120); // Add padding for deadline
+		// TODO Quest Level Up logic
+		Level       = 1,
 
-		List<int> optimalRoles = GetOptimalRoles(type);
+		// Should probably make this smarter at some point
+		Reward      = rng.Next(30, 80)
+	};
+}
 
-		return new Quest
-		{
-			QuestId = id,
-			Title = GenerateQuestTitle(type, region),
-			Type = type,
-			Region = region,
-			TravelHours = travelTime,
-			TaskHours = taskTime / 60,
-			Description = SampleDescriptions[rng.Next(SampleDescriptions.Count)],
-			Quirk = rng.NextDouble() < 0.3 ? SampleQuirks[rng.Next(SampleQuirks.Count)] : null,
-			OptimalRoles = optimalRoles,
-			Reward = rng.Next(30, 80)
-		};
-	}
 
 	private static string GenerateQuestTitle(QuestType type, Region region)
 	{

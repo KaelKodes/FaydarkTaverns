@@ -1,0 +1,100 @@
+{
+  "Slay": {
+    "1": {
+      "requiredStats": {
+        "Tank": 6,
+        "Healer": 5
+      },
+      "bonusStats": {
+        "mDPS": 4,
+        "pDPS": 4
+      }
+    }
+  },
+  "Escort": {
+    "1": {
+      "requiredStats": {
+        "Transport": 6
+      },
+      "bonusStats": {
+        "Athletics": 5,
+        "Debuffing": 5,
+        "pDPS": 5
+      }
+    }
+  },
+  "Heist": {
+    "1": {
+      "requiredStats": {
+        "LockPicking": 6,
+        "Buffing": 6
+      },
+      "bonusStats": {
+        "mDPS": 5,
+        "Taming": 5,
+        "Athletics": 5
+      }
+    }
+  },
+  "Explore": {
+    "1": {
+      "requiredStats": {
+        "Tracking": 6,
+        "Athletics": 5
+      },
+      "bonusStats": {
+        "Investigation": 5,
+        "SpellResearch": 5
+      }
+    }
+  },
+  "Rescue": {
+    "1": {
+      "requiredStats": {
+        "Tank": 6,
+        "Healer": 6
+      },
+      "bonusStats": {
+        "pDPS": 5,
+        "Buffing": 5,
+        "Transport": 5
+      }
+    }
+  },
+  "Tame": {
+    "1": {
+      "requiredStats": {
+        "Taming": 6,
+        "Tracking": 5
+      },
+      "bonusStats": {
+        "Healer": 5,
+        "Buffing": 5
+      }
+    }
+  },
+  "Research": {
+    "1": {
+      "requiredStats": {
+        "SpellResearch": 7,
+        "Investigation": 6
+      },
+      "bonusStats": {
+        "mDPS" : 7
+      }
+    }
+  },
+  "Treasure": {
+    "1": {
+      "requiredStats": {
+        "Investigation": 6,
+        "LockPicking": 6
+      },
+      "bonusStats": {
+        "Transport": 5,
+        "Tracking": 5,
+        "Debuffing": 5
+      }
+    }
+  }
+}

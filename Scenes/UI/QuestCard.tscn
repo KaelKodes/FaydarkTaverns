@@ -12,11 +12,11 @@ bg_color = Color(0.274105, 0.586438, 0.811932, 1)
 [node name="QuestCard" type="Panel" node_paths=PackedStringArray("TitleLabel", "RegionLabel", "TypeLabel", "RewardLabel", "TimeLabel") groups=["QuestCard"]]
 custom_minimum_size = Vector2(200, 150)
 anchors_preset = -1
-anchor_right = 0.26
-anchor_bottom = 0.284
+anchor_right = 0.193
+anchor_bottom = 0.31
 offset_top = 5.0
-offset_right = -129.2
-offset_bottom = 28.28
+offset_right = -0.559998
+offset_bottom = 0.200012
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 0
@@ -41,24 +41,30 @@ expand_mode = 1
 [node name="SuccessBanner" type="TextureRect" parent="."]
 visible = false
 z_index = 1
-layout_mode = 0
-offset_left = -21.0
-offset_top = -53.0
-offset_right = 321.0
-offset_bottom = 181.0
+custom_minimum_size = Vector2(0, 125)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -94.0
+offset_top = -37.0
+offset_right = 112.0
+offset_bottom = 88.0
+grow_horizontal = 2
 size_flags_vertical = 3
 texture = ExtResource("2_aftnd")
 expand_mode = 3
 
 [node name="FailedBanner" type="TextureRect" parent="."]
+visible = false
 z_index = 1
 layout_mode = 0
-offset_left = -5.0
-offset_top = -18.0
-offset_right = 310.0
-offset_bottom = 136.0
+offset_left = 17.0
+offset_top = -31.0
+offset_right = 184.0
+offset_bottom = 83.0
 texture = ExtResource("3_bnagl")
-expand_mode = 3
+expand_mode = 1
 
 [node name="VBox" type="VBoxContainer" parent="."]
 layout_mode = 1

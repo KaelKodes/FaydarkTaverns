@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bhj2q8slrlooa" path="res://Scenes/MainMenu.cs" id="1_tt5f1"]
 [ext_resource type="Texture2D" uid="uid://djdkv3epv4lwx" path="res://Scenes/UI/Faydark Taverns.png" id="2_853f1"]
-[ext_resource type="AudioStream" uid="uid://bq1lk2okaarr8" path="res://Assets/Audio/Music/Nothing Quite Like It.mp3" id="3_df05h"]
+[ext_resource type="AudioStream" uid="uid://bsghs4tohilvv" path="res://Assets/Audio/Music/NothingQuiteLikeIt.mp3" id="3_df05h"]
 [ext_resource type="Script" uid="uid://d0o5nruylpjgu" path="res://Scenes/MainMenuMusicPlayer.cs" id="4_8um5k"]
 
 [node name="MainMenu" type="Control"]

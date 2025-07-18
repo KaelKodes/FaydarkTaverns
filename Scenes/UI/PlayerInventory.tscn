@@ -1,0 +1,341 @@
+[gd_scene load_steps=14 format=3 uid="uid://0yu3iapbx37s"]
+
+[ext_resource type="Script" uid="uid://dad051eh6qgcm" path="res://Scenes/UI/PlayerInventory.cs" id="1_2jlje"]
+[ext_resource type="Texture2D" uid="uid://bbqohiy1hx8ls" path="res://Assets/UI/Panels/BarrelWindow.png" id="1_dn76q"]
+[ext_resource type="Texture2D" uid="uid://dqrf2qcouoqfh" path="res://Assets/UI/Buttons/ActiveTab.png" id="2_4pc7k"]
+[ext_resource type="Texture2D" uid="uid://dua355nyhxmd6" path="res://Assets/UI/FlavorIcons/Bitter.png" id="3_4ax2q"]
+[ext_resource type="Texture2D" uid="uid://dejxxv7ukhpqh" path="res://Assets/UI/FlavorIcons/Creamy.png" id="4_2jlje"]
+[ext_resource type="Texture2D" uid="uid://c7rwqhditwnpo" path="res://Assets/UI/FlavorIcons/Earthy.png" id="5_6haki"]
+[ext_resource type="Texture2D" uid="uid://d36sskl482d8v" path="res://Assets/UI/FlavorIcons/Funky.png" id="6_6n3e7"]
+[ext_resource type="Texture2D" uid="uid://cqmu0cnp3ndq1" path="res://Assets/UI/FlavorIcons/Salty.png" id="7_u4mab"]
+[ext_resource type="Texture2D" uid="uid://dp0c81pu66s58" path="res://Assets/UI/FlavorIcons/Savory.png" id="8_frue6"]
+[ext_resource type="Texture2D" uid="uid://bbp2635mg8i3g" path="res://Assets/UI/FlavorIcons/Smoky.png" id="9_a2guf"]
+[ext_resource type="Texture2D" uid="uid://uwvl5qjary8u" path="res://Assets/UI/FlavorIcons/Sour.png" id="10_fy06f"]
+[ext_resource type="Texture2D" uid="uid://bc5fydu3h6p4e" path="res://Assets/UI/FlavorIcons/Spicy.png" id="11_c6ayk"]
+[ext_resource type="Texture2D" uid="uid://4l8aa51mf217" path="res://Assets/UI/FlavorIcons/Sweet.png" id="12_8oxsq"]
+
+[node name="PlayerInventory" type="Window"]
+size = Vector2i(756, 1006)
+wrap_controls = true
+borderless = true
+extend_to_title = true
+script = ExtResource("1_2jlje")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer"]
+custom_minimum_size = Vector2(750, 1000)
+layout_mode = 2
+texture = ExtResource("1_dn76q")
+expand_mode = 1
+
+[node name="Main" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 11
+
+[node name="HeaderContainer" type="VBoxContainer" parent="MarginContainer/Main"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/Main/HeaderContainer"]
+z_index = 2
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Inventory"
+horizontal_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/Main/HeaderContainer/Label"]
+z_index = -1
+layout_mode = 2
+offset_right = 750.0
+offset_bottom = 48.0
+texture = ExtResource("2_4pc7k")
+
+[node name="Split" type="HBoxContainer" parent="MarginContainer/Main"]
+layout_mode = 2
+theme_override_constants/separation = 49
+alignment = 1
+
+[node name="Flavor" type="HBoxContainer" parent="MarginContainer/Main/Split"]
+layout_mode = 2
+
+[node name="BitterButton" type="TextureButton" parent="MarginContainer/Main/Split/Flavor"]
+z_index = 1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+texture_normal = ExtResource("3_4ax2q")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="BitterIcon" type="TextureRect" parent="MarginContainer/Main/Split/Flavor/BitterButton"]
+z_index = -1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_4pc7k")
+expand_mode = 1
+
+[node name="CreamyButton" type="TextureButton" parent="MarginContainer/Main/Split/Flavor"]
+z_index = 1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+texture_normal = ExtResource("4_2jlje")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="CreamyIcon" type="TextureRect" parent="MarginContainer/Main/Split/Flavor/CreamyButton"]
+z_index = -1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_4pc7k")
+expand_mode = 1
+
+[node name="EarthyButton" type="TextureButton" parent="MarginContainer/Main/Split/Flavor"]
+z_index = 1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+texture_normal = ExtResource("5_6haki")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="EarthyIcon" type="TextureRect" parent="MarginContainer/Main/Split/Flavor/EarthyButton"]
+z_index = -1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_4pc7k")
+expand_mode = 1
+
+[node name="FunkyButton" type="TextureButton" parent="MarginContainer/Main/Split/Flavor"]
+z_index = 1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource("6_6n3e7")
+ignore_texture_size = true
+stretch_mode = 6
+
+[node name="FunkyIcon" type="TextureRect" parent="MarginContainer/Main/Split/Flavor/FunkyButton"]
+z_index = -1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_4pc7k")
+expand_mode = 1
+
+[node name="SaltyButton" type="TextureButton" parent="MarginContainer/Main/Split/Flavor"]
+z_index = 1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+texture_normal = ExtResource("7_u4mab")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="SaltyIcon" type="TextureRect" parent="MarginContainer/Main/Split/Flavor/SaltyButton"]
+z_index = -1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_4pc7k")
+expand_mode = 1
+
+[node name="SavoryButton" type="TextureButton" parent="MarginContainer/Main/Split/Flavor"]
+z_index = 1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+texture_normal = ExtResource("8_frue6")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="SavoryIcon" type="TextureRect" parent="MarginContainer/Main/Split/Flavor/SavoryButton"]
+z_index = -1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_4pc7k")
+expand_mode = 1
+
+[node name="SmokyButton" type="TextureButton" parent="MarginContainer/Main/Split/Flavor"]
+z_index = 1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+texture_normal = ExtResource("9_a2guf")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="SmokyIcon" type="TextureRect" parent="MarginContainer/Main/Split/Flavor/SmokyButton"]
+z_index = -1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_4pc7k")
+expand_mode = 1
+
+[node name="SourButton" type="TextureButton" parent="MarginContainer/Main/Split/Flavor"]
+z_index = 1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+texture_normal = ExtResource("10_fy06f")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="SourIcon" type="TextureRect" parent="MarginContainer/Main/Split/Flavor/SourButton"]
+z_index = -1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_right = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_4pc7k")
+expand_mode = 1
+
+[node name="SpicyButton" type="TextureButton" parent="MarginContainer/Main/Split/Flavor"]
+z_index = 1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+texture_normal = ExtResource("11_c6ayk")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="SpicyIcon" type="TextureRect" parent="MarginContainer/Main/Split/Flavor/SpicyButton"]
+z_index = -1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_4pc7k")
+expand_mode = 1
+
+[node name="SweetButton" type="TextureButton" parent="MarginContainer/Main/Split/Flavor"]
+z_index = 1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+texture_normal = ExtResource("12_8oxsq")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="SweetIcon" type="TextureRect" parent="MarginContainer/Main/Split/Flavor/SweetButton"]
+z_index = -1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_4pc7k")
+expand_mode = 1
+
+[node name="Sort" type="HBoxContainer" parent="MarginContainer/Main/Split"]
+layout_mode = 2
+
+[node name="Filter" type="TextureButton" parent="MarginContainer/Main/Split/Sort"]
+z_index = 1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="bkg" type="TextureRect" parent="MarginContainer/Main/Split/Sort/Filter"]
+z_index = -1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_4pc7k")
+expand_mode = 1
+
+[node name="Filter2" type="TextureButton" parent="MarginContainer/Main/Split/Sort"]
+z_index = 1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="bkg" type="TextureRect" parent="MarginContainer/Main/Split/Sort/Filter2"]
+z_index = -1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_4pc7k")
+expand_mode = 1
+
+[node name="Filter3" type="TextureButton" parent="MarginContainer/Main/Split/Sort"]
+z_index = 1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="bkg" type="TextureRect" parent="MarginContainer/Main/Split/Sort/Filter3"]
+z_index = -1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_4pc7k")
+expand_mode = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/Main"]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/Main/ScrollContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+columns = 5
+
+[node name="ItemBkg" type="ColorRect" parent="MarginContainer/Main/ScrollContainer/GridContainer"]
+layout_mode = 2
+color = Color(0.0431373, 0.0431373, 0.0431373, 0.537255)

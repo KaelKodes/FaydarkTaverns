@@ -26,6 +26,8 @@ GuestManager="*res://System/GuestManager.cs"
 UIAudio="*res://System/Sound/UIAudio.cs"
 TavernStats="*res://System/TavernStats.cs"
 UpgradeManager="*res://System/UpgradeManager.cs"
+PlayerPantry="*res://System/Kitchen/PlayerPantry.cs"
+CookbookManager="*res://System/Kitchen/CookbookManager.cs"
 
 [display]
 

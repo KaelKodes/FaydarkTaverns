@@ -173,5 +173,329 @@
     "category": "food",
     "base_price": 13,
     "description": "Delicately cured quail with a reduction of wine vinegar."
+  },
+  {
+    "name": "Savory Dish (Cheap)",
+    "description": "A cheap quality dish with strong savory flavors.",
+    "flavors": [
+      "Savory"
+    ],
+    "quality": "Cheap",
+    "price": 3
+  },
+  {
+    "name": "Savory Dish (Medium)",
+    "description": "A medium quality dish with strong savory flavors.",
+    "flavors": [
+      "Savory"
+    ],
+    "quality": "Medium",
+    "price": 7
+  },
+  {
+    "name": "Savory Dish (High)",
+    "description": "A high quality dish with strong savory flavors.",
+    "flavors": [
+      "Savory"
+    ],
+    "quality": "High",
+    "price": 12
+  },
+  {
+    "name": "Sweet Dish (Cheap)",
+    "description": "A cheap quality dish with strong sweet flavors.",
+    "flavors": [
+      "Sweet"
+    ],
+    "quality": "Cheap",
+    "price": 3
+  },
+  {
+    "name": "Sweet Dish (Medium)",
+    "description": "A medium quality dish with strong sweet flavors.",
+    "flavors": [
+      "Sweet"
+    ],
+    "quality": "Medium",
+    "price": 7
+  },
+  {
+    "name": "Sweet Dish (High)",
+    "description": "A high quality dish with strong sweet flavors.",
+    "flavors": [
+      "Sweet"
+    ],
+    "quality": "High",
+    "price": 12
+  },
+  {
+    "name": "Spicy Dish (Cheap)",
+    "description": "A cheap quality dish with strong spicy flavors.",
+    "flavors": [
+      "Spicy"
+    ],
+    "quality": "Cheap",
+    "price": 3
+  },
+  {
+    "name": "Spicy Dish (Medium)",
+    "description": "A medium quality dish with strong spicy flavors.",
+    "flavors": [
+      "Spicy"
+    ],
+    "quality": "Medium",
+    "price": 7
+  },
+  {
+    "name": "Spicy Dish (High)",
+    "description": "A high quality dish with strong spicy flavors.",
+    "flavors": [
+      "Spicy"
+    ],
+    "quality": "High",
+    "price": 12
+  },
+  {
+    "name": "Earthy Dish (Cheap)",
+    "description": "A cheap quality dish with strong earthy flavors.",
+    "flavors": [
+      "Earthy"
+    ],
+    "quality": "Cheap",
+    "price": 3
+  },
+  {
+    "name": "Earthy Dish (Medium)",
+    "description": "A medium quality dish with strong earthy flavors.",
+    "flavors": [
+      "Earthy"
+    ],
+    "quality": "Medium",
+    "price": 7
+  },
+  {
+    "name": "Earthy Dish (High)",
+    "description": "A high quality dish with strong earthy flavors.",
+    "flavors": [
+      "Earthy"
+    ],
+    "quality": "High",
+    "price": 12
+  },
+  {
+    "name": "Sour Dish (Cheap)",
+    "description": "A cheap quality dish with strong sour flavors.",
+    "flavors": [
+      "Sour"
+    ],
+    "quality": "Cheap",
+    "price": 3
+  },
+  {
+    "name": "Sour Dish (Medium)",
+    "description": "A medium quality dish with strong sour flavors.",
+    "flavors": [
+      "Sour"
+    ],
+    "quality": "Medium",
+    "price": 7
+  },
+  {
+    "name": "Sour Dish (High)",
+    "description": "A high quality dish with strong sour flavors.",
+    "flavors": [
+      "Sour"
+    ],
+    "quality": "High",
+    "price": 12
+  },
+  {
+    "name": "Bitter Dish (Cheap)",
+    "description": "A cheap quality dish with strong bitter flavors.",
+    "flavors": [
+      "Bitter"
+    ],
+    "quality": "Cheap",
+    "price": 3
+  },
+  {
+    "name": "Bitter Dish (Medium)",
+    "description": "A medium quality dish with strong bitter flavors.",
+    "flavors": [
+      "Bitter"
+    ],
+    "quality": "Medium",
+    "price": 7
+  },
+  {
+    "name": "Bitter Dish (High)",
+    "description": "A high quality dish with strong bitter flavors.",
+    "flavors": [
+      "Bitter"
+    ],
+    "quality": "High",
+    "price": 12
+  },
+  {
+    "name": "Salty Dish (Cheap)",
+    "description": "A cheap quality dish with strong salty flavors.",
+    "flavors": [
+      "Salty"
+    ],
+    "quality": "Cheap",
+    "price": 3
+  },
+  {
+    "name": "Salty Dish (Medium)",
+    "description": "A medium quality dish with strong salty flavors.",
+    "flavors": [
+      "Salty"
+    ],
+    "quality": "Medium",
+    "price": 7
+  },
+  {
+    "name": "Salty Dish (High)",
+    "description": "A high quality dish with strong salty flavors.",
+    "flavors": [
+      "Salty"
+    ],
+    "quality": "High",
+    "price": 12
+  },
+  {
+    "name": "Smoky Dish (Cheap)",
+    "description": "A cheap quality dish with strong smoky flavors.",
+    "flavors": [
+      "Smoky"
+    ],
+    "quality": "Cheap",
+    "price": 3
+  },
+  {
+    "name": "Smoky Dish (Medium)",
+    "description": "A medium quality dish with strong smoky flavors.",
+    "flavors": [
+      "Smoky"
+    ],
+    "quality": "Medium",
+    "price": 7
+  },
+  {
+    "name": "Smoky Dish (High)",
+    "description": "A high quality dish with strong smoky flavors.",
+    "flavors": [
+      "Smoky"
+    ],
+    "quality": "High",
+    "price": 12
+  },
+  {
+    "name": "Creamy Dish (Cheap)",
+    "description": "A cheap quality dish with strong creamy flavors.",
+    "flavors": [
+      "Creamy"
+    ],
+    "quality": "Cheap",
+    "price": 3
+  },
+  {
+    "name": "Creamy Dish (Medium)",
+    "description": "A medium quality dish with strong creamy flavors.",
+    "flavors": [
+      "Creamy"
+    ],
+    "quality": "Medium",
+    "price": 7
+  },
+  {
+    "name": "Creamy Dish (High)",
+    "description": "A high quality dish with strong creamy flavors.",
+    "flavors": [
+      "Creamy"
+    ],
+    "quality": "High",
+    "price": 12
+  },
+  {
+    "name": "Fruity Dish (Cheap)",
+    "description": "A cheap quality dish with strong fruity flavors.",
+    "flavors": [
+      "Fruity"
+    ],
+    "quality": "Cheap",
+    "price": 3
+  },
+  {
+    "name": "Fruity Dish (Medium)",
+    "description": "A medium quality dish with strong fruity flavors.",
+    "flavors": [
+      "Fruity"
+    ],
+    "quality": "Medium",
+    "price": 7
+  },
+  {
+    "name": "Fruity Dish (High)",
+    "description": "A high quality dish with strong fruity flavors.",
+    "flavors": [
+      "Fruity"
+    ],
+    "quality": "High",
+    "price": 12
+  },
+  {
+    "name": "Dry Dish (Cheap)",
+    "description": "A cheap quality dish with strong dry flavors.",
+    "flavors": [
+      "Dry"
+    ],
+    "quality": "Cheap",
+    "price": 3
+  },
+  {
+    "name": "Dry Dish (Medium)",
+    "description": "A medium quality dish with strong dry flavors.",
+    "flavors": [
+      "Dry"
+    ],
+    "quality": "Medium",
+    "price": 7
+  },
+  {
+    "name": "Dry Dish (High)",
+    "description": "A high quality dish with strong dry flavors.",
+    "flavors": [
+      "Dry"
+    ],
+    "quality": "High",
+    "price": 12
+  },
+  {
+    "name": "Herbal Dish (Cheap)",
+    "description": "A cheap quality dish with strong herbal flavors.",
+    "flavors": [
+      "Herbal"
+    ],
+    "quality": "Cheap",
+    "price": 3
+  },
+  {
+    "name": "Herbal Dish (Medium)",
+    "description": "A medium quality dish with strong herbal flavors.",
+    "flavors": [
+      "Herbal"
+    ],
+    "quality": "Medium",
+    "price": 7
+  },
+  {
+    "name": "Herbal Dish (High)",
+    "description": "A high quality dish with strong herbal flavors.",
+    "flavors": [
+      "Herbal"
+    ],
+    "quality": "High",
+    "price": 12
   }
 ]

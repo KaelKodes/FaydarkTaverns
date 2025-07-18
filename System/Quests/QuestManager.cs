@@ -6,6 +6,12 @@ using FaydarkTaverns.Objects;
 
 public class QuestManager
 {
+	// Automatically load our quest-requirements JSON once
+	static QuestManager()
+	{
+	   QuestRequirementsLoader.Load("res://System/Quests/QuestRequirements.json");
+	}
+	
 	// Singleton instance
 	private static QuestManager _instance;
 	public static QuestManager Instance => _instance ??= new QuestManager();

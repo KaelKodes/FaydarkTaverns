@@ -1,7 +1,7 @@
 [gd_scene load_steps=31 format=3 uid="uid://bp53yv3ypaa5j"]
 
 [ext_resource type="Script" uid="uid://hacx1tuggxkp" path="res://Scenes/QuestBoardPanel.cs" id="1_7ljul"]
-[ext_resource type="Texture2D" uid="uid://ofetq83brqll" path="res://Assets/UI/Bkg/ChatGPT Image Jul 13, 2025, 11_38_13 PM.png" id="1_e0xf5"]
+[ext_resource type="Texture2D" uid="uid://c4yn8u5hh50nr" path="res://Assets/UI/Bkg/TavernBKGEmpty.png" id="1_e0xf5"]
 [ext_resource type="Script" uid="uid://bw4esvijflh3" path="res://Scenes/TavernManager.cs" id="1_v6xsb"]
 [ext_resource type="PackedScene" uid="uid://w7he4xk8qe6k" path="res://Scenes/UI/QuestCard.tscn" id="2_6wg6o"]
 [ext_resource type="Script" uid="uid://x4id2gkwvhxq" path="res://System/TimerManager.cs" id="2_t546b"]
@@ -413,7 +413,6 @@ PointCursor = ExtResource("22_abkob")
 [node name="QuestDetailPopup" parent="." instance=ExtResource("6_smfey")]
 position = Vector2i(750, 100)
 visible = false
-content_scale_mode = 1
 
 [node name="MusicManager" type="Node" parent="." node_paths=PackedStringArray("MusicPlayer")]
 process_mode = 1

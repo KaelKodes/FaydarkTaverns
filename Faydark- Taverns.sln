@@ -1,6 +1,6 @@
 ﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Faydark- Taverns", "Faydark- Taverns.csproj", "{B715C5FE-5D55-47B6-8437-220C5C2FBE23}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Faydark- Taverns", "Faydark- Taverns.csproj", "{041DD47A-F4B8-488B-8CA6-8877D3303FB9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,11 +9,11 @@ Global
 	ExportRelease|Any CPU = ExportRelease|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B715C5FE-5D55-47B6-8437-220C5C2FBE23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B715C5FE-5D55-47B6-8437-220C5C2FBE23}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B715C5FE-5D55-47B6-8437-220C5C2FBE23}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
-		{B715C5FE-5D55-47B6-8437-220C5C2FBE23}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
-		{B715C5FE-5D55-47B6-8437-220C5C2FBE23}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
-		{B715C5FE-5D55-47B6-8437-220C5C2FBE23}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
+		{041DD47A-F4B8-488B-8CA6-8877D3303FB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{041DD47A-F4B8-488B-8CA6-8877D3303FB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{041DD47A-F4B8-488B-8CA6-8877D3303FB9}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
+		{041DD47A-F4B8-488B-8CA6-8877D3303FB9}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
+		{041DD47A-F4B8-488B-8CA6-8877D3303FB9}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
+		{041DD47A-F4B8-488B-8CA6-8877D3303FB9}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
 	EndGlobalSection
 EndGlobal

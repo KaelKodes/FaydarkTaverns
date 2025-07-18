@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://ch7r0s51qa60a"]
+[gd_scene load_steps=7 format=3 uid="uid://ch7r0s51qa60a"]
 
 [ext_resource type="Script" uid="uid://ctgsvgv1is7jt" path="res://Scenes/UI/GuestCard.cs" id="1_4rk5c"]
+[ext_resource type="PackedScene" uid="uid://cma47g7i4lggy" path="res://Scenes/UI/NPCDetailPopup.tscn" id="2_c174f"]
 [ext_resource type="Texture2D" uid="uid://dgsmrh4xjsgis" path="res://Assets/UI/ClassPortraits/Informant/InformantM3.jpg" id="2_vu3ij"]
 [ext_resource type="Script" uid="uid://qi56yy8o3hs4" path="res://System/Sound/UIInteractButton.cs" id="3_h1sue"]
 [ext_resource type="Texture2D" uid="uid://c0v03h0xh71ym" path="res://Assets/UI/ChatBubbles/HungryBubble.png" id="4_h1sue"]
@@ -14,6 +15,7 @@ scale = Vector2(1.00344, 0.776052)
 size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("1_4rk5c")
+NPCDetailPopupScene = ExtResource("2_c174f")
 metadata/_edit_horizontal_guides_ = [10.0]
 
 [node name="Background" type="ColorRect" parent="."]

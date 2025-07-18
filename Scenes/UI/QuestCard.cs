@@ -13,6 +13,8 @@ public partial class QuestCard : Panel
 	[Export] public Label RewardLabel;
 	[Export] public Label TimeLabel;
 
+
+
 	// Party slot containers
 	private List<HBoxContainer> PartySlots = new();
 	private List<Label> partySlotLabels = new();
@@ -376,6 +378,9 @@ private void UnassignFromSlot(int index)
 		// 🧹 Removed right-click unassign fallback
 	}
 }
+
+
+
 
 
 

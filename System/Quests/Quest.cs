@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using FaydarkTaverns.Objects;
 
@@ -22,6 +23,7 @@ public class Quest
 	public QuestType Type;
 	public Region Region;
 	public int Reward;
+	public int Level { get; set; } = 1;
 
 	// Timing
 	public int TravelHours;
@@ -51,7 +53,8 @@ public NPCData PostedBy { get; set; }
 
 
 	// Synergy / Role guidance
-	public List<int> OptimalRoles = new(); // E.g. [1, 2, 4] for Tank/DPS/Healer
+	public QuestStatRequirement Requirements =>
+	 QuestRequirementsLoader.Get(Type, Level);
 
 	// Narrative flavor
 	public string Description;
@@ -77,21 +80,25 @@ public NPCData PostedBy { get; set; }
 {
 	int bonus = 0;
 
+	// Bard gives 10% faster travel
 	if (AssignedAdventurers.Exists(a => a.ClassName == "Bard"))
-		bonus += (int)(TravelHours * 0.1); // 10% faster travel
+		bonus += (int)(TravelHours * 0.1f);
 
-	var uniqueRoles = new HashSet<int>();
-	foreach (var a in AssignedAdventurers)
+	// Synergy bonus if we cover at least 3 of the quest's required skills
+	var req = Requirements;
+	if (req != null)
 	{
-		int roleId = ClassTemplate.GetRoleIdFromClass(a.ClassName);
-		uniqueRoles.Add(roleId);
-	}
+		int covered = req.RequiredStats.Count(kv =>
+			AssignedAdventurers.Exists(a =>
+				QuestSimulator.GetStatValue(a, kv.Key) >= kv.Value));
 
-	if (uniqueRoles.Count >= 3)
-		bonus += (int)(TaskHours * 0.05); // 5% bonus for good synergy
+		if (covered >= 3)
+			bonus += (int)(TaskHours * 0.05f); // 5% task‐time reduction
+	}
 
 	return bonus;
 }
+
 
 
 

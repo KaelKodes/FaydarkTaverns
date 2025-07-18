@@ -1,0 +1,38 @@
+[gd_scene load_steps=2 format=3 uid="uid://brbgnxx76j22l"]
+
+[ext_resource type="Script" uid="uid://4wkib6dl1iho" path="res://Scenes/UI/ItemSlot.cs" id="1_0qyjl"]
+
+[node name="ItemSlot" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_0qyjl")
+metadata/_edit_vertical_guides_ = [77.0]
+metadata/_edit_horizontal_guides_ = [75.0]
+
+[node name="TextureRect" type="TextureRect" parent="."]
+z_index = 1
+custom_minimum_size = Vector2(75, 75)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ItemName" type="Label" parent="."]
+z_index = 2
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 0
+offset_top = 1.0
+offset_right = 77.0
+offset_bottom = 26.0
+text = "Name"
+horizontal_alignment = 1
+
+[node name="StackLabel" type="Label" parent="."]
+z_index = 2
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 0
+offset_left = 52.0
+offset_top = 49.0
+offset_right = 77.0
+offset_bottom = 74.0
+text = "#"
+horizontal_alignment = 1

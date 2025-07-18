@@ -8,6 +8,7 @@ public static class FoodDrinkDatabase
 	public static List<FoodItem> AllFood = new();
 	public static List<DrinkItem> AllDrinks = new();
 
+
 	public static void LoadData()
 	{
 		var foodJson = FileAccess.Open("res://System/Databases/FoodMenuDB.json", FileAccess.ModeFlags.Read).GetAsText();
@@ -34,6 +35,7 @@ public class FoodItem
 	public string id;
 	public string name;
 	public List<string> flavor_profiles;
+	public List<string> ingredients;
 	public string quality;
 	public string category;
 	public int base_price;
@@ -45,6 +47,7 @@ public class DrinkItem
 	public string id;
 	public string name;
 	public List<string> flavor_profiles;
+	public List<string> ingredients;
 	public string quality;
 	public string category;
 	public int base_price;

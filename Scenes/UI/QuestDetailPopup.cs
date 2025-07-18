@@ -11,7 +11,8 @@ public partial class QuestDetailPopup : Window
 	[Export] public Label TypeLabel;
 	[Export] public Label RewardLabel;
 	[Export] public Label TimeLabel;
-	[Export] public Label OptimalRolesLabel;
+	[Export] public Label RequiredSkillsLabel;
+	[Export] public Label RecommendedSkillsLabel;
 	[Export] public Label DescriptionLabel;
 	[Export] public Button AcceptButton;
 	[Export] public Button CloseButton;
@@ -54,29 +55,44 @@ public partial class QuestDetailPopup : Window
 	quest = q;
 	boundQuest = q;
 
+	// safety check
 	if (TitleLabel == null || DescriptionLabel == null)
 		return;
 
-	TitleLabel.Text = q.Title;
-	RegionLabel.Text = $"Region: {q.Region}";
-	TypeLabel.Text = $"Type: {q.Type}";
-	RewardLabel.Text = $"Reward: {q.Reward}g";
-
+	// Basic fields
+	TitleLabel.Text       = q.Title;
+	RegionLabel.Text      = $"Region: {q.Region}";
+	TypeLabel.Text        = $"Type: {q.Type}";
+	RewardLabel.Text      = $"Reward: {q.Reward}g";
 	if (q.IsAccepted)
-		TimeLabel.Text = $"Est: {q.GetTotalExpectedTU()} hrs / Due: {q.Deadline:MMM dd, HH:mm}";
+		TimeLabel.Text    = $"Est: {q.GetTotalExpectedTU()} hrs / Due: {q.Deadline:MMM dd, HH:mm}";
 	else
-		TimeLabel.Text = $"Est: {q.GetTotalExpectedTU()} hrs";
-
-	var roles = new StringBuilder("Optimal Roles: ");
-	foreach (var role in q.OptimalRoles)
-		roles.Append($"{GetRoleName(role)}, ");
-	OptimalRolesLabel.Text = roles.ToString().TrimEnd(',', ' ');
-
+		TimeLabel.Text    = $"Est: {q.GetTotalExpectedTU()} hrs";
 	DescriptionLabel.Text = q.Description;
 
-	// 🔧 ✅ NEW — Update retry/dismiss logic too
+	// ── NEW: Required Skills ──
+	var reqBuilder = new StringBuilder("Required Skills: ");
+	foreach (var kv in q.Requirements.RequiredStats)
+		reqBuilder.Append($"{kv.Key} {kv.Value}, ");
+	RequiredSkillsLabel.Text = reqBuilder.ToString().TrimEnd(',', ' ');
+
+	// ── NEW: Recommended (Bonus) Skills ──
+	if (q.Requirements.BonusStats.Count > 0)
+	{
+		var recBuilder = new StringBuilder("Recommended Skills: ");
+		foreach (var kv in q.Requirements.BonusStats)
+			recBuilder.Append($"{kv.Key} {kv.Value}, ");
+		RecommendedSkillsLabel.Text = recBuilder.ToString().TrimEnd(',', ' ');
+	}
+	else
+	{
+		RecommendedSkillsLabel.Text = "Recommended Skills: None";
+	}
+
+	// 🔧 ✅ Update retry/dismiss logic as before
 	SetQuestDetails(q);
 }
+
 
 
 

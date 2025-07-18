@@ -208,5 +208,82 @@
     "base_price": 13,
     "description": "A rare and expensive fermented fruit beer with a wild tang.",
     "id": "stormcatcher_lambic"
+  },
+  {
+    "name": "Honeyed Mead",
+    "flavor_profiles": ["Sweet"],
+    "quality": "Cheap",
+    "description": "A simple mead with light honey sweetness.",
+    "base_price": 2
+  },
+  {
+    "name": "Ambrosial Elixir",
+    "flavor_profiles": ["Sweet"],
+    "quality": "High",
+    "description": "A rich and decadent sweet spirit with floral notes.",
+    "base_price": 12
+  },
+  {
+    "name": "Spiced Tavern Ale",
+    "flavor_profiles": ["Spiced"],
+    "quality": "Cheap",
+    "description": "A budget ale infused with mild cinnamon and clove.",
+    "base_price": 3
+  },
+  {
+    "name": "Cinnamon Spice Lager",
+    "flavor_profiles": ["Spiced"],
+    "quality": "Average",
+    "description": "Lager with warming cinnamon and nutmeg.",
+    "base_price": 7
+  },
+  {
+    "name": "Imperial Spiced Brew",
+    "flavor_profiles": ["Spiced"],
+    "quality": "High",
+    "description": "Full-bodied ale with robust spice blend.",
+    "base_price": 13
+  },
+  {
+    "name": "Wildflower Tisane",
+    "flavor_profiles": ["Herbal"],
+    "quality": "Cheap",
+    "description": "Light herbal tea from local blooms.",
+    "base_price": 2
+  },
+  {
+    "name": "Enchanted Herb Tonic",
+    "flavor_profiles": ["Herbal"],
+    "quality": "High",
+    "description": "Potent herbal infusion praised for its clarity.",
+    "base_price": 12
+  },
+  {
+    "name": "Cream Ale",
+    "flavor_profiles": ["Creamy"],
+    "quality": "Cheap",
+    "description": "Light, smooth ale with a creamy finish.",
+    "base_price": 3
+  },
+  {
+    "name": "Silken Cream Stout",
+    "flavor_profiles": ["Creamy"],
+    "quality": "Average",
+    "description": "Velvety stout with rich creamy body.",
+    "base_price": 8
+  },
+  {
+    "name": "Smoky Barrel Whiskey",
+    "flavor_profiles": ["Smoky"],
+    "quality": "Cheap",
+    "description": "Entry‑level whiskey with gentle smoke.",
+    "base_price": 4
+  },
+  {
+    "name": "Smoked Oak Reserve",
+    "flavor_profiles": ["Smoky"],
+    "quality": "High",
+    "description": "Premium whiskey aged in smoky oak barrels.",
+    "base_price": 15
   }
 ]

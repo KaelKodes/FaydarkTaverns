@@ -1,0 +1,317 @@
+[gd_scene load_steps=13 format=3 uid="uid://co0nmvlgexp4v"]
+
+[ext_resource type="Texture2D" uid="uid://dqrf2qcouoqfh" path="res://Assets/UI/Buttons/ActiveTab.png" id="1_g72hx"]
+[ext_resource type="Texture2D" uid="uid://b0hm16k4vkglx" path="res://Assets/UI/Placeholder/Cookbook.png" id="1_m574h"]
+[ext_resource type="Texture2D" uid="uid://dp0c81pu66s58" path="res://Assets/UI/FlavorIcons/Savory.png" id="3_61pbk"]
+[ext_resource type="Texture2D" uid="uid://4l8aa51mf217" path="res://Assets/UI/FlavorIcons/Sweet.png" id="4_3ebol"]
+[ext_resource type="Texture2D" uid="uid://bc5fydu3h6p4e" path="res://Assets/UI/FlavorIcons/Spicy.png" id="5_6vp8k"]
+[ext_resource type="Texture2D" uid="uid://c7rwqhditwnpo" path="res://Assets/UI/FlavorIcons/Earthy.png" id="6_txhjw"]
+[ext_resource type="Texture2D" uid="uid://uwvl5qjary8u" path="res://Assets/UI/FlavorIcons/Sour.png" id="7_1d4sq"]
+[ext_resource type="Texture2D" uid="uid://dua355nyhxmd6" path="res://Assets/UI/FlavorIcons/Bitter.png" id="8_c36gv"]
+[ext_resource type="Texture2D" uid="uid://cqmu0cnp3ndq1" path="res://Assets/UI/FlavorIcons/Salty.png" id="9_mlqj7"]
+[ext_resource type="Texture2D" uid="uid://bbp2635mg8i3g" path="res://Assets/UI/FlavorIcons/Smoky.png" id="10_wcv2w"]
+[ext_resource type="Texture2D" uid="uid://dejxxv7ukhpqh" path="res://Assets/UI/FlavorIcons/Creamy.png" id="11_86ghs"]
+[ext_resource type="Texture2D" uid="uid://d36sskl482d8v" path="res://Assets/UI/FlavorIcons/Funky.png" id="12_41lu2"]
+
+[node name="CookbookUi" type="Node2D"]
+
+[node name="IngredientsBKG" type="TextureRect" parent="."]
+z_index = 1
+offset_left = -422.0
+offset_top = -455.0
+offset_right = -28.0
+offset_bottom = -407.0
+texture = ExtResource("1_g72hx")
+
+[node name="DetailsBKG" type="TextureRect" parent="."]
+z_index = 1
+offset_left = 30.0
+offset_top = -455.0
+offset_right = 424.0
+offset_bottom = -407.0
+texture = ExtResource("1_g72hx")
+
+[node name="MainBKG" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(1000, 1000)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("1_m574h")
+expand_mode = 1
+
+[node name="IngredientControl" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = -455.0
+offset_top = -467.0
+offset_right = -1.0
+offset_bottom = 428.0
+
+[node name="IngredientVBox" type="VBoxContainer" parent="IngredientControl"]
+z_index = 2
+layout_mode = 2
+offset_left = 32.0
+offset_top = 12.0
+offset_right = 426.0
+offset_bottom = 840.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="IngredientLabel" type="Label" parent="IngredientControl/IngredientVBox"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.227451, 0.227451, 0.313726, 1)
+theme_override_font_sizes/font_size = 30
+text = "Ingredients"
+horizontal_alignment = 1
+
+[node name="FlavorHBox" type="HBoxContainer" parent="IngredientControl/IngredientVBox"]
+layout_mode = 2
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="BitterButton" type="TextureButton" parent="IngredientControl/IngredientVBox/FlavorHBox"]
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+texture_normal = ExtResource("8_c36gv")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="BitterIcon" type="TextureRect" parent="IngredientControl/IngredientVBox/FlavorHBox/BitterButton"]
+z_index = -1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_g72hx")
+expand_mode = 1
+
+[node name="CreamyButton" type="TextureButton" parent="IngredientControl/IngredientVBox/FlavorHBox"]
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+texture_normal = ExtResource("11_86ghs")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="CreamyIcon" type="TextureRect" parent="IngredientControl/IngredientVBox/FlavorHBox/CreamyButton"]
+z_index = -1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_g72hx")
+expand_mode = 1
+
+[node name="EarthyButton" type="TextureButton" parent="IngredientControl/IngredientVBox/FlavorHBox"]
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+texture_normal = ExtResource("6_txhjw")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="EarthyIcon" type="TextureRect" parent="IngredientControl/IngredientVBox/FlavorHBox/EarthyButton"]
+z_index = -1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_g72hx")
+expand_mode = 1
+
+[node name="FunkyButton" type="TextureButton" parent="IngredientControl/IngredientVBox/FlavorHBox"]
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource("12_41lu2")
+ignore_texture_size = true
+stretch_mode = 6
+
+[node name="FunkyIcon" type="TextureRect" parent="IngredientControl/IngredientVBox/FlavorHBox/FunkyButton"]
+z_index = -1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_g72hx")
+expand_mode = 1
+
+[node name="SaltyButton" type="TextureButton" parent="IngredientControl/IngredientVBox/FlavorHBox"]
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+texture_normal = ExtResource("9_mlqj7")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="SaltyIcon" type="TextureRect" parent="IngredientControl/IngredientVBox/FlavorHBox/SaltyButton"]
+z_index = -1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_g72hx")
+expand_mode = 1
+
+[node name="SavoryButton" type="TextureButton" parent="IngredientControl/IngredientVBox/FlavorHBox"]
+z_index = 3
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+texture_normal = ExtResource("3_61pbk")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="SavoryIcon" type="TextureRect" parent="IngredientControl/IngredientVBox/FlavorHBox/SavoryButton"]
+z_index = -1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_g72hx")
+expand_mode = 1
+
+[node name="SmokyButton" type="TextureButton" parent="IngredientControl/IngredientVBox/FlavorHBox"]
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+texture_normal = ExtResource("10_wcv2w")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="SmokyIcon" type="TextureRect" parent="IngredientControl/IngredientVBox/FlavorHBox/SmokyButton"]
+z_index = -1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_g72hx")
+expand_mode = 1
+
+[node name="SourButton" type="TextureButton" parent="IngredientControl/IngredientVBox/FlavorHBox"]
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+texture_normal = ExtResource("7_1d4sq")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="SourIcon" type="TextureRect" parent="IngredientControl/IngredientVBox/FlavorHBox/SourButton"]
+z_index = -1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_right = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_g72hx")
+expand_mode = 1
+
+[node name="SpicyButton" type="TextureButton" parent="IngredientControl/IngredientVBox/FlavorHBox"]
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+texture_normal = ExtResource("5_6vp8k")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="SpicyIcon" type="TextureRect" parent="IngredientControl/IngredientVBox/FlavorHBox/SpicyButton"]
+z_index = -1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_g72hx")
+expand_mode = 1
+
+[node name="SweetButton" type="TextureButton" parent="IngredientControl/IngredientVBox/FlavorHBox"]
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+texture_normal = ExtResource("4_3ebol")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="SweetIcon" type="TextureRect" parent="IngredientControl/IngredientVBox/FlavorHBox/SweetButton"]
+z_index = -1
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_g72hx")
+expand_mode = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="IngredientControl/IngredientVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="IngredientControl/IngredientVBox/VBoxContainer"]
+layout_mode = 2
+text = "Found Ingredients will be listed here"
+horizontal_alignment = 1
+
+[node name="DetailControl" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_top = -469.0
+offset_right = 457.0
+offset_bottom = 429.0
+
+[node name="DetailLabel" type="Label" parent="DetailControl"]
+z_index = 1
+layout_mode = 2
+offset_left = 20.0
+offset_top = 18.0
+offset_right = 414.0
+offset_bottom = 60.0
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.227451, 0.227451, 0.313726, 1)
+theme_override_font_sizes/font_size = 30
+text = "Details"
+horizontal_alignment = 1
+
+[node name="DetailsVBox" type="VBoxContainer" parent="DetailControl"]
+z_index = 2
+layout_mode = 2
+offset_left = 20.0
+offset_top = 78.0
+offset_right = 414.0
+offset_bottom = 144.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="Label" type="Label" parent="DetailControl/DetailsVBox"]
+layout_mode = 2
+text = "Details will be given here"
+horizontal_alignment = 1

@@ -1,0 +1,394 @@
+[gd_scene load_steps=3 format=3 uid="uid://cma47g7i4lggy"]
+
+[ext_resource type="Script" uid="uid://dv721a2qh0qbu" path="res://Scenes/UI/NPCDetailPopup.cs" id="1_gx2n4"]
+[ext_resource type="Texture2D" uid="uid://b1ka1wqofmg24" path="res://Assets/UI/ClassPortraits/Bard/BardF1.jpg" id="2_4f010"]
+
+[node name="NpcDetailPopup" type="Window" node_paths=PackedStringArray("NameLabel", "GenderLabel", "VisitHourLabel", "VisitDayLabel", "LoyaltyRatingLabel", "MaxSpendMultiplierLabel", "FavoriteFoodGroupLabel", "HatedFoodGroupLabel", "FavoriteDrinkGroupLabel", "HatedDrinkGroupLabel", "BirthRegionLabel", "HatedRegionLabel", "FavoriteQuestTypeLabel", "HatedQuestTypeLabel", "FavoriteClassLabel", "HatedClassLabel", "IsHungryLabel", "IsThirstyLabel", "HasEatenTodayLabel", "HasDrankTodayLabel", "RoleLabel", "StateLabel", "ClassNameLabel", "StrengthLabel", "DexterityLabel", "ConstitutionLabel", "IntelligenceLabel", "AggressionLabel", "DistanceLabel", "HealingUseLabel", "FocusLabel", "AthleticsLabel", "TrackingLabel", "LockPickingLabel", "BuffingLabel", "DebuffingLabel", "TransportLabel", "TamingLabel", "SpellResearchLabel", "InvestigationLabel", "TankLabel", "PhysicalDPSLabel", "MagicDPSLabel", "HealerLabel", "LevelLabel", "XpLabel", "XPToLevelUpLabel", "AssignedQuestIdLabel", "HasPostedTodayLabel", "QuestsPostedLabel", "QuestsCompletedLabel", "QuestsFailedLabel", "GoldGivenLabel", "ExpGivenLabel", "HappinessLabel", "ActiveQuestLabel", "PostedQuestLabel", "EntryPatienceLabel", "TavernLingerTimeLabel", "SeatRetryIntervalLabel", "SocializeDurationLabel", "HealthLabel", "ManaLabel", "PortraitRect")]
+initial_position = 1
+size = Vector2i(550, 792)
+wrap_controls = true
+content_scale_mode = 2
+content_scale_aspect = 4
+script = ExtResource("1_gx2n4")
+NameLabel = NodePath("MarginContainer/MainVBox/HeaderHBox/NPC Details/NameLabel")
+GenderLabel = NodePath("MarginContainer/MainVBox/HeaderHBox/NPC Details/GenderLabel")
+VisitHourLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxRight/Tavern Stats/VisitHourLabel")
+VisitDayLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxRight/Tavern Stats/VisitDayLabel")
+LoyaltyRatingLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxRight/Tavern Stats/LoyaltyRatingLabel")
+MaxSpendMultiplierLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxRight/Tavern Stats/MaxSpendMultiplierLabel")
+FavoriteFoodGroupLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxRight/Fav_Hated/FavoriteFoodGroupLabel")
+HatedFoodGroupLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxRight/Fav_Hated/HatedFoodGroupLabel")
+FavoriteDrinkGroupLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxRight/Fav_Hated/FavoriteDrinkGroupLabel")
+HatedDrinkGroupLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxRight/Fav_Hated/HatedDrinkGroupLabel")
+BirthRegionLabel = NodePath("MarginContainer/MainVBox/HeaderHBox/NPC Details/Birth Region")
+HatedRegionLabel = NodePath("MarginContainer/MainVBox/Unused/HatedRegion")
+FavoriteQuestTypeLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxRight/Fav_Hated/FavoriteQuestTypeLabel")
+HatedQuestTypeLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxRight/Fav_Hated/HatedQuestTypeLabel")
+FavoriteClassLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxRight/Fav_Hated/FavoriteClassLabel")
+HatedClassLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxRight/Fav_Hated/HatedClassLabel")
+IsHungryLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxRight/Tavern Stats/IsHungryLabel")
+IsThirstyLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxRight/Tavern Stats/IsThirstyLabel")
+HasEatenTodayLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxRight/Tavern Stats/HasEatenTodayLabel")
+HasDrankTodayLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxRight/Tavern Stats/HasDrankTodayLabel")
+RoleLabel = NodePath("MarginContainer/MainVBox/Unused/RoleLabel")
+StateLabel = NodePath("MarginContainer/MainVBox/HeaderHBox/NPC Details/StateLabel")
+ClassNameLabel = NodePath("MarginContainer/MainVBox/HeaderHBox/NPC Details/ClassNameLabel")
+StrengthLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxLeft/Base Stats/StrengthLabel")
+DexterityLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxLeft/Base Stats/DexterityLabel")
+ConstitutionLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxLeft/Base Stats/ConstitutionLabel")
+IntelligenceLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxLeft/Base Stats/IntelligenceLabel")
+AggressionLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxCenter/Personality/AggressionLabel")
+DistanceLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxCenter/Personality/DistanceLabel")
+HealingUseLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxCenter/Personality/HealingUseLabel")
+FocusLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxCenter/Personality/FocusLabel")
+AthleticsLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxLeft/Skills/AthleticsLabel")
+TrackingLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxLeft/Skills/TrackingLabel")
+LockPickingLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxLeft/Skills/LockPickingLabel")
+BuffingLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxLeft/Skills/BuffingLabel")
+DebuffingLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxLeft/Skills/DebuffingLabel")
+TransportLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxLeft/Skills/TransportLabel")
+TamingLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxLeft/Skills/TamingLabel")
+SpellResearchLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxLeft/Skills/SpellResearchLabel")
+InvestigationLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxLeft/Skills/InvestigationLabel")
+TankLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxLeft/Skills/TankLabel")
+PhysicalDPSLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxLeft/Skills/PhysicalDPSLabel")
+MagicDPSLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxLeft/Skills/MagicDPSLabel")
+HealerLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxLeft/Skills/HealerLabel")
+LevelLabel = NodePath("MarginContainer/MainVBox/HeaderHBox/NPC Details/LevelLabel")
+XpLabel = NodePath("MarginContainer/MainVBox/HeaderHBox/NPC Details/XpLabel")
+XPToLevelUpLabel = NodePath("MarginContainer/MainVBox/HeaderHBox/NPC Details/XPToLevelUpLabel")
+AssignedQuestIdLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxCenter/QuestStats/AssignedQuestIdLabel")
+HasPostedTodayLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxCenter/QuestGiver/HasPostedTodayLabel")
+QuestsPostedLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxCenter/QuestGiver/QuestsPostedLabel")
+QuestsCompletedLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxCenter/QuestStats/QuestsCompletedLabel")
+QuestsFailedLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxCenter/QuestStats/QuestsFailedLabel")
+GoldGivenLabel = NodePath("MarginContainer/MainVBox/HeaderHBox/NPC Details/GoldGivenLabel")
+ExpGivenLabel = NodePath("MarginContainer/MainVBox/Unused/ExpGivenLabel")
+HappinessLabel = NodePath("MarginContainer/MainVBox/HeaderHBox/NPC Details/HappinessLabel")
+ActiveQuestLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxCenter/QuestGiver/ActiveQuestLabel")
+PostedQuestLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxCenter/QuestGiver/PostedQuestLabel")
+EntryPatienceLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxCenter/Personality/EntryPatienceLabel")
+TavernLingerTimeLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxCenter/Personality/TavernLingerTimeLabel")
+SeatRetryIntervalLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxCenter/Personality/SeatRetryIntervalLabel")
+SocializeDurationLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxCenter/Personality/SocializeDurationLabel")
+HealthLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxLeft/Base Stats/HealthLabel")
+ManaLabel = NodePath("MarginContainer/MainVBox/Split 1/VBoxLeft/Base Stats/ManaLabel")
+PortraitRect = NodePath("MarginContainer/MainVBox/HeaderHBox/Portrait")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 546.0
+offset_bottom = 788.0
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="MainVBox" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="HeaderHBox" type="HBoxContainer" parent="MarginContainer/MainVBox"]
+layout_mode = 2
+theme_override_constants/separation = 23
+
+[node name="Portrait" type="TextureRect" parent="MarginContainer/MainVBox/HeaderHBox"]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+texture = ExtResource("2_4f010")
+expand_mode = 1
+
+[node name="NPC Details" type="VBoxContainer" parent="MarginContainer/MainVBox/HeaderHBox"]
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="MarginContainer/MainVBox/HeaderHBox/NPC Details"]
+layout_mode = 2
+text = "Name:"
+
+[node name="GenderLabel" type="Label" parent="MarginContainer/MainVBox/HeaderHBox/NPC Details"]
+visible = false
+layout_mode = 2
+text = "Gender:"
+
+[node name="LevelLabel" type="Label" parent="MarginContainer/MainVBox/HeaderHBox/NPC Details"]
+layout_mode = 2
+text = "Level:"
+
+[node name="ClassNameLabel" type="Label" parent="MarginContainer/MainVBox/HeaderHBox/NPC Details"]
+layout_mode = 2
+text = "Class:"
+
+[node name="Birth Region" type="Label" parent="MarginContainer/MainVBox/HeaderHBox/NPC Details"]
+layout_mode = 2
+text = "Hometown:"
+
+[node name="XpLabel" type="Label" parent="MarginContainer/MainVBox/HeaderHBox/NPC Details"]
+layout_mode = 2
+text = "XP:"
+
+[node name="XPToLevelUpLabel" type="Label" parent="MarginContainer/MainVBox/HeaderHBox/NPC Details"]
+layout_mode = 2
+text = "XP to Level:"
+
+[node name="GoldGivenLabel" type="Label" parent="MarginContainer/MainVBox/HeaderHBox/NPC Details"]
+layout_mode = 2
+text = "Gold Earned:"
+
+[node name="HappinessLabel" type="Label" parent="MarginContainer/MainVBox/HeaderHBox/NPC Details"]
+layout_mode = 2
+text = "Happiness:"
+
+[node name="StateLabel" type="Label" parent="MarginContainer/MainVBox/HeaderHBox/NPC Details"]
+layout_mode = 2
+text = "State:"
+
+[node name="Split 1" type="HBoxContainer" parent="MarginContainer/MainVBox"]
+layout_mode = 2
+theme_override_constants/separation = 50
+
+[node name="VBoxLeft" type="VBoxContainer" parent="MarginContainer/MainVBox/Split 1"]
+layout_mode = 2
+
+[node name="Base Stats" type="VBoxContainer" parent="MarginContainer/MainVBox/Split 1/VBoxLeft"]
+layout_mode = 2
+
+[node name="HealthLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxLeft/Base Stats"]
+layout_mode = 2
+text = "Health:"
+
+[node name="ManaLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxLeft/Base Stats"]
+layout_mode = 2
+text = "Mana:"
+
+[node name="StrengthLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxLeft/Base Stats"]
+layout_mode = 2
+text = "STR:"
+
+[node name="DexterityLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxLeft/Base Stats"]
+layout_mode = 2
+text = "DEX:"
+
+[node name="ConstitutionLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxLeft/Base Stats"]
+layout_mode = 2
+text = "CON:"
+
+[node name="IntelligenceLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxLeft/Base Stats"]
+layout_mode = 2
+text = "INT:"
+
+[node name="Skills" type="VBoxContainer" parent="MarginContainer/MainVBox/Split 1/VBoxLeft"]
+layout_mode = 2
+
+[node name="AthleticsLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxLeft/Skills"]
+layout_mode = 2
+text = "Athletics:"
+
+[node name="TrackingLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxLeft/Skills"]
+layout_mode = 2
+text = "Tracking:"
+
+[node name="LockPickingLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxLeft/Skills"]
+layout_mode = 2
+text = "Lockpicking:"
+
+[node name="BuffingLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxLeft/Skills"]
+layout_mode = 2
+text = "Buffing:"
+
+[node name="DebuffingLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxLeft/Skills"]
+layout_mode = 2
+text = "Debuffing:"
+
+[node name="TransportLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxLeft/Skills"]
+layout_mode = 2
+text = "Transport:"
+
+[node name="TamingLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxLeft/Skills"]
+layout_mode = 2
+text = "Taming:"
+
+[node name="SpellResearchLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxLeft/Skills"]
+layout_mode = 2
+text = "Spell Research:"
+
+[node name="InvestigationLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxLeft/Skills"]
+layout_mode = 2
+text = "Investigation:"
+
+[node name="TankLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxLeft/Skills"]
+layout_mode = 2
+text = "Tank:"
+
+[node name="PhysicalDPSLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxLeft/Skills"]
+layout_mode = 2
+text = "pDPS:"
+
+[node name="MagicDPSLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxLeft/Skills"]
+layout_mode = 2
+text = "mDPS:"
+
+[node name="HealerLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxLeft/Skills"]
+layout_mode = 2
+text = "Healer:"
+
+[node name="VBoxCenter" type="VBoxContainer" parent="MarginContainer/MainVBox/Split 1"]
+layout_mode = 2
+
+[node name="Personality" type="VBoxContainer" parent="MarginContainer/MainVBox/Split 1/VBoxCenter"]
+layout_mode = 2
+
+[node name="AggressionLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxCenter/Personality"]
+layout_mode = 2
+text = "Aggression:"
+
+[node name="DistanceLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxCenter/Personality"]
+layout_mode = 2
+text = "Distance:"
+
+[node name="HealingUseLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxCenter/Personality"]
+layout_mode = 2
+text = "Healing Use:"
+
+[node name="FocusLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxCenter/Personality"]
+layout_mode = 2
+text = "Focus:"
+
+[node name="TavernLingerTimeLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxCenter/Personality"]
+layout_mode = 2
+text = "Linger:"
+
+[node name="SeatRetryIntervalLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxCenter/Personality"]
+layout_mode = 2
+text = "Retry:"
+
+[node name="SocializeDurationLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxCenter/Personality"]
+layout_mode = 2
+text = "Social:"
+
+[node name="EntryPatienceLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxCenter/Personality"]
+layout_mode = 2
+text = "Patience:"
+
+[node name="QuestStats" type="VBoxContainer" parent="MarginContainer/MainVBox/Split 1/VBoxCenter"]
+layout_mode = 2
+
+[node name="QuestsCompletedLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxCenter/QuestStats"]
+layout_mode = 2
+text = "Quests Completed:"
+
+[node name="QuestsFailedLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxCenter/QuestStats"]
+layout_mode = 2
+text = "Quests Failed:"
+
+[node name="AssignedQuestIdLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxCenter/QuestStats"]
+layout_mode = 2
+text = "AssignedQuest:"
+
+[node name="QuestGiver" type="VBoxContainer" parent="MarginContainer/MainVBox/Split 1/VBoxCenter"]
+layout_mode = 2
+
+[node name="PostedQuestLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxCenter/QuestGiver"]
+layout_mode = 2
+text = "PostedQuest:"
+
+[node name="HasPostedTodayLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxCenter/QuestGiver"]
+layout_mode = 2
+text = "Has Posted?"
+
+[node name="ActiveQuestLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxCenter/QuestGiver"]
+layout_mode = 2
+text = "ActiveQuest:"
+
+[node name="QuestsPostedLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxCenter/QuestGiver"]
+layout_mode = 2
+text = "Quest Posted:"
+
+[node name="VBoxRight" type="VBoxContainer" parent="MarginContainer/MainVBox/Split 1"]
+layout_mode = 2
+
+[node name="Fav_Hated" type="VBoxContainer" parent="MarginContainer/MainVBox/Split 1/VBoxRight"]
+layout_mode = 2
+
+[node name="FavoriteFoodGroupLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxRight/Fav_Hated"]
+layout_mode = 2
+text = "Fav Food:"
+
+[node name="FavoriteDrinkGroupLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxRight/Fav_Hated"]
+layout_mode = 2
+text = "Fav Drink:"
+
+[node name="HatedFoodGroupLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxRight/Fav_Hated"]
+layout_mode = 2
+text = "Hated Food:"
+
+[node name="HatedDrinkGroupLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxRight/Fav_Hated"]
+layout_mode = 2
+text = "Hated Drink:"
+
+[node name="FavoriteQuestTypeLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxRight/Fav_Hated"]
+layout_mode = 2
+text = "Fav Quest:"
+
+[node name="HatedQuestTypeLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxRight/Fav_Hated"]
+layout_mode = 2
+text = "Hated Quest:"
+
+[node name="FavoriteClassLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxRight/Fav_Hated"]
+layout_mode = 2
+text = "Fav Class:"
+
+[node name="HatedClassLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxRight/Fav_Hated"]
+layout_mode = 2
+text = "Hated Class:"
+
+[node name="Tavern Stats" type="VBoxContainer" parent="MarginContainer/MainVBox/Split 1/VBoxRight"]
+layout_mode = 2
+
+[node name="VisitHourLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxRight/Tavern Stats"]
+layout_mode = 2
+text = "Visit Hour:"
+
+[node name="VisitDayLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxRight/Tavern Stats"]
+layout_mode = 2
+text = "Visit Day:"
+
+[node name="LoyaltyRatingLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxRight/Tavern Stats"]
+layout_mode = 2
+text = "Loyalty:"
+
+[node name="MaxSpendMultiplierLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxRight/Tavern Stats"]
+layout_mode = 2
+text = "MaxSpend:"
+
+[node name="IsHungryLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxRight/Tavern Stats"]
+layout_mode = 2
+text = "Hungry?"
+
+[node name="IsThirstyLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxRight/Tavern Stats"]
+layout_mode = 2
+text = "Thirsty?"
+
+[node name="HasEatenTodayLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxRight/Tavern Stats"]
+layout_mode = 2
+text = "Has Eaten?"
+
+[node name="HasDrankTodayLabel" type="Label" parent="MarginContainer/MainVBox/Split 1/VBoxRight/Tavern Stats"]
+layout_mode = 2
+text = "Has Drank?"
+
+[node name="Unused" type="HBoxContainer" parent="MarginContainer/MainVBox"]
+layout_mode = 2
+
+[node name="RoleLabel" type="Label" parent="MarginContainer/MainVBox/Unused"]
+visible = false
+layout_mode = 2
+text = "Role:"
+
+[node name="ExpGivenLabel" type="Label" parent="MarginContainer/MainVBox/Unused"]
+visible = false
+layout_mode = 2
+
+[node name="HatedRegion" type="Label" parent="MarginContainer/MainVBox/Unused"]
+visible = false
+layout_mode = 2
