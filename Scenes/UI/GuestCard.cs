@@ -275,7 +275,8 @@ public void UpdateBubbleDisplay()
 	if (ThirstyBubble == null)
 		GD.PrintErr("❌ ThirstyBubble node is null.");
 
-	bool isSeated = BoundGuest?.AssignedTable != null;
+	// Use enum state instead of seating boolean
+	bool isSeated = BoundGuest?.CurrentState == NPCState.Seats;
 
 	// Show food bubble only if seated
 	if (HungryBubble != null)
@@ -285,6 +286,7 @@ public void UpdateBubbleDisplay()
 	if (ThirstyBubble != null)
 		ThirstyBubble.Visible = BoundNPC.IsThirsty;
 }
+
 
 
 

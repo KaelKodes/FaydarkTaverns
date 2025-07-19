@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://cnbv0kpjf2kmk"]
+[gd_scene load_steps=7 format=3 uid="uid://cnbv0kpjf2kmk"]
 
 [ext_resource type="Script" uid="uid://bhj2q8slrlooa" path="res://Scenes/MainMenu.cs" id="1_tt5f1"]
-[ext_resource type="Texture2D" uid="uid://djdkv3epv4lwx" path="res://Scenes/UI/Faydark Taverns.png" id="2_853f1"]
+[ext_resource type="Texture2D" uid="uid://dnq3jwfymsaxh" path="res://Assets/UI/Placeholder/TitleConcept2-Centered.png" id="2_ghw46"]
+[ext_resource type="Texture2D" uid="uid://dqrf2qcouoqfh" path="res://Assets/UI/Buttons/ActiveTab.png" id="3_8um5k"]
 [ext_resource type="AudioStream" uid="uid://bsghs4tohilvv" path="res://Assets/Audio/Music/NothingQuiteLikeIt.mp3" id="3_df05h"]
 [ext_resource type="Script" uid="uid://d0o5nruylpjgu" path="res://Scenes/MainMenuMusicPlayer.cs" id="4_8um5k"]
+[ext_resource type="Texture2D" uid="uid://hjhwiuyh0eoo" path="res://Assets/UI/Buttons/InactiveTab.png" id="4_xim88"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -24,7 +26,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_853f1")
+texture = ExtResource("2_ghw46")
 expand_mode = 2
 
 [node name="VBoxContainer" type="HBoxContainer" parent="."]
@@ -34,10 +36,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -156.0
-offset_top = -221.0
-offset_right = 152.0
-offset_bottom = -34.0
+offset_left = -173.0
+offset_top = -273.0
+offset_right = 166.0
+offset_bottom = -230.0
 grow_horizontal = 2
 grow_vertical = 0
 alignment = 1
@@ -47,15 +49,49 @@ layout_mode = 2
 size_flags_vertical = 4
 text = "New Game"
 
-[node name="LoadGame" type="Button" parent="VBoxContainer"]
+[node name="LoadGame" type="TextureButton" parent="VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 4
-text = "Load Game"
+size_flags_horizontal = 3
+texture_normal = ExtResource("3_8um5k")
+texture_pressed = ExtResource("4_xim88")
+ignore_texture_size = true
+stretch_mode = 0
 
-[node name="Settings" type="Button" parent="VBoxContainer"]
+[node name="Label" type="Label" parent="VBoxContainer/LoadGame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_right = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Load"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Settings" type="TextureButton" parent="VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 4
+size_flags_horizontal = 3
+texture_normal = ExtResource("3_8um5k")
+texture_pressed = ExtResource("4_xim88")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="VBoxContainer/Settings"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_right = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Settings"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Exit" type="Button" parent="VBoxContainer"]
 layout_mode = 2

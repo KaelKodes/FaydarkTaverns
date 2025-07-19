@@ -216,19 +216,21 @@ private void StartNewDay(DateTime currentDate)
 		foreach (var className in ClassTemplate.GetAllClassNames())
 		{
 			var guest = GuestManager.SpawnNewNPC(NPCRole.Adventurer, className);
-if (guest != null)
-{
-	guest.SetState(NPCState.Elsewhere); // ✅ Start as Elsewhere
-	guest.VisitDay = ClockManager.CurrentDay;
-	guest.VisitHour = GD.RandRange(7, 22); // 9AM–8PM range
-	guest.WaitDuration = GD.RandRange(2, 4);
+			if (guest != null)
+			{
+				guest.SetState(NPCState.Elsewhere); // ✅ Start as Elsewhere
+				if (guest.BoundNPC != null)
+					guest.BoundNPC.State = guest.CurrentState; // <<--- ADD THIS
 
-	GuestManager.QueueGuest(guest);
+				guest.VisitDay = ClockManager.CurrentDay;
+				guest.VisitHour = GD.RandRange(7, 22); // 9AM–8PM range
+				guest.WaitDuration = GD.RandRange(2, 4);
 
-	if (!AllVillagers.Contains(guest))
-		AllVillagers.Add(guest);
-}
+				GuestManager.QueueGuest(guest);
 
+				if (!AllVillagers.Contains(guest))
+					AllVillagers.Add(guest);
+			}
 		}
 
 		// 🧓 Spawn 4 informants (quest givers)
@@ -238,6 +240,9 @@ if (guest != null)
 			if (guest != null)
 			{
 				guest.SetState(NPCState.Elsewhere);
+				if (guest.BoundNPC != null)
+					guest.BoundNPC.State = guest.CurrentState; // <<--- ADD THIS
+
 				guest.VisitDay = ClockManager.CurrentDay;
 				guest.VisitHour = GD.RandRange(6, 18);
 				GuestManager.QueueGuest(guest);
@@ -257,13 +262,11 @@ if (guest != null)
 		if (guest.BoundNPC != null)
 			guest.BoundNPC.HasPostedToday = false;
 
-		// 🧍 Only persistent guests return
+		// 🧍 Only persistent guests who are idle elsewhere return
 		bool isPersistent = guest.BoundNPC != null;
-		bool isQuestBound = guest.CurrentState == NPCState.StagingArea || guest.CurrentState == NPCState.AssignedToQuest;
-		bool isDeployed = guest.CurrentState == NPCState.AssignedToQuest;
-		bool isElsewhere = guest.CurrentState == NPCState.Elsewhere;
+		bool isIdleElsewhere = guest.CurrentState == NPCState.Elsewhere;
 
-		if (guest != null && isPersistent && isElsewhere && !isQuestBound && !isDeployed)
+		if (guest != null && isPersistent && isIdleElsewhere)
 		{
 			guest.VisitDay = ClockManager.CurrentDay;
 			guest.VisitHour = GD.RandRange(6, 18);
@@ -277,8 +280,6 @@ if (guest != null)
 	UpdateFloorLabel();
 	RecheckSeating();
 }
-
-
 
 	
 	private void UpdateQuestCapacityLabel()
@@ -462,9 +463,6 @@ private void OnServeDrinkRequested(NPCData npc)
 
 	SetTimeMultiplier(nowPaused ? 0 : 1);
 	PauseButton.Text = nowPaused ? "Play" : "Pause";
-
-	MusicManager musicManager = GetNode<MusicManager>("../MusicManager");
-	musicManager.TogglePause(nowPaused);
 }
 
 
@@ -727,6 +725,8 @@ public void AdmitGuestToTavern(Guest guest)
 
 	// ✅ Proceed with admission: now safe to set state
 	guest.SetState(NPCState.TavernFloor);
+	if (guest.BoundNPC != null)
+		guest.BoundNPC.State = guest.CurrentState; // <-- ADD THIS
 
 	// 🧠 Register in AllVillagers list if new
 	if (!AllVillagers.Contains(guest))
@@ -759,6 +759,7 @@ public void AdmitGuestToTavern(Guest guest)
 	UpdateFloorLabel();
 	DisplayAdventurers();
 }
+
 
 
 
@@ -820,10 +821,13 @@ public List<Guest> GetGuestsInside()
 	foreach (var guest in floorGuests)
 	{
 		guest.SetState(NPCState.TavernFloor);
+		if (guest.BoundNPC != null)
+			guest.BoundNPC.State = guest.CurrentState; // <-- ADD THIS LINE
 	}
 
 	return floorGuests;
 }
+
 
 	#endregion
 	#region Shop

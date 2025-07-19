@@ -2,11 +2,13 @@ using Godot;
 using System.Text;
 using FaydarkTaverns.Objects;
 
-/// <summary>
-/// Popup window showing full NPC details for debugging/testing.
-/// </summary>
+
+/// Popup window showing full NPC details for debugging/testing
 public partial class NPCDetailPopup : Window
 {
+	
+	private Guest BoundGuest;
+	
 	// --- Exports: hook these up in the .tscn ---
 	[Export] public Label NameLabel;
 	[Export] public Label GenderLabel;
@@ -105,7 +107,6 @@ public partial class NPCDetailPopup : Window
 		HasEatenTodayLabel.Text        = $"Has Eaten Today: {npc.HasEatenToday}";
 		HasDrankTodayLabel.Text        = $"Has Drank Today: {npc.HasDrankToday}";
 		RoleLabel.Text                 = $"Role: {npc.Role}";
-		StateLabel.Text                = $"State: {npc.State}";
 		ClassNameLabel.Text            = $"Class: {npc.ClassName}";
 		StrengthLabel.Text             = $"Strength: {npc.Strength}";
 		DexterityLabel.Text            = $"Dexterity: {npc.Dexterity}";
@@ -146,7 +147,9 @@ public partial class NPCDetailPopup : Window
 		SeatRetryIntervalLabel.Text    = $"Seat Retry: {npc.SeatRetryInterval:F2}";
 		SocializeDurationLabel.Text    = $"Socialize Duration: {npc.SocializeDuration:F2}";
 		HealthLabel.Text   = $"HP: {npc.GetHp()}";
-		ManaLabel.Text = $"Mana: {npc.GetMana()}";;
+		ManaLabel.Text = $"Mana: {npc.GetMana()}";
+		StateLabel.Text = $"State: {npc.State}";
+		;
 
 		
 // Portrait
@@ -165,4 +168,15 @@ else
 
 
 	}
+	
+	public void SetGuest(Guest guest)
+{
+	BoundGuest = guest;
+	var npc = guest.BoundNPC;
+
+	NameLabel.Text = npc.Name;
+	// ... all the other labels stay the same ...
+	StateLabel.Text = $"State: {guest.CurrentState}"; // ✅ accurate
+}
+
 }

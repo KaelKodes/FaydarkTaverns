@@ -107,6 +107,9 @@ public void TickGuests(DateTime currentTime)
 			currentHour >= guest.VisitHour)
 		{
 			guest.SetState(NPCState.StreetOutside);
+			if (guest.BoundNPC != null)
+				guest.BoundNPC.State = guest.CurrentState;
+
 			GameLog.Debug($"🚶 {guest.Name} arrived outside the tavern (VisitHour={guest.VisitHour}).");
 		}
 	}
@@ -128,6 +131,9 @@ public void TickGuests(DateTime currentTime)
 		{
 			guestsOutside.RemoveAt(i);
 			guest.SetState(NPCState.Elsewhere);
+			if (guest.BoundNPC != null)
+				guest.BoundNPC.State = guest.CurrentState;
+
 			GameLog.Debug($"{guest.Name} waited too long and left the street.");
 		}
 	}
@@ -144,6 +150,7 @@ public void TickGuests(DateTime currentTime)
 		}
 	}
 }
+
 
 private void AdmitGuest(Guest guest)
 {
@@ -255,8 +262,6 @@ public void Leave(Guest guest)
 	if (guest == null)
 		return;
 
-	GameLog.Info($"🚶 {guest.Name} heads home.");
-
 	if (guestsInside.Contains(guest))
 		guestsInside.Remove(guest);
 
@@ -277,9 +282,12 @@ public void Leave(Guest guest)
 	guest.SetState(NPCState.Elsewhere);
 	GameLog.Debug($"✅ {guest.Name} left the tavern at {ClockManager.CurrentTime}. DepartureTime was {guest.DepartureTime}");
 
-
 	OnGuestLeft?.Invoke(guest);
+
+	// 🟢 Move the log to here, last
+	GameLog.Info($"🚶 {guest.Name} heads home.");
 }
+
 
 private void TryAdmitGuest(Guest guest)
 {

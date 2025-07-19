@@ -62,6 +62,9 @@ public partial class Table : Panel
 
 			// ✅ Set state to seated
 			guest.SetState(NPCState.Seats);
+			if (guest.BoundNPC != null)
+			guest.BoundNPC.State = guest.CurrentState;
+
 
 			UpdateSeatVisual(i, guest);
 
@@ -99,6 +102,9 @@ public partial class Table : Panel
 
 			// ✅ Reset to idle state on tavern floor
 			guest.SetState(NPCState.TavernFloor);
+			if (guest.BoundNPC != null)
+			guest.BoundNPC.State = guest.CurrentState;
+
 
 			UpdateSeatVisual(index, null);
 			LinkedPanel?.UpdateSeatSlots();

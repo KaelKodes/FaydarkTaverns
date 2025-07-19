@@ -290,6 +290,8 @@ public override void _DropData(Vector2 atPosition, Variant data)
 
 		// 🎯 Update guest quest assignment state
 		guest.SetState(NPCState.StagingArea);
+		if (guest.BoundNPC != null)
+			guest.BoundNPC.State = guest.CurrentState;   // <-- ADD THIS LINE
 		guest.DepartureTime = null;
 
 		GameLog.Info($"🧭 {guest.Name} has been assigned to '{quest.Title}' and awaits departure.");
@@ -304,6 +306,7 @@ public override void _DropData(Vector2 atPosition, Variant data)
 	TavernManager.Instance?.DisplayAdventurers();
 	TavernManager.Instance?.UpdateFloorLabel();
 }
+
 
 private void UnassignFromSlot(int index)
 {
@@ -342,6 +345,8 @@ private void UnassignFromSlot(int index)
 
 		// 🔄 Reset state and remove seating
 		guest.SetState(NPCState.StreetOutside);
+		if (guest.BoundNPC != null)
+			guest.BoundNPC.State = guest.CurrentState;   // <-- ADD THIS LINE
 		guest.AssignedTable = null;
 		guest.SeatIndex = null;
 		guest.DepartureTime = null;
@@ -362,6 +367,7 @@ private void UnassignFromSlot(int index)
 		TavernManager.Instance.DisplayAdventurers();
 	}
 }
+
 
 
 	public override void _GuiInput(InputEvent @event)

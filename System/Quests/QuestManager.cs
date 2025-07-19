@@ -163,6 +163,8 @@ public void UnassignAdventurer(Quest quest, NPCData npc)
 
 		// 🚪 Update state
 		guest.SetState(NPCState.StreetOutside);
+		if (guest.BoundNPC != null)
+			guest.BoundNPC.State = guest.CurrentState; // <-- ADD THIS LINE
 
 		// ⏳ Ensure they’ll leave eventually
 		int fallbackDuration = 3;
@@ -173,6 +175,7 @@ public void UnassignAdventurer(Quest quest, NPCData npc)
 		GameLog.Info($"👋 {guest.Name} was unassigned and returned to the street.");
 	}
 }
+
 
 
 
@@ -202,6 +205,8 @@ public void HandleQuestReturn(Quest quest)
 		guest.SeatIndex = null;
 
 		guest.SetState(NPCState.StreetOutside);
+		if (guest.BoundNPC != null)
+			guest.BoundNPC.State = guest.CurrentState; // <-- ADD THIS LINE
 
 		// ⏳ Set DepartureTime for auto-leave
 		int fallbackDuration = 3;
@@ -212,6 +217,7 @@ public void HandleQuestReturn(Quest quest)
 		GameLog.Info($"🧭 {guest.Name} has returned from '{quest.Title}' and waits outside.");
 	}
 }
+
 
 
 
