@@ -18,10 +18,13 @@ public partial class Dish
 	public int CalculateBaseCost()
 	{
 		int total = 0;
+		if (Ingredients == null)
+			return total;
+
 		foreach (var ingredientName in Ingredients)
 		{
 			if (IngredientDatabase.Ingredients.TryGetValue(ingredientName, out var ing))
-				total += ing.Value;
+				total += (int)ing.Value;  // Or use Mathf.RoundToInt(ing.Value) if preferred
 		}
 		return total;
 	}

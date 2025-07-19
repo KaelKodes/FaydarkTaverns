@@ -1,4 +1,8 @@
+using Godot;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+
 
 public enum ShopCategory
 {
@@ -55,11 +59,8 @@ new ShopItem("Large Table", 500, 8, 2, ShopCategory.Tables, "8-seat raid-ready t
 		new ShopItem("Fancy Rug", 50, 2, 1, ShopCategory.Decorations, "Stylish rug"),
 		new ShopItem("Mounted Trophy", 100, 4, 4, ShopCategory.Decorations, "Display your beast-slaying pride"),
 
-		// 🍞 Supplies (x10 bundles)
-		new ShopItem("Bread Loaf x10", 20, 1, -1, ShopCategory.Supplies, "Bundle of bread"),
-		new ShopItem("Mug of Ale x10", 30, 1, -1, ShopCategory.Supplies, "Bundle of ale"),
-		new ShopItem("Hearty Stew x10", 60, 5, -1, ShopCategory.Supplies, "Extends guest stay"),
-		new ShopItem("Rare Wine x10", 120, 7, -1, ShopCategory.Supplies, "Treat for VIP guests"),
+		// 🍞 Supplies
+
 		
 		// 🔧 Upgrades
 new ShopItem("Increase Floor Cap", 250, 2, -1, ShopCategory.Upgrades, "Adds +1 to max guests on the tavern floor."),
@@ -70,4 +71,42 @@ new ShopItem("Unlock Keg Stand", 500, 4, 1, ShopCategory.Upgrades, "Unlocks the 
 new ShopItem("Unlock Lodging", 1000, 10, 1, ShopCategory.Upgrades, "Prepares the tavern to house guests overnight."),
 
 	};
+
+public static void RefreshSupplyItems()
+{
+	AllItems.RemoveAll(i => i.Category == ShopCategory.Supplies);
+
+	foreach (var food in FoodDrinkDatabase.AllFood)
+	{
+		if (food.Purchasable)
+		{
+			AllItems.Add(new ShopItem(
+				$"{food.Name} x10",
+				food.BasePrice * 10,
+				1,
+				-1,
+				ShopCategory.Supplies,
+				$"Bundle of {food.Name.ToLower()}"
+			));
+		}
+	}
+
+	foreach (var drink in FoodDrinkDatabase.AllDrinks)
+	{
+		if (drink.Purchasable)
+		{
+			AllItems.Add(new ShopItem(
+				$"{drink.Name} x10",
+				drink.BasePrice * 10,
+				1,
+				-1,
+				ShopCategory.Supplies,
+				$"Bundle of {drink.Name.ToLower()}"
+			));
+		}
+	}
+}
+
+
+
 }

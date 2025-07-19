@@ -1,501 +1,574 @@
 [
   {
+    "id": "town_bread",
+    "name": "Town Bread",
+    "flavor_profiles": ["Basic"],
+    "quality": "cheap",
+    "category": "food",
+    "base_price": 2,
+    "description": "Simple bread loaf baked locally in town.",
+    "learned": true,
+    "purchasable": true
+  },
+  {
     "id": "peasants_stew",
     "name": "Peasant's Stew",
-    "flavor_profiles": [
-      "Savory"
-    ],
+    "flavor_profiles": ["Savory"],
     "quality": "cheap",
     "category": "food",
     "base_price": 3,
-    "description": "A simple meat-and-vegetable stew, mostly potatoes."
+    "description": "A simple meat-and-vegetable stew, mostly potatoes.",
+    "learned": false,
+    "purchasable": false
   },
   {
     "id": "hunters_broth",
     "name": "Hunter's Broth",
-    "flavor_profiles": [
-      "Savory",
-      "Earthy"
-    ],
+    "flavor_profiles": ["Savory", "Earthy"],
     "quality": "average",
     "category": "food",
     "base_price": 7,
-    "description": "Hearty stew with fresh game and wild roots."
+    "description": "Hearty stew with fresh game and wild roots.",
+    "learned": false,
+    "purchasable": false
   },
   {
     "id": "golden_elk_ragu",
     "name": "Golden Elk Ragu",
-    "flavor_profiles": [
-      "Savory",
-      "Smoky"
-    ],
+    "flavor_profiles": ["Savory", "Smoky"],
     "quality": "high",
     "category": "food",
     "base_price": 14,
-    "description": "A slow-roasted elk stew with fire-charred onions and aged stock."
+    "description": "A slow-roasted elk stew with fire-charred onions and aged stock.",
+    "learned": false,
+    "purchasable": false
   },
   {
     "id": "crumbly_sugar_biscuit",
     "name": "Crumbly Sugar Biscuit",
-    "flavor_profiles": [
-      "Sweet"
-    ],
+    "flavor_profiles": ["Sweet"],
     "quality": "cheap",
     "category": "food",
     "base_price": 2,
-    "description": "Dry and overly sweet, but beloved by children."
+    "description": "Dry and overly sweet, but beloved by children.",
+    "learned": false,
+    "purchasable": false
   },
   {
     "id": "autumn_berry_tart",
     "name": "Autumn Berry Tart",
-    "flavor_profiles": [
-      "Sweet",
-      "Fruity"
-    ],
+    "flavor_profiles": ["Sweet", "Fruity"],
     "quality": "average",
     "category": "food",
     "base_price": 6,
-    "description": "A golden crust filled with local berries and honey glaze."
+    "description": "A golden crust filled with local berries and honey glaze.",
+    "learned": false,
+    "purchasable": false
   },
   {
     "id": "royal_custard_crown",
     "name": "Royal Custard Crown",
-    "flavor_profiles": [
-      "Sweet",
-      "Creamy"
-    ],
+    "flavor_profiles": ["Sweet", "Creamy"],
     "quality": "high",
     "category": "food",
     "base_price": 12,
-    "description": "A multilayered cream dessert served with candied petals."
+    "description": "A multilayered cream dessert served with candied petals.",
+    "learned": false,
+    "purchasable": false
   },
   {
     "id": "firestick_jerky",
     "name": "Firestick Jerky",
-    "flavor_profiles": [
-      "Spicy"
-    ],
+    "flavor_profiles": ["Spicy"],
     "quality": "cheap",
     "category": "food",
     "base_price": 3,
-    "description": "Chewy meat sticks laced with hot peppers."
+    "description": "Chewy meat sticks laced with hot peppers.",
+    "learned": false,
+    "purchasable": false
   },
   {
     "id": "dragonspice_chili",
     "name": "Dragonspice Chili",
-    "flavor_profiles": [
-      "Spicy",
-      "Savory"
-    ],
+    "flavor_profiles": ["Spicy", "Savory"],
     "quality": "average",
     "category": "food",
     "base_price": 8,
-    "description": "A fiery mix of beans, meat, and wildfire sauce."
+    "description": "A fiery mix of beans, meat, and wildfire sauce.",
+    "learned": false,
+    "purchasable": false
   },
   {
     "id": "hellboar_ribs",
     "name": "Hellboar Ribs",
-    "flavor_profiles": [
-      "Spicy",
-      "Smoky"
-    ],
+    "flavor_profiles": ["Spicy", "Smoky"],
     "quality": "high",
     "category": "food",
     "base_price": 15,
-    "description": "Char-grilled ribs smothered in molten chili glaze."
+    "description": "Char-grilled ribs smothered in molten chili glaze.",
+    "learned": false,
+    "purchasable": false
   },
   {
     "id": "stoneground_flatbread",
     "name": "Stoneground Flatbread",
-    "flavor_profiles": [
-      "Earthy"
-    ],
+    "flavor_profiles": ["Earthy"],
     "quality": "cheap",
     "category": "food",
     "base_price": 2,
-    "description": "Dense flatbread made with coarse flour and forest grains."
+    "description": "Dense flatbread made with coarse flour and forest grains.",
+    "learned": false,
+    "purchasable": false
   },
   {
     "id": "foragers_pie",
     "name": "Forager's Pie",
-    "flavor_profiles": [
-      "Earthy",
-      "Savory"
-    ],
+    "flavor_profiles": ["Earthy", "Savory"],
     "quality": "average",
     "category": "food",
     "base_price": 7,
-    "description": "A warm pie stuffed with mushrooms and root vegetables."
+    "description": "A warm pie stuffed with mushrooms and root vegetables.",
+    "learned": false,
+    "purchasable": false
   },
   {
     "id": "druids_table",
     "name": "Druid's Table",
-    "flavor_profiles": [
-      "Earthy",
-      "Herbal"
-    ],
+    "flavor_profiles": ["Earthy", "Herbal"],
     "quality": "high",
     "category": "food",
     "base_price": 11,
-    "description": "Forest greens, wild grains, and enchanted truffle oil."
+    "description": "Forest greens, wild grains, and enchanted truffle oil.",
+    "learned": false,
+    "purchasable": false
   },
   {
     "id": "pickled_bits_plate",
     "name": "Pickled Bits Plate",
-    "flavor_profiles": [
-      "Sour"
-    ],
+    "flavor_profiles": ["Sour"],
     "quality": "cheap",
     "category": "food",
     "base_price": 2,
-    "description": "A mix of sharp pickled roots and eggs."
+    "description": "A mix of sharp pickled roots and eggs.",
+    "learned": false,
+    "purchasable": false
   },
   {
     "id": "sour_apple_pork",
     "name": "Sour Apple Pork",
-    "flavor_profiles": [
-      "Sour",
-      "Savory"
-    ],
+    "flavor_profiles": ["Sour", "Savory"],
     "quality": "average",
     "category": "food",
     "base_price": 7,
-    "description": "Grilled pork with tangy green apple glaze."
+    "description": "Grilled pork with tangy green apple glaze.",
+    "learned": false,
+    "purchasable": false
   },
   {
     "id": "vinegar_cured_quail",
     "name": "Vinegar-Cured Quail",
-    "flavor_profiles": [
-      "Sour",
-      "Dry"
-    ],
+    "flavor_profiles": ["Sour", "Dry"],
     "quality": "high",
     "category": "food",
     "base_price": 13,
-    "description": "Delicately cured quail with a reduction of wine vinegar."
+    "description": "Delicately cured quail with a reduction of wine vinegar.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Savory Dish (Cheap)",
-    "description": "A cheap quality dish with strong savory flavors.",
-    "flavors": [
-      "Savory"
-    ],
-    "quality": "Cheap",
-    "price": 3
+    "id": "boar_haunch_stew",
+    "name": "Boar Haunch Stew",
+    "flavor_profiles": ["Savory"],
+    "quality": "cheap",
+    "category": "food",
+    "base_price": 3,
+    "description": "A muddy stew of wild boar haunch, cave millet, and coldroot. Common fare for workers in Crooked Crossing.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Savory Dish (Medium)",
-    "description": "A medium quality dish with strong savory flavors.",
-    "flavors": [
-      "Savory"
-    ],
-    "quality": "Medium",
-    "price": 7
+    "id": "stonecap_fungi_bake",
+    "name": "Stonecap Fungi Bake",
+    "flavor_profiles": ["Savory"],
+    "quality": "medium",
+    "category": "food",
+    "base_price": 7,
+    "description": "Sliced stonecap mushrooms roasted with goatcurd and whisperbloom, then baked in roughbarley crust. A staple in Glimmerfen.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Savory Dish (High)",
-    "description": "A high quality dish with strong savory flavors.",
-    "flavors": [
-      "Savory"
-    ],
-    "quality": "High",
-    "price": 12
+    "id": "duskhorn_royale",
+    "name": "Duskhorn Royale",
+    "flavor_profiles": ["Savory"],
+    "quality": "high",
+    "category": "food",
+    "base_price": 12,
+    "description": "Succulent duskhorn steak and hearthleaf, stewed with thorn spice and topped with goldpetal nectar. Served at noble tables in Hollowmere.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Sweet Dish (Cheap)",
-    "description": "A cheap quality dish with strong sweet flavors.",
-    "flavors": [
-      "Sweet"
-    ],
-    "quality": "Cheap",
-    "price": 3
+    "id": "crumbleberry_scone",
+    "name": "Crumbleberry Scone",
+    "flavor_profiles": ["Sweet"],
+    "quality": "cheap",
+    "category": "food",
+    "base_price": 3,
+    "description": "Dry but satisfying scones, sweetened with glimmer sugar and filled with blood plum compote. Favored by miners’ children.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Sweet Dish (Medium)",
-    "description": "A medium quality dish with strong sweet flavors.",
-    "flavors": [
-      "Sweet"
-    ],
-    "quality": "Medium",
-    "price": 7
+    "id": "spark_apple_tart",
+    "name": "Spark Apple Tart",
+    "flavor_profiles": ["Sweet"],
+    "quality": "medium",
+    "category": "food",
+    "base_price": 7,
+    "description": "Golden tart of spark apple slices and sap honey, dusted with moonglow petal. A festival treat in Tranquil Rise.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Sweet Dish (High)",
-    "description": "A high quality dish with strong sweet flavors.",
-    "flavors": [
-      "Sweet"
-    ],
-    "quality": "High",
-    "price": 12
+    "id": "royal_nectar_trifle",
+    "name": "Royal Nectar Trifle",
+    "flavor_profiles": ["Sweet"],
+    "quality": "high",
+    "category": "food",
+    "base_price": 12,
+    "description": "A layered confection of goldpetal nectar, churned cream, and twilight fig. Reserved for feasts in Moondrop Cliff.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Spicy Dish (Cheap)",
-    "description": "A cheap quality dish with strong spicy flavors.",
-    "flavors": [
-      "Spicy"
-    ],
-    "quality": "Cheap",
-    "price": 3
+    "id": "ashpepper_crumble",
+    "name": "Ashpepper Crumble",
+    "flavor_profiles": ["Spicy"],
+    "quality": "cheap",
+    "category": "food",
+    "base_price": 3,
+    "description": "Crispy bread crumbs laced with ashpepper and fire lizard tail, baked for heat lovers of Suncleft Dunes.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Spicy Dish (Medium)",
-    "description": "A medium quality dish with strong spicy flavors.",
-    "flavors": [
-      "Spicy"
-    ],
-    "quality": "Medium",
-    "price": 7
+    "id": "embervale_hotpot",
+    "name": "Embervale Hotpot",
+    "flavor_profiles": ["Spicy"],
+    "quality": "medium",
+    "category": "food",
+    "base_price": 7,
+    "description": "Molten pepper and basilisk fat simmered with flameberry and boar, eaten by caravan guards in Embervale.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Spicy Dish (High)",
-    "description": "A high quality dish with strong spicy flavors.",
-    "flavors": [
-      "Spicy"
-    ],
-    "quality": "High",
-    "price": 12
+    "id": "inferno_chili",
+    "name": "Inferno Chili",
+    "flavor_profiles": ["Spicy"],
+    "quality": "high",
+    "category": "food",
+    "base_price": 12,
+    "description": "Legendary stew of duskhorn steak, molten pepper, thorn spice, and embershard flake, said to awaken dragons.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Earthy Dish (Cheap)",
-    "description": "A cheap quality dish with strong earthy flavors.",
-    "flavors": [
-      "Earthy"
-    ],
-    "quality": "Cheap",
-    "price": 3
+    "id": "mudroot_mash",
+    "name": "Mudroot Mash",
+    "flavor_profiles": ["Earthy"],
+    "quality": "cheap",
+    "category": "food",
+    "base_price": 3,
+    "description": "Boiled stonebeet, mudroot, and goatcurd. Heavy, plain, and filling for hungry travelers.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Earthy Dish (Medium)",
-    "description": "A medium quality dish with strong earthy flavors.",
-    "flavors": [
-      "Earthy"
-    ],
-    "quality": "Medium",
-    "price": 7
+    "id": "foragers_loaf",
+    "name": "Forager's Loaf",
+    "flavor_profiles": ["Earthy"],
+    "quality": "medium",
+    "category": "food",
+    "base_price": 7,
+    "description": "Wild cave millet and mellowleaf, baked together with forest mushrooms from Gloamhollow Basin.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Earthy Dish (High)",
-    "description": "A high quality dish with strong earthy flavors.",
-    "flavors": [
-      "Earthy"
-    ],
-    "quality": "High",
-    "price": 12
+    "id": "elders_root_supper",
+    "name": "Elder's Root Supper",
+    "flavor_profiles": ["Earthy"],
+    "quality": "high",
+    "category": "food",
+    "base_price": 12,
+    "description": "Coldroot, cragvine, and spiral clam meat slow-cooked in goatcurd, dusted with cracked myrrh.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Sour Dish (Cheap)",
-    "description": "A cheap quality dish with strong sour flavors.",
-    "flavors": [
-      "Sour"
-    ],
-    "quality": "Cheap",
-    "price": 3
+    "id": "briarberry_pie",
+    "name": "Briarberry Pie",
+    "flavor_profiles": ["Sour"],
+    "quality": "cheap",
+    "category": "food",
+    "base_price": 3,
+    "description": "Pie of blood plum and ghost melon with a vinegar tang, a staple in Shatterspire.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Sour Dish (Medium)",
-    "description": "A medium quality dish with strong sour flavors.",
-    "flavors": [
-      "Sour"
-    ],
-    "quality": "Medium",
-    "price": 7
+    "id": "frostmilk_quiche",
+    "name": "Frostmilk Quiche",
+    "flavor_profiles": ["Sour"],
+    "quality": "medium",
+    "category": "food",
+    "base_price": 7,
+    "description": "A tart quiche of frostberry and frostmilk, flavored with sunroot and mellowleaf.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Sour Dish (High)",
-    "description": "A high quality dish with strong sour flavors.",
-    "flavors": [
-      "Sour"
-    ],
-    "quality": "High",
-    "price": 12
+    "id": "vinegar_roast_quail",
+    "name": "Vinegar Roast Quail",
+    "flavor_profiles": ["Sour"],
+    "quality": "high",
+    "category": "food",
+    "base_price": 12,
+    "description": "Wild quail marinated in ghost melon juice, finished with a glaze of cave syrup and spark apple.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Bitter Dish (Cheap)",
-    "description": "A cheap quality dish with strong bitter flavors.",
-    "flavors": [
-      "Bitter"
-    ],
-    "quality": "Cheap",
-    "price": 3
+    "id": "bitter_squash_fritters",
+    "name": "Bitter Squash Fritters",
+    "flavor_profiles": ["Bitter"],
+    "quality": "cheap",
+    "category": "food",
+    "base_price": 3,
+    "description": "Fried patties of grated bitter squash and dryspike bean, favored in Cinderfen Oasis.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Bitter Dish (Medium)",
-    "description": "A medium quality dish with strong bitter flavors.",
-    "flavors": [
-      "Bitter"
-    ],
-    "quality": "Medium",
-    "price": 7
+    "id": "twilight_fig_toss",
+    "name": "Twilight Fig Toss",
+    "flavor_profiles": ["Bitter"],
+    "quality": "medium",
+    "category": "food",
+    "base_price": 7,
+    "description": "Roasted twilight fig and gravedust shard, tossed with wisp essence and mellowleaf.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Bitter Dish (High)",
-    "description": "A high quality dish with strong bitter flavors.",
-    "flavors": [
-      "Bitter"
-    ],
-    "quality": "High",
-    "price": 12
+    "id": "cracked_myrrh_cakes",
+    "name": "Cracked Myrrh Cakes",
+    "flavor_profiles": ["Bitter"],
+    "quality": "high",
+    "category": "food",
+    "base_price": 12,
+    "description": "Delicate cakes soaked in cracked myrrh syrup, with sunroot for a fragrant aftertaste.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Salty Dish (Cheap)",
-    "description": "A cheap quality dish with strong salty flavors.",
-    "flavors": [
-      "Salty"
-    ],
-    "quality": "Cheap",
-    "price": 3
+    "id": "stormsalt_flatbread",
+    "name": "Stormsalt Flatbread",
+    "flavor_profiles": ["Salty"],
+    "quality": "cheap",
+    "category": "food",
+    "base_price": 3,
+    "description": "Flatbread of roughbarley and stormsalt, chewy and filling, keeps well for journeys.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Salty Dish (Medium)",
-    "description": "A medium quality dish with strong salty flavors.",
-    "flavors": [
-      "Salty"
-    ],
-    "quality": "Medium",
-    "price": 7
+    "id": "red_lantern_crab",
+    "name": "Red Lantern Crab",
+    "flavor_profiles": ["Salty"],
+    "quality": "medium",
+    "category": "food",
+    "base_price": 7,
+    "description": "Stir-fried spiral clam meat, red lantern pod, and skywater droplet, a Cranewatch Pier delicacy.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Salty Dish (High)",
-    "description": "A high quality dish with strong salty flavors.",
-    "flavors": [
-      "Salty"
-    ],
-    "quality": "High",
-    "price": 12
+    "id": "crystal_cavern_cure",
+    "name": "Crystal Cavern Cure",
+    "flavor_profiles": ["Salty"],
+    "quality": "high",
+    "category": "food",
+    "base_price": 12,
+    "description": "A brined blend of cave millet, embershard flake, and glowmint. Eaten after hard labor in the mines.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Smoky Dish (Cheap)",
-    "description": "A cheap quality dish with strong smoky flavors.",
-    "flavors": [
-      "Smoky"
-    ],
-    "quality": "Cheap",
-    "price": 3
+    "id": "smoked_barley_cakes",
+    "name": "Smoked Barley Cakes",
+    "flavor_profiles": ["Smoky"],
+    "quality": "cheap",
+    "category": "food",
+    "base_price": 3,
+    "description": "Dense cakes made from smoked barley and churned cream. A staple in Skyroot Steppe.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Smoky Dish (Medium)",
-    "description": "A medium quality dish with strong smoky flavors.",
-    "flavors": [
-      "Smoky"
-    ],
-    "quality": "Medium",
-    "price": 7
+    "id": "emberbluff_brisket",
+    "name": "Emberbluff Brisket",
+    "flavor_profiles": ["Smoky"],
+    "quality": "medium",
+    "category": "food",
+    "base_price": 7,
+    "description": "Brisket of wild game, slow-cooked with fire lizard tail and smoked cheese, finished over ashen coals.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Smoky Dish (High)",
-    "description": "A high quality dish with strong smoky flavors.",
-    "flavors": [
-      "Smoky"
-    ],
-    "quality": "High",
-    "price": 12
+    "id": "molten_spice_ribs",
+    "name": "Molten Spice Ribs",
+    "flavor_profiles": ["Smoky"],
+    "quality": "high",
+    "category": "food",
+    "base_price": 12,
+    "description": "Charred hellboar ribs glazed with thorn spice and embershard flake, a feast for the brave.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Creamy Dish (Cheap)",
-    "description": "A cheap quality dish with strong creamy flavors.",
-    "flavors": [
-      "Creamy"
-    ],
-    "quality": "Cheap",
-    "price": 3
+    "id": "churned_cream_porridge",
+    "name": "Churned Cream Porridge",
+    "flavor_profiles": ["Creamy"],
+    "quality": "cheap",
+    "category": "food",
+    "base_price": 3,
+    "description": "A simple, filling porridge of churned cream, cloud yam, and sap honey.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Creamy Dish (Medium)",
-    "description": "A medium quality dish with strong creamy flavors.",
-    "flavors": [
-      "Creamy"
-    ],
-    "quality": "Medium",
-    "price": 7
+    "id": "silvershine_souffle",
+    "name": "Silvershine Souffle",
+    "flavor_profiles": ["Creamy"],
+    "quality": "medium",
+    "category": "food",
+    "base_price": 7,
+    "description": "Soft souffle whipped from goatcurd, glimmer sugar, and silvercap for a shimmering finish.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Creamy Dish (High)",
-    "description": "A high quality dish with strong creamy flavors.",
-    "flavors": [
-      "Creamy"
-    ],
-    "quality": "High",
-    "price": 12
+    "id": "royal_cream_crown",
+    "name": "Royal Cream Crown",
+    "flavor_profiles": ["Creamy"],
+    "quality": "high",
+    "category": "food",
+    "base_price": 12,
+    "description": "Decadent tower of churned cream, topped with moonglow petals and dusted with goldpetal nectar.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Fruity Dish (Cheap)",
-    "description": "A cheap quality dish with strong fruity flavors.",
-    "flavors": [
-      "Fruity"
-    ],
-    "quality": "Cheap",
-    "price": 3
+    "id": "wildberry_crumble",
+    "name": "Wildberry Crumble",
+    "flavor_profiles": ["Fruity"],
+    "quality": "cheap",
+    "category": "food",
+    "base_price": 3,
+    "description": "Roasted berries from Thorncage Dell, sweetened with sap honey and baked into a crumbly crust.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Fruity Dish (Medium)",
-    "description": "A medium quality dish with strong fruity flavors.",
-    "flavors": [
-      "Fruity"
-    ],
-    "quality": "Medium",
-    "price": 7
+    "id": "ghost_melon_galette",
+    "name": "Ghost Melon Galette",
+    "flavor_profiles": ["Fruity"],
+    "quality": "medium",
+    "category": "food",
+    "base_price": 7,
+    "description": "Thin, sweet galette made with ghost melon and mellowleaf, light as air from Echoweald.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Fruity Dish (High)",
-    "description": "A high quality dish with strong fruity flavors.",
-    "flavors": [
-      "Fruity"
-    ],
-    "quality": "High",
-    "price": 12
+    "id": "sunroot_orchard_tart",
+    "name": "Sunroot Orchard Tart",
+    "flavor_profiles": ["Fruity"],
+    "quality": "high",
+    "category": "food",
+    "base_price": 12,
+    "description": "A golden tart of sunroot, spark apple, and cave syrup. Glazed for festivals in Tranquil Rise.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Dry Dish (Cheap)",
-    "description": "A cheap quality dish with strong dry flavors.",
-    "flavors": [
-      "Dry"
-    ],
-    "quality": "Cheap",
-    "price": 3
+    "id": "roughbarley_flatbread",
+    "name": "Roughbarley Flatbread",
+    "flavor_profiles": ["Dry"],
+    "quality": "cheap",
+    "category": "food",
+    "base_price": 3,
+    "description": "Coarse flatbread made with roughbarley and windwheat, dry but nourishing.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Dry Dish (Medium)",
-    "description": "A medium quality dish with strong dry flavors.",
-    "flavors": [
-      "Dry"
-    ],
-    "quality": "Medium",
-    "price": 7
+    "id": "cave_millet_crackers",
+    "name": "Cave Millet Crackers",
+    "flavor_profiles": ["Dry"],
+    "quality": "medium",
+    "category": "food",
+    "base_price": 7,
+    "description": "Crispy crackers baked from cave millet, dusted with cracked myrrh for a mineral tang.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Dry Dish (High)",
-    "description": "A high quality dish with strong dry flavors.",
-    "flavors": [
-      "Dry"
-    ],
-    "quality": "High",
-    "price": 12
+    "id": "wisp_bread",
+    "name": "Wisp Bread",
+    "flavor_profiles": ["Dry"],
+    "quality": "high",
+    "category": "food",
+    "base_price": 12,
+    "description": "An airy bread made with wisp essence and goldpetal nectar. So light, it nearly floats.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Herbal Dish (Cheap)",
-    "description": "A cheap quality dish with strong herbal flavors.",
-    "flavors": [
-      "Herbal"
-    ],
-    "quality": "Cheap",
-    "price": 3
+    "id": "glowmint_salad",
+    "name": "Glowmint Salad",
+    "flavor_profiles": ["Herbal"],
+    "quality": "cheap",
+    "category": "food",
+    "base_price": 3,
+    "description": "Fresh glowmint, hearthleaf, and mellowleaf tossed with a hint of vinegary pickled bits.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Herbal Dish (Medium)",
-    "description": "A medium quality dish with strong herbal flavors.",
-    "flavors": [
-      "Herbal"
-    ],
-    "quality": "Medium",
-    "price": 7
+    "id": "herbal_stock_risotto",
+    "name": "Herbal Stock Risotto",
+    "flavor_profiles": ["Herbal"],
+    "quality": "medium",
+    "category": "food",
+    "base_price": 7,
+    "description": "Creamy risotto cooked in herbal stock and topped with skywater droplet and cragvine.",
+    "learned": false,
+    "purchasable": false
   },
   {
-    "name": "Herbal Dish (High)",
-    "description": "A high quality dish with strong herbal flavors.",
-    "flavors": [
-      "Herbal"
-    ],
-    "quality": "High",
-    "price": 12
+    "id": "moonglow_garden_soup",
+    "name": "Moonglow Garden Soup",
+    "flavor_profiles": ["Herbal"],
+    "quality": "high",
+    "category": "food",
+    "base_price": 12,
+    "description": "A glowing soup of moonglow petal, sunroot, and mellowleaf, traditionally made on moonless nights.",
+    "learned": false,
+    "purchasable": false
   }
 ]

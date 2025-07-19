@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://bp53yv3ypaa5j"]
+[gd_scene load_steps=32 format=3 uid="uid://bp53yv3ypaa5j"]
 
 [ext_resource type="Script" uid="uid://hacx1tuggxkp" path="res://Scenes/QuestBoardPanel.cs" id="1_7ljul"]
 [ext_resource type="Texture2D" uid="uid://c4yn8u5hh50nr" path="res://Assets/UI/Bkg/TavernBKGEmpty.png" id="1_e0xf5"]
@@ -14,6 +14,7 @@
 [ext_resource type="Script" uid="uid://b77bsiakfj8qa" path="res://Scenes/FurniturePanel.cs" id="9_wnxq3"]
 [ext_resource type="Texture2D" uid="uid://bdfjo5q8ltm3j" path="res://Assets/UI/Bkg/Panel.png" id="12_slrnj"]
 [ext_resource type="Texture2D" uid="uid://b3o0xw4hwlcru" path="res://Assets/UI/Bkg/Candle.png" id="13_wlqhj"]
+[ext_resource type="Script" uid="uid://dyueyuk4r0m0d" path="res://Scenes/PantryPanel.cs" id="13_yj0io"]
 [ext_resource type="Script" uid="uid://qi56yy8o3hs4" path="res://System/Sound/UIInteractButton.cs" id="14_udw8w"]
 [ext_resource type="Script" uid="uid://beiuw711c5786" path="res://System/Sound/UIAudio.cs" id="16_kk1q5"]
 [ext_resource type="AudioStream" uid="uid://c0q1moejob5v6" path="res://Assets/Audio/FX/mouserelease1.ogg" id="17_rf4u6"]
@@ -82,7 +83,7 @@ script = ExtResource("7_6462i")
 [node name="TimerManager" type="Node" parent="."]
 script = ExtResource("2_t546b")
 
-[node name="TavernManager" type="Node" parent="." node_paths=PackedStringArray("TimeLabel", "GoldLabel", "PauseButton", "Button1x", "Button2x", "Button4x", "Button8x", "ShopButton", "TavernRenownDisplay", "TavernLevelDisplay", "TavernLevelLabel", "AdventurerListContainer", "TavernFloorPanel", "FloorSlots", "TavernFloorLabel")]
+[node name="TavernManager" type="Node" parent="." node_paths=PackedStringArray("TimeLabel", "GoldLabel", "PauseButton", "Button1x", "Button2x", "Button4x", "Button8x", "ShopButton", "PantryPanel", "TavernRenownDisplay", "TavernLevelDisplay", "TavernLevelLabel", "AdventurerListContainer", "TavernFloorPanel", "FloorSlots", "TavernFloorLabel")]
 script = ExtResource("1_v6xsb")
 TimeLabel = NodePath("../TavernDisplay/ControlPanel/TimeLabel")
 GoldLabel = NodePath("../TavernDisplay/ControlPanel/GoldLabel")
@@ -93,6 +94,7 @@ Button4x = NodePath("../TavernDisplay/ControlPanel/TopBar/Button4x")
 Button8x = NodePath("../TavernDisplay/ControlPanel/TopBar/Button8x")
 ShopButton = NodePath("../TavernDisplay/ControlPanel/ShopButton")
 QuestBoardPath = NodePath("../QuestBoardPanel/ScrollContainer/QuestBoard")
+PantryPanel = NodePath("../PantryControl")
 TavernRenownDisplay = NodePath("../TavernDisplay/TavernRenown/VBoxContainer/TavernRenownDisplay")
 TavernLevelDisplay = NodePath("../TavernDisplay/TavernLevelControl/VBoxContainer/TavernLevelDisplay")
 TavernLevelLabel = NodePath("../TavernDisplay/TavernLevelControl/VBoxContainer/TavernLevelLabel")
@@ -309,39 +311,72 @@ z_index = 3
 layout_mode = 2
 alignment = 1
 
-[node name="FurnitureContainer" type="Control" parent="."]
+[node name="PantryControl" type="Control" parent="." node_paths=PackedStringArray("ItemListContainer", "IngredientListContainer")]
 z_index = 1
 anchors_preset = 0
 offset_left = 1419.0
 offset_top = 211.0
 offset_right = 1829.0
 offset_bottom = 605.0
+script = ExtResource("13_yj0io")
+ItemListContainer = NodePath("ScrollContainer/ItemListContainer")
+IngredientListContainer = NodePath("ScrollContainer2/IngredientListContainer")
 
-[node name="TextureRect" type="TextureRect" parent="FurnitureContainer"]
+[node name="BKG" type="TextureRect" parent="PantryControl"]
+z_index = 2
 layout_mode = 2
 offset_right = 410.0
 offset_bottom = 394.0
 texture = ExtResource("8_3yx2a")
 expand_mode = 1
 
-[node name="FurniturePanel" type="Panel" parent="FurnitureContainer"]
-z_index = 2
-custom_minimum_size = Vector2(25, 25)
-layout_mode = 2
-offset_left = 14.0
-offset_top = 23.0
-offset_right = 395.0
-offset_bottom = 374.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-script = ExtResource("9_wnxq3")
+[node name="ScrollContainer" type="ScrollContainer" parent="PantryControl"]
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 31.0
+offset_top = 28.0
+offset_right = -201.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
 
-[node name="FurnitureVBox" type="VBoxContainer" parent="FurnitureContainer/FurniturePanel"]
-layout_mode = 0
-offset_left = 3.0
-offset_right = 381.0
-offset_bottom = 353.0
-theme_override_constants/separation = 35
+[node name="ItemListContainer" type="VBoxContainer" parent="PantryControl/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="Label" type="Label" parent="PantryControl/ScrollContainer/ItemListContainer"]
+layout_mode = 2
+text = "Test"
+
+[node name="ScrollContainer2" type="ScrollContainer" parent="PantryControl"]
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 226.0
+offset_top = 28.0
+offset_right = -20.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
+
+[node name="IngredientListContainer" type="VBoxContainer" parent="PantryControl/ScrollContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="Label" type="Label" parent="PantryControl/ScrollContainer2/IngredientListContainer"]
+layout_mode = 2
+text = "Test"
 
 [node name="LogControl" type="Control" parent="."]
 layout_mode = 2
@@ -440,6 +475,7 @@ texture = ExtResource("25_yj0io")
 
 [node name="AudioPanelManager" type="Panel" parent="MusicManager" node_paths=PackedStringArray("AudioButton", "AudioPanel", "MusicSlider", "InterfaceSlider")]
 process_mode = 1
+visible = false
 z_index = 2
 offset_left = 1662.0
 offset_top = 506.0
@@ -508,6 +544,41 @@ layout_mode = 2
 process_mode = 1
 bus = &"Music"
 playback_type = 1
+
+[node name="FurnitureContainer" type="Control" parent="."]
+visible = false
+z_index = 1
+anchors_preset = 0
+offset_left = 1419.0
+offset_top = 211.0
+offset_right = 1829.0
+offset_bottom = 605.0
+
+[node name="TextureRect" type="TextureRect" parent="FurnitureContainer"]
+layout_mode = 2
+offset_right = 410.0
+offset_bottom = 394.0
+texture = ExtResource("8_3yx2a")
+expand_mode = 1
+
+[node name="FurniturePanel" type="Panel" parent="FurnitureContainer"]
+z_index = 2
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+offset_left = 14.0
+offset_top = 23.0
+offset_right = 395.0
+offset_bottom = 374.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+script = ExtResource("9_wnxq3")
+
+[node name="FurnitureVBox" type="VBoxContainer" parent="FurnitureContainer/FurniturePanel"]
+layout_mode = 0
+offset_left = 3.0
+offset_right = 381.0
+offset_bottom = 353.0
+theme_override_constants/separation = 35
 
 [connection signal="pressed" from="TavernDisplay/ControlPanel/TopBar/Button1x" to="QuestBoardPanel" method="OnSpeed1xPressed"]
 [connection signal="pressed" from="TavernDisplay/ControlPanel/TopBar/Button2x" to="QuestBoardPanel" method="OnSpeed2xPressed"]

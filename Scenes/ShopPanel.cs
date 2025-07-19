@@ -17,6 +17,9 @@ public partial class ShopPanel : Window
 	[Export] public TextureButton TabUpgrade;
 	[Export] public Texture2D activeTexture;
 	[Export] public Texture2D inactiveTexture;
+	public PantryPanel PantryPanel { get; set; }
+
+
 
 
 
@@ -27,6 +30,9 @@ public partial class ShopPanel : Window
 
 	public override void _Ready()
 	{
+		FoodDrinkDatabase.LoadData();
+		ShopDatabase.RefreshSupplyItems();
+
 		TabTables.Pressed += () => SwitchCategory(ShopCategory.Tables);
 		TabDecorations.Pressed += () => SwitchCategory(ShopCategory.Decorations);
 		TabSupplies.Pressed += () => SwitchCategory(ShopCategory.Supplies);
@@ -64,6 +70,8 @@ public partial class ShopPanel : Window
 
 	private void RefreshShop()
 {
+	ShopDatabase.RefreshSupplyItems();
+
 	foreach (var child in ItemListContainer.GetChildren())
 		child.QueueFree();
 
@@ -222,9 +230,34 @@ public partial class ShopPanel : Window
 			for (int i = 0; i < entry.Value; i++)
 			{
 				if (item.Category == ShopCategory.Upgrades)
-	UpgradeManager.Instance.ApplyUpgrade(item);
-else
-	TavernManager.Instance.PurchaseItem(item);
+				{
+					UpgradeManager.Instance.ApplyUpgrade(item);
+				}
+				else if (item.Category == ShopCategory.Supplies)
+				{
+					// Supplies: Add 10 of the correct food/drink to pantry
+					var nameOnly = item.Name.Replace(" x10", "");
+					var food = FoodDrinkDatabase.AllFood.FirstOrDefault(f => f.Name == nameOnly);
+					if (food != null)
+					{
+						PlayerPantry.AddSupply(food.Id, 10);
+						PantryPanel?.RefreshPantry();
+
+					}
+					else
+					{
+						var drink = FoodDrinkDatabase.AllDrinks.FirstOrDefault(d => d.Name == nameOnly);
+						if (drink != null)
+						{
+							PlayerPantry.AddSupply(drink.Id, 10);
+							PantryPanel?.RefreshPantry();
+						}
+					}
+				}
+				else
+				{
+					TavernManager.Instance.PurchaseItem(item);
+				}
 
 				item.PurchasedQuantity++;
 			}
@@ -240,6 +273,8 @@ else
 		GameLog.Info("❌ Not enough gold!");
 	}
 }
+
+
 
 
 }
