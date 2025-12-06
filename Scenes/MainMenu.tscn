@@ -44,15 +44,29 @@ grow_horizontal = 2
 grow_vertical = 0
 alignment = 1
 
-[node name="NewGame" type="Button" parent="VBoxContainer"]
+[node name="NewGame" type="TextureButton" parent="VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 4
-text = "New Game"
+size_flags_horizontal = 3
+texture_normal = ExtResource("3_8um5k")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="VBoxContainer/NewGame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "New"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="LoadGame" type="TextureButton" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-texture_normal = ExtResource("3_8um5k")
+texture_normal = ExtResource("4_xim88")
 texture_pressed = ExtResource("4_xim88")
 ignore_texture_size = true
 stretch_mode = 0
@@ -74,7 +88,7 @@ vertical_alignment = 1
 [node name="Settings" type="TextureButton" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-texture_normal = ExtResource("3_8um5k")
+texture_normal = ExtResource("4_xim88")
 texture_pressed = ExtResource("4_xim88")
 ignore_texture_size = true
 stretch_mode = 0
@@ -93,10 +107,24 @@ text = "Settings"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Exit" type="Button" parent="VBoxContainer"]
+[node name="Exit" type="TextureButton" parent="VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 4
+size_flags_horizontal = 3
+texture_normal = ExtResource("3_8um5k")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="VBoxContainer/Exit"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Exit"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="DebugToggle" type="CheckBox" parent="."]
 layout_mode = 0

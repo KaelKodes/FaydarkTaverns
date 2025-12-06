@@ -4,152 +4,156 @@ using FaydarkTaverns.Objects;
 
 public partial class GuestCard : Panel
 {
+	// ============================================================
+	//  EXPORTED / BOUND DATA
+	// ============================================================
 	[Export] public PackedScene NPCDetailPopupScene;
 
 	public Guest BoundGuest { get; set; }
 	public NPCData BoundNPC { get; set; }
 
+	// Bubble nodes
 	private TextureButton HungryBubble;
 	private TextureButton ThirstyBubble;
+
+	// Feed signals
 	public event Action<GuestCard> ServeFoodRequested;
 	public event Action<GuestCard> ServeDrinkRequested;
 
 	private ColorRect background;
 
-
-	// Mouse 
+	// ============================================================
+	//  DRAGGING / POPUP
+	// ============================================================
 	private static GuestCard _currentlyDraggedCard = null;
 	private NPCDetailPopup _currentPopup;
 
 	public static bool IsDraggingAdventurer() => _currentlyDraggedCard != null;
 	public static GuestCard GetCurrentlyDraggedCard() => _currentlyDraggedCard;
+
 	private Vector2 _clickStartPos;
-	private bool    _didDrag;
+	private bool _didDrag;
 	private const float DragThreshold = 10f;
 
 
-	
-
+	// ============================================================
+	//  READY — Initialize visuals & interactions
+	// ============================================================
 	public override void _Ready()
-{
-	background = GetNodeOrNull<ColorRect>("Background");
-	SetMouseFilter(MouseFilterEnum.Stop);
-
-	// Role-based background color
-	if (BoundNPC != null)
 	{
-		if (BoundNPC.Role == NPCRole.Adventurer)
-			SetDefaultColor();
-		else if (BoundNPC.Role == NPCRole.QuestGiver)
-			SetBackgroundColor(new Color(0.5f, 0.5f, 0.5f));
-		else
-			SetBackgroundColor(new Color(0.4f, 0.4f, 0.4f));
+		background = GetNodeOrNull<ColorRect>("Background");
+		SetMouseFilter(MouseFilterEnum.Stop);
+
+		InitializeBackgroundColor();
+		SetCardLabels();
+		InitializeKickButton();
+		InitializeBubbles();
+		InitializePortrait();
+		InitializeMouseFeedback();
+
+		GuiInput += OnGuiInput;
 	}
 
-	SetCardLabels();
-
-	// Setup Kick Button
-	var removeButton = GetNode<Button>("KickButton");
-	removeButton.Text = "❌";
-	removeButton.FocusMode = Control.FocusModeEnum.None;
-	removeButton.Pressed += OnRemovePressed;
-
-	var transparentStyle = new StyleBoxFlat { BgColor = new Color(0, 0, 0, 0) };
-	removeButton.AddThemeStyleboxOverride("normal", transparentStyle);
-	removeButton.AddThemeStyleboxOverride("hover", transparentStyle);
-	removeButton.AddThemeStyleboxOverride("pressed", transparentStyle);
-
-	removeButton.MouseEntered += () => removeButton.Text = "🥾";
-	removeButton.MouseExited += () => removeButton.Text = "❌";
-
-	// ✅ Setup Hunger/Thirst Bubbles (safe + null-checked)
-	HungryBubble = GetNodeOrNull<TextureButton>("BubbleControl/HungryBubble");
-	ThirstyBubble = GetNodeOrNull<TextureButton>("BubbleControl/ThirstyBubble");
-
-	if (HungryBubble != null)
+	private void InitializeBackgroundColor()
 	{
-		HungryBubble.Pressed += OnHungryBubblePressed;
-		HungryBubble.Visible = false;
-	}
-	else
-	{
-		GD.PrintErr("❌ HungryBubble not found in GuestCard!");
+		if (BoundNPC == null)
+			return;
+
+		switch (BoundNPC.Role)
+		{
+			case NPCRole.Adventurer:
+				SetDefaultColor();
+				break;
+
+			case NPCRole.QuestGiver:
+				SetBackgroundColor(new Color(0.5f, 0.5f, 0.5f));
+				break;
+
+			default:
+				SetBackgroundColor(new Color(0.4f, 0.4f, 0.4f));
+				break;
+		}
 	}
 
-	if (ThirstyBubble != null)
+	private void InitializeKickButton()
 	{
-		ThirstyBubble.Pressed += OnThirstyBubblePressed;
-		ThirstyBubble.Visible = false;
-	}
-	else
-	{
-		GD.PrintErr("❌ ThirstyBubble not found in GuestCard!");
+		var button = GetNode<Button>("KickButton");
+
+		button.Text = "❌";
+		button.FocusMode = Control.FocusModeEnum.None;
+
+		button.Pressed += OnRemovePressed;
+
+		var transparent = new StyleBoxFlat { BgColor = new Color(0, 0, 0, 0) };
+		button.AddThemeStyleboxOverride("normal", transparent);
+		button.AddThemeStyleboxOverride("hover", transparent);
+		button.AddThemeStyleboxOverride("pressed", transparent);
+
+		// Button emoji feedback
+		button.MouseEntered += () => button.Text = "🥾";
+		button.MouseExited += () => button.Text = "❌";
 	}
 
-	// Portrait logic
-	var portrait = GetNodeOrNull<TextureRect>("MarginContainer/Portrait");
-	if (portrait != null)
+	private void InitializeBubbles()
 	{
+		HungryBubble  = GetNodeOrNull<TextureButton>("BubbleControl/HungryBubble");
+		ThirstyBubble = GetNodeOrNull<TextureButton>("BubbleControl/ThirstyBubble");
+
+		if (HungryBubble != null)
+		{
+			HungryBubble.Pressed += OnHungryBubblePressed;
+			HungryBubble.Visible = false;
+		}
+
+		if (ThirstyBubble != null)
+		{
+			ThirstyBubble.Pressed += OnThirstyBubblePressed;
+			ThirstyBubble.Visible = false;
+		}
+	}
+
+	private void InitializePortrait()
+	{
+		var portrait = GetNodeOrNull<TextureRect>("MarginContainer/Portrait");
+		if (portrait == null || BoundNPC == null)
+			return;
+
 		portrait.Position += new Vector2(25, 0);
 
 		Gender gender = BoundGuest?.Gender ?? Gender.Male;
-		string className = BoundNPC?.ClassName ?? "Informant";
-		int portraitId = BoundNPC?.PortraitId ?? 1;
+		string className = BoundNPC.ClassName ?? "Informant";
+		int portraitId = BoundNPC.PortraitId;
 
 		string initial = gender == Gender.Male ? "M" : "F";
-		string assetPath = $"res://Assets/UI/ClassPortraits/{className}/{className}{initial}{portraitId}.jpg";
-		portrait.Texture = ResourceLoader.Load<Texture2D>(assetPath);
+		string path = $"res://Assets/UI/ClassPortraits/{className}/{className}{initial}{portraitId}.jpg";
+
+		portrait.Texture = ResourceLoader.Load<Texture2D>(path);
 	}
 
-	// Mouse/hover/click feedback
-	MouseEntered += () =>
+	private void InitializeMouseFeedback()
 	{
-		if (!IsDraggingAdventurer())
+		MouseEntered += () =>
 		{
-			UIAudio.Instance.PlayHover();
-			UICursor.Instance.SetPoint();
-		}
-	};
+			if (!IsDraggingAdventurer())
+			{
+				UIAudio.Instance.PlayHover();
+				UICursor.Instance.SetPoint();
+			}
+		};
 
-	MouseExited += () =>
-	{
-		if (!IsDraggingAdventurer())
-			UICursor.Instance.SetIdle();
-	};
-
-	FocusEntered += () => UIAudio.Instance.PlayHover();
-
-	GuiInput += OnGuiInput;
-
-}
-
-
-	private void OnRemovePressed()
-	{
-		if (BoundGuest == null)
-			return;
-
-		if (BoundGuest.AssignedTable != null)
+		MouseExited += () =>
 		{
-			BoundGuest.AssignedTable.RemoveGuest(BoundGuest);
-			BoundGuest.AssignedTable = null;
-			BoundGuest.SeatIndex = null;
-		}
+			if (!IsDraggingAdventurer())
+				UICursor.Instance.SetIdle();
+		};
 
-		if (TavernManager.Instance.GetGuestsInside().Contains(BoundGuest))
-		{
-			TavernManager.Instance.OnGuestRemoved(BoundGuest);
-		}
-
-		GuestManager.QueueGuest(BoundGuest);
-		GameLog.Info($"🚶 {BoundGuest.Name} left to rejoin the queue.");
-
-		UICursor.Instance.SetIdle();
-		TavernManager.Instance.DisplayAdventurers();
-		TavernManager.Instance.UpdateFloorLabel();
-		QueueFree();
+		FocusEntered += () => UIAudio.Instance.PlayHover();
 	}
 
+
+	// ============================================================
+	//  GENERAL UI SUPPORT
+	// ============================================================
 	public void SetBackgroundColor(Color color)
 	{
 		if (background != null)
@@ -161,28 +165,29 @@ public partial class GuestCard : Panel
 		SetBackgroundColor(new Color(0.3f, 0.4f, 0.6f));
 	}
 
-	public override void _GuiInput(InputEvent @event)
+	public void SetCardLabels()
 	{
-		if (@event is InputEventMouseButton mouseEvent)
+		var nameLabel  = GetNode<Label>("VBoxContainer/NameLabel");
+		var classLabel = GetNode<Label>("VBoxContainer/ClassLabel");
+
+		if (BoundNPC != null)
 		{
-			if (!mouseEvent.Pressed)
-			{
-				_currentlyDraggedCard = null;
-				UICursor.Instance.SetIdle();
-			}
-			else if (mouseEvent.ButtonIndex == MouseButton.Left && mouseEvent.Pressed)
-			{
-				GetViewport().SetInputAsHandled();
-			}
+			var lastInitial = string.IsNullOrEmpty(BoundNPC.LastName) ? "" : $"{BoundNPC.LastName[0]}.";
+			nameLabel.Text  = $"{BoundNPC.FirstName} {lastInitial}";
+			classLabel.Text = $"{BoundNPC.Level} {BoundNPC.ClassName}";
 		}
 	}
 
+
+	// ============================================================
+	//  EMPTY SLOT MODE
+	// ============================================================
 	public void SetEmptySlot()
 	{
 		GetNode<Control>("VBoxContainer").Visible = false;
 
-		var background = GetNode<ColorRect>("Background");
-		background.Color = new Color(0f, 0f, 0f, 0.3f);
+		var bg = GetNode<ColorRect>("Background");
+		bg.Color = new Color(0f, 0f, 0f, 0.3f);
 
 		var portrait = GetNode<TextureRect>("MarginContainer/Portrait");
 		portrait.Texture = null;
@@ -191,28 +196,29 @@ public partial class GuestCard : Panel
 		GetNode<Button>("KickButton").Visible = false;
 	}
 
+
+	// ============================================================
+	//  DRAG & DROP SUPPORT
+	// ============================================================
 	public override Variant _GetDragData(Vector2 atPosition)
-{
-	// Only allow dragging if this card is an Adventurer
-	if (BoundNPC == null || BoundNPC.Role != NPCRole.Adventurer)
-		return new Variant(); 
-
-	// ── Existing drag logic ──
-	_currentlyDraggedCard = this;
-	UICursor.Instance.SetGrab();
-
-	var preview = new Label
 	{
-		Text                = BoundNPC.Name,
-		Modulate            = new Color(1,1,1,0.9f),
-		SizeFlagsHorizontal = SizeFlags.ExpandFill,
-		HorizontalAlignment = HorizontalAlignment.Center
-	};
+		if (BoundNPC == null || BoundNPC.Role != NPCRole.Adventurer)
+			return new Variant();
 
-	SetDragPreview(preview);
-	return this;
-}
+		_currentlyDraggedCard = this;
+		UICursor.Instance.SetGrab();
 
+		var preview = new Label
+		{
+			Text = BoundNPC.Name,
+			Modulate = new Color(1,1,1,0.9f),
+			SizeFlagsHorizontal = SizeFlags.ExpandFill,
+			HorizontalAlignment = HorizontalAlignment.Center
+		};
+
+		SetDragPreview(preview);
+		return this;
+	}
 
 	public override void _DropData(Vector2 atPosition, Variant data)
 	{
@@ -220,21 +226,36 @@ public partial class GuestCard : Panel
 		UICursor.Instance.SetIdle();
 		base._DropData(atPosition, data);
 	}
-	
-	public void SetCardLabels()
-{
-	var nameLabel = GetNode<Label>("VBoxContainer/NameLabel");
-	var classLabel = GetNode<Label>("VBoxContainer/ClassLabel");
 
-	if (BoundNPC != null)
+	public override void _GuiInput(InputEvent @event)
 	{
-		var lastInitial = string.IsNullOrEmpty(BoundNPC.LastName) ? "" : $"{BoundNPC.LastName[0]}.";
-		nameLabel.Text = $"{BoundNPC.FirstName} {lastInitial}";
-		classLabel.Text = $"{BoundNPC.Level} {BoundNPC.ClassName}";
+		if (@event is InputEventMouseButton mb)
+		{
+			if (!mb.Pressed)
+			{
+				_currentlyDraggedCard = null;
+				UICursor.Instance.SetIdle();
+			}
+			else if (mb.ButtonIndex == MouseButton.Left)
+			{
+				GetViewport().SetInputAsHandled();
+			}
+		}
+		else if (@event is InputEventMouseMotion mm)
+		{
+			if (mm.ButtonMask.HasFlag(MouseButtonMask.Left) &&
+				!_didDrag &&
+				mm.Position.DistanceTo(_clickStartPos) > DragThreshold)
+			{
+				_didDrag = true;
+			}
+		}
 	}
-}
 
 
+	// ============================================================
+	//  CARD FACTORY
+	// ============================================================
 	public static GuestCard CreateCardFor(Guest guest)
 	{
 		var card = GD.Load<PackedScene>("res://Scenes/UI/GuestCard.tscn").Instantiate<GuestCard>();
@@ -243,122 +264,172 @@ public partial class GuestCard : Panel
 		card.BoundNPC = guest.BoundNPC;
 		card.SetMouseFilter(Control.MouseFilterEnum.Stop);
 
-		var nameLabel = card.GetNode<Label>("VBoxContainer/NameLabel");
-		var classLabel = card.GetNode<Label>("VBoxContainer/ClassLabel");
+		card.SetCardLabels();
 
-		if (card.BoundNPC != null)
-		{
-			var lastInitial = string.IsNullOrEmpty(card.BoundNPC.LastName) ? "" : $"{card.BoundNPC.LastName[0]}.";
-			nameLabel.Text = $"{card.BoundNPC.FirstName} {lastInitial}";
-			classLabel.Text = $"{card.BoundNPC.Level} {card.BoundNPC.ClassName}";
-			GameLog.Debug($"🧪 Card Name: {card.BoundNPC.FirstName} {card.BoundNPC.LastName}");
-
-		}
-		else
-		{
+		if (card.BoundNPC == null)
 			card.SetEmptySlot();
-		}
 
+		// Hook into FeedMenu
+		FeedMenu.Instance?.ConnectGuestCard(card);
 		return card;
 	}
 
-// Hunger Display
-public void UpdateBubbleDisplay()
-{
-	if (BoundNPC == null)
-		return;
 
-	GameLog.Debug($"🧪 {BoundNPC.FirstName} UpdateBubbleDisplay → Hungry={BoundNPC.IsHungry}, Thirsty={BoundNPC.IsThirsty}");
-
-	if (HungryBubble == null)
-		GD.PrintErr("❌ HungryBubble node is null.");
-	if (ThirstyBubble == null)
-		GD.PrintErr("❌ ThirstyBubble node is null.");
-
-	// Use enum state instead of seating boolean
-	bool isSeated = BoundGuest?.CurrentState == NPCState.Seats;
-
-	// Show food bubble only if seated
-	if (HungryBubble != null)
-		HungryBubble.Visible = BoundNPC.IsHungry && isSeated;
-
-	// Show drink bubble always if thirsty
-	if (ThirstyBubble != null)
-		ThirstyBubble.Visible = BoundNPC.IsThirsty;
-}
-
-
-
-
-
-private void OnHungryBubblePressed()
-{
-	ServeFoodRequested?.Invoke(this);
-	HungryBubble.Visible = false;
-}
-
-private void OnThirstyBubblePressed()
-{
-	ServeDrinkRequested?.Invoke(this);
-	ThirstyBubble.Visible = false;
-}
-
- private void ToggleNpcDetails()
-{
-	// If it’s already open, close it
-	if (_currentPopup != null && _currentPopup.IsInsideTree())
+	// ============================================================
+	//  REQUEST BUBBLE LOGIC
+	// ============================================================
+	public void ShowRequestBubble(bool visible)
 	{
-		_currentPopup.QueueFree();
-		_currentPopup = null;
-		return;
+		if (BoundNPC == null)
+			return;
+
+		if (HungryBubble != null)
+			HungryBubble.Visible = visible && BoundNPC.IsHungry;
+
+		if (ThirstyBubble != null)
+			ThirstyBubble.Visible = visible && BoundNPC.IsThirsty;
 	}
 
-	// Otherwise, instantiate and show
-	if (BoundNPC == null || NPCDetailPopupScene == null)
-		return;
+	public void UpdateBubbleDisplay()
+	{
+		if (BoundNPC == null)
+			return;
 
-	_currentPopup = NPCDetailPopupScene.Instantiate<NPCDetailPopup>();
-	GetTree().Root.AddChild(_currentPopup);
-	_currentPopup.SetNPC(BoundNPC);
-	_currentPopup.Show();
-}
+		bool isSeated = BoundGuest?.CurrentState == NPCState.Seats;
 
-	
+		if (HungryBubble != null)
+			HungryBubble.Visible = BoundNPC.IsHungry && isSeated;
+
+		if (ThirstyBubble != null)
+			ThirstyBubble.Visible = BoundNPC.IsThirsty;
+	}
+
+	private void OnHungryBubblePressed()
+	{
+		ServeFoodRequested?.Invoke(this);
+		HungryBubble.Visible = false;
+	}
+
+	private void OnThirstyBubblePressed()
+	{
+		ServeDrinkRequested?.Invoke(this);
+		ThirstyBubble.Visible = false;
+	}
+
+
+	// ============================================================
+	//  REACTION DISPLAY
+	// ============================================================
+	public void ShowReaction(ConsumptionReaction reaction)
+	{
+		GD.Print($"Guest {BoundNPC?.Name} reaction: {reaction}");
+
+		switch (reaction)
+		{
+			case ConsumptionReaction.Loved:
+				ShowFloatingEmote("❤️ Loved it!");
+				break;
+			case ConsumptionReaction.Liked:
+				ShowFloatingEmote("🙂 Liked it.");
+				break;
+			case ConsumptionReaction.Neutral:
+				ShowFloatingEmote("😐 Neutral.");
+				break;
+			case ConsumptionReaction.Disliked:
+				ShowFloatingEmote("💀 Disliked it.");
+				break;
+		}
+	}
+
+	private void ShowFloatingEmote(string text)
+	{
+		GD.Print($"[EMOTE] {text}");
+	}
+
+
+	// ============================================================
+	//  REMOVE GUEST
+	// ============================================================
+	private void OnRemovePressed()
+	{
+		if (BoundGuest == null)
+			return;
+
+		// Remove from table
+		if (BoundGuest.AssignedTable != null)
+		{
+			BoundGuest.AssignedTable.RemoveGuest(BoundGuest);
+			BoundGuest.AssignedTable = null;
+			BoundGuest.SeatIndex = null;
+		}
+
+		// Remove from tavern
+		if (TavernManager.Instance.GetGuestsInside().Contains(BoundGuest))
+			TavernManager.Instance.OnGuestRemoved(BoundGuest);
+
+		GuestManager.QueueGuest(BoundGuest);
+		GameLog.Info($"🚶 {BoundGuest.Name} left to rejoin the queue.");
+
+		UICursor.Instance.SetIdle();
+		TavernManager.Instance.DisplayAdventurers();
+		TavernManager.Instance.UpdateFloorLabel();
+
+		QueueFree();
+	}
+
+
+	// ============================================================
+	//  POPUP (NPC DETAILS)
+	// ============================================================
+	private void ToggleNpcDetails()
+	{
+		if (_currentPopup != null && _currentPopup.IsInsideTree())
+		{
+			_currentPopup.QueueFree();
+			_currentPopup = null;
+			return;
+		}
+
+		if (BoundNPC == null || NPCDetailPopupScene == null)
+			return;
+
+		_currentPopup = NPCDetailPopupScene.Instantiate<NPCDetailPopup>();
+		GetTree().Root.AddChild(_currentPopup);
+		_currentPopup.SetNPC(BoundNPC);
+		_currentPopup.Show();
+	}
+
 	private void OnGuiInput(InputEvent @event)
 {
-	if (@event is InputEventMouseButton mb && mb.ButtonIndex == MouseButton.Left)
+	if (@event is InputEventMouseButton e && e.ButtonIndex == MouseButton.Left)
 	{
-		if (mb.Pressed)
+		if (e.Pressed)
 		{
 			UIAudio.Instance.PlayClick();
 			_didDrag = false;
-			_clickStartPos = mb.Position;
+			_clickStartPos = e.Position;
 		}
 		else
 		{
 			// on release: only open popup if no drag happened
 			if (!_didDrag)
 				ToggleNpcDetails();
+
 			_didDrag = false;
 		}
+
 		GetViewport().SetInputAsHandled();
 	}
 	else if (@event is InputEventMouseMotion mm)
-{
-	// while left is held, if moved enough, mark as drag
-	if (mm.ButtonMask.HasFlag(MouseButtonMask.Left) &&
-		!_didDrag &&
-		mm.Position.DistanceTo(_clickStartPos) > DragThreshold)
 	{
-		_didDrag = true;
+		// while left is held, if moved enough, mark as drag
+		if (mm.ButtonMask.HasFlag(MouseButtonMask.Left) &&
+			!_didDrag &&
+			mm.Position.DistanceTo(_clickStartPos) > DragThreshold)
+		{
+			_didDrag = true;
+		}
 	}
 }
-
-}
-
-
-
-
-
 
 }

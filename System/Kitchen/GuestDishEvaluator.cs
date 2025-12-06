@@ -19,7 +19,7 @@ public static class GuestDishEvaluator
 		float maxAcceptable = TavernEconomy.GetGuestMaxPrice(
 			baseCost,
 			renownFactor: 0f,
-			loyaltyFactor: guest.LoyaltyRating * 0.25f,
+			loyaltyFactor: (guest.LoyaltyRating / 100f) * 0.25f,
 			flavorMatchBonus: flavorBonus,
 			rarityFactor: 0f
 		) + (penalty * baseCost);

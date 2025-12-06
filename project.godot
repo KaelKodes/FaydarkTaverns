@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Faydark: Taverns"
 run/main_scene="uid://cnbv0kpjf2kmk"
-config/features=PackedStringArray("4.4", "C#", "Forward Plus")
+config/features=PackedStringArray("4.5", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [audio]
@@ -26,7 +26,6 @@ GuestManager="*res://System/GuestManager.cs"
 UIAudio="*res://System/Sound/UIAudio.cs"
 TavernStats="*res://System/TavernStats.cs"
 UpgradeManager="*res://System/UpgradeManager.cs"
-PlayerPantry="*res://System/Kitchen/PlayerPantry.cs"
 CookbookManager="*res://System/Kitchen/CookbookManager.cs"
 
 [display]

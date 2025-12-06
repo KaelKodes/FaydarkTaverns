@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public partial class TimerManager : Node
 {
@@ -9,23 +10,36 @@ public partial class TimerManager : Node
 	private List<ScheduledEvent> eventQueue = new();
 
 	public override void _Ready()
-{
-	if (Instance != null)
 	{
-		GD.PrintErr("❌ Duplicate TimerManager instance!");
-		QueueFree();
-		return;
+		if (Instance != null)
+		{
+			GD.PrintErr("❌ Duplicate TimerManager instance!");
+			QueueFree();
+			return;
+		}
+
+		Instance = this;
+
+		var clock = GetNode<ClockManager>("/root/ClockManager");
+		clock.OnTimeAdvanced += CheckEvents;
 	}
 
-	Instance = this;
+	// ★ CORRECT PLACE FOR WaitSeconds ★
+	public static async Task WaitSeconds(double seconds)
+	{
+		var sceneTree = Engine.GetMainLoop() as SceneTree;
 
-	// ✅ Cast the ClockManager autoload properly
-	var clock = GetNode<ClockManager>("/root/ClockManager");
-	clock.OnTimeAdvanced += CheckEvents;
-}
+		if (sceneTree == null)
+		{
+			GD.PrintErr("TimerManager.WaitSeconds: SceneTree unavailable!");
+			return;
+		}
 
+		var timer = sceneTree.CreateTimer(seconds);
+		await timer.ToSignal(timer, Timer.SignalName.Timeout);
+	}
 
-
+	// Scheduling system (unchanged)
 	public void ScheduleEvent(DateTime triggerTime, Action callback)
 	{
 		eventQueue.Add(new ScheduledEvent(triggerTime, callback));
@@ -41,7 +55,7 @@ public partial class TimerManager : Node
 			if (evt.TriggerTime <= currentTime)
 				toFire.Add(evt);
 			else
-				break; // list is sorted, so stop here
+				break;
 		}
 
 		foreach (var evt in toFire)

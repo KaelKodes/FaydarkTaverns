@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://bp53yv3ypaa5j"]
+[gd_scene load_steps=42 format=3 uid="uid://bp53yv3ypaa5j"]
 
 [ext_resource type="Script" uid="uid://hacx1tuggxkp" path="res://Scenes/QuestBoardPanel.cs" id="1_7ljul"]
 [ext_resource type="Texture2D" uid="uid://c4yn8u5hh50nr" path="res://Assets/UI/Bkg/TavernBKGEmpty.png" id="1_e0xf5"]
@@ -28,12 +28,53 @@
 [ext_resource type="Texture2D" uid="uid://hjhwiuyh0eoo" path="res://Assets/UI/Buttons/InactiveTab.png" id="24_e0xf5"]
 [ext_resource type="Texture2D" uid="uid://ck07m4ymrsgus" path="res://Assets/UI/Buttons/Audio.png" id="25_yj0io"]
 [ext_resource type="Script" uid="uid://cy12bvwpnd4qw" path="res://Scenes/MusicManager.cs" id="27_e0xf5"]
+[ext_resource type="Script" uid="uid://coqlsgkc7oc21" path="res://System/Quests/QuestJournalUnlockController.cs" id="29_vlkay"]
+[ext_resource type="Texture2D" uid="uid://q4sadsktlrrk" path="res://Assets/UI/Buttons/QuestLog.png" id="30_a4f71"]
+[ext_resource type="Texture2D" uid="uid://dwu6b0hytl2jx" path="res://Assets/UI/FX/burst.png" id="30_u8d0f"]
+[ext_resource type="PackedScene" uid="uid://dbl2xruqo3b45" path="res://Scenes/Quest/QuestJournal.tscn" id="30_xdfn1"]
+[ext_resource type="PackedScene" uid="uid://c5vdtaboy0ony" path="res://Scenes/Kitchen/FeedMenu.tscn" id="33_xdfn1"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_esg4o"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3yx2a"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_slrnj"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xdfn1"]
+atlas = ExtResource("30_u8d0f")
+region = Rect2(0, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m23cf"]
+atlas = ExtResource("30_u8d0f")
+region = Rect2(512, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_psdsr"]
+atlas = ExtResource("30_u8d0f")
+region = Rect2(0, 512, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oyk85"]
+atlas = ExtResource("30_u8d0f")
+region = Rect2(512, 512, 512, 512)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_gj511"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xdfn1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m23cf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_psdsr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oyk85")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
 
 [node name="TavernMain" type="Control"]
 layout_mode = 3
@@ -61,7 +102,7 @@ texture = ExtResource("1_e0xf5")
 [node name="TavernFloorLabel" type="Label" parent="."]
 z_index = 5
 custom_minimum_size = Vector2(30, 0)
-layout_mode = 2
+layout_mode = 0
 offset_left = 277.0
 offset_top = 44.0
 offset_right = 307.0
@@ -70,7 +111,7 @@ size_flags_vertical = 0
 horizontal_alignment = 1
 
 [node name="QuestCapacity" type="Label" parent="."]
-layout_mode = 2
+layout_mode = 0
 offset_left = 64.0
 offset_top = 43.0
 offset_right = 188.0
@@ -114,7 +155,7 @@ offset_right = 1869.0
 offset_bottom = 182.0
 
 [node name="TextureRect" type="TextureRect" parent="TavernDisplay"]
-layout_mode = 2
+layout_mode = 0
 offset_left = -5.0
 offset_top = -4.0
 offset_right = 503.0
@@ -240,7 +281,7 @@ text = "0"
 horizontal_alignment = 1
 
 [node name="AdventurerRosterPanel" type="PanelContainer" parent="."]
-layout_mode = 2
+layout_mode = 0
 offset_left = 252.0
 offset_top = 72.0
 offset_right = 252.0
@@ -267,7 +308,7 @@ theme_override_constants/separation = 108
 
 [node name="QuestBoardPanel" type="PanelContainer" parent="."]
 custom_minimum_size = Vector2(150, 0)
-layout_mode = 2
+layout_mode = 0
 offset_left = 25.0
 offset_top = 72.0
 offset_right = 114.0
@@ -324,7 +365,7 @@ IngredientListContainer = NodePath("ScrollContainer2/IngredientListContainer")
 
 [node name="BKG" type="TextureRect" parent="PantryControl"]
 z_index = 2
-layout_mode = 2
+layout_mode = 0
 offset_right = 410.0
 offset_bottom = 394.0
 texture = ExtResource("8_3yx2a")
@@ -379,7 +420,6 @@ layout_mode = 2
 text = "Test"
 
 [node name="LogControl" type="Control" parent="."]
-layout_mode = 2
 anchors_preset = 0
 offset_left = 1369.0
 offset_top = 622.0
@@ -555,7 +595,7 @@ offset_right = 1829.0
 offset_bottom = 605.0
 
 [node name="TextureRect" type="TextureRect" parent="FurnitureContainer"]
-layout_mode = 2
+layout_mode = 0
 offset_right = 410.0
 offset_bottom = 394.0
 texture = ExtResource("8_3yx2a")
@@ -564,7 +604,7 @@ expand_mode = 1
 [node name="FurniturePanel" type="Panel" parent="FurnitureContainer"]
 z_index = 2
 custom_minimum_size = Vector2(25, 25)
-layout_mode = 2
+layout_mode = 0
 offset_left = 14.0
 offset_top = 23.0
 offset_right = 395.0
@@ -579,6 +619,52 @@ offset_left = 3.0
 offset_right = 381.0
 offset_bottom = 353.0
 theme_override_constants/separation = 35
+
+[node name="QuestJournalAnchor" type="Control" parent="." node_paths=PackedStringArray("QuestJournalButton", "QuestJournalFX", "SparkleBurst", "ShineSweep")]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("29_vlkay")
+QuestJournalButton = NodePath("QuestJournalButton")
+QuestJournalFX = NodePath("QuestJournalFX")
+SparkleBurst = NodePath("QuestJournalFX/SparkleBurst")
+ShineSweep = NodePath("QuestJournalFX/ShineSweep")
+QuestJournalScene = ExtResource("30_xdfn1")
+
+[node name="QuestJournalFX" type="Control" parent="QuestJournalAnchor"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="SparkleBurst" type="AnimatedSprite2D" parent="QuestJournalAnchor/QuestJournalFX"]
+visible = false
+z_index = 1
+position = Vector2(82, 865)
+scale = Vector2(0.45, 0.45)
+sprite_frames = SubResource("SpriteFrames_gj511")
+frame = 2
+frame_progress = 0.5589632
+speed_scale = 0.5
+
+[node name="ShineSweep" type="ColorRect" parent="QuestJournalAnchor/QuestJournalFX"]
+visible = false
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="QuestJournalButton" type="TextureButton" parent="QuestJournalAnchor"]
+layout_mode = 0
+offset_left = 17.0
+offset_top = 833.0
+offset_right = 442.0
+offset_bottom = 1258.0
+rotation = -0.13788101
+scale = Vector2(0.25, 0.25)
+texture_normal = ExtResource("30_a4f71")
+stretch_mode = 0
+
+[node name="FeedMenu" parent="." instance=ExtResource("33_xdfn1")]
+layout_mode = 1
 
 [connection signal="pressed" from="TavernDisplay/ControlPanel/TopBar/Button1x" to="QuestBoardPanel" method="OnSpeed1xPressed"]
 [connection signal="pressed" from="TavernDisplay/ControlPanel/TopBar/Button2x" to="QuestBoardPanel" method="OnSpeed2xPressed"]

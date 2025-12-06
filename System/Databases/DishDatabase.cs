@@ -11,7 +11,7 @@ public static class DishDatabase
 		Dishes.Clear();
 		foreach (var food in FoodDrinkDatabase.AllFood)
 		{
-			Dishes.Add(new Dish(food.Id, food.Ingredients, food.FlavorProfiles));
+			Dishes.Add(new Dish(food.Name, food.Ingredients, food.FlavorProfiles));
 		}
 	}
 

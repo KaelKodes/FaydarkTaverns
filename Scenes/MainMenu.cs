@@ -10,9 +10,9 @@ public partial class MainMenu : Control
 
 	public override void _Ready()
 	{
-		// 🎮 Core buttons
-		GetNode<Button>("VBoxContainer/NewGame").Pressed += OnNewGamePressed;
-		GetNode<Button>("VBoxContainer/Exit").Pressed += OnExitPressed;
+		// 🎮 Core buttons (now using TextureButton)
+		GetNode<TextureButton>("VBoxContainer/NewGame").Pressed += OnNewGamePressed;
+		GetNode<TextureButton>("VBoxContainer/Exit").Pressed += OnExitPressed;
 
 		// 🐞 Debug toggle
 		DebugToggle = GetNode<CheckBox>("DebugToggle");

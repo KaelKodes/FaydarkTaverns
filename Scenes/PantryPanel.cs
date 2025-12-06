@@ -10,9 +10,13 @@ public partial class PantryPanel : Control
 	public VBoxContainer IngredientListContainer;   // Ingredients container
 
 	public override void _Ready()
-	{
-		RefreshPantry();
-	}
+{
+	// Listen to pantry supply updates
+	PlayerPantry.SuppliesChanged += RefreshPantry;
+
+	RefreshPantry();
+}
+
 
 	public void RefreshPantry()
 	{

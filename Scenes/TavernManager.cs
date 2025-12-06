@@ -47,6 +47,7 @@ public partial class TavernManager : Node
 	public static int TavernLevel { get; private set; } = 1;
 	public static int TavernExp { get; private set; } = 0;
 	public static int ExpToNextLevel => TavernLevel * 10;
+	public static FeedMenu FeedMenuInstance;
 
 
 	public static int Gold => currentGold;
@@ -117,6 +118,8 @@ public partial class TavernManager : Node
 		TavernLevelDisplay = GetNode<Label>("../TavernDisplay/TavernLevelControl/VBoxContainer/TavernLevelDisplay");
 		TavernLevelLabel = GetNode<Label>("../TavernDisplay/TavernLevelControl/VBoxContainer/TavernLevelLabel");
 		TavernRenownDisplay = GetNode<Label>("../TavernDisplay/TavernRenown/VBoxContainer/TavernRenownDisplay");
+		FeedMenuInstance = GetNode<FeedMenu>("../FeedMenu");
+
 
 		QuestManager.Instance.OnQuestsUpdated += UpdateQuestCapacityLabel;
 		UpdateQuestCapacityLabel();
@@ -144,7 +147,19 @@ public partial class TavernManager : Node
 
 		//load DBs
 		FoodDrinkDatabase.LoadData();
+		DishDatabase.LoadFromFoodDB();
 		GD.Print($"Loaded {FoodDrinkDatabase.AllFood.Count} food items and {FoodDrinkDatabase.AllDrinks.Count} drinks.");
+		
+		// Listen to all guest cards
+	foreach (var card in GetTree().GetNodesInGroup("GuestCard"))
+	{
+		var gc = card as GuestCard;
+		if (gc != null)
+		{
+			gc.ServeFoodRequested += OnServeFoodRequested;
+			gc.ServeDrinkRequested += OnServeDrinkRequested;
+		}
+	}
 
 
 		UpdateTimeLabel();
@@ -381,31 +396,43 @@ public partial class TavernManager : Node
 	}
 
 
-	// Called when a GuestCard emits the ServeFoodRequested signal
 	public void OnServeFoodRequestedFromCard(Node source)
+{
+	if (source is GuestCard card)
+		OnServeFoodRequested(card);
+}
+
+public void OnServeDrinkRequestedFromCard(Node source)
+{
+	if (source is GuestCard card)
+		OnServeDrinkRequested(card);
+}
+
+
+	private void OnServeFoodRequested(GuestCard card)
+{
+	if (FeedMenuInstance == null)
 	{
-		if (source is GuestCard card)
-			OnServeFoodRequested(card.BoundNPC);
+		GD.PrintErr("FeedMenuInstance missing!");
+		return;
 	}
 
-	public void OnServeDrinkRequestedFromCard(Node source)
+	FeedMenuInstance.OpenAtMouse(card.BoundGuest, false); // Food
+
+}
+
+private void OnServeDrinkRequested(GuestCard card)
+{
+	if (FeedMenuInstance == null)
 	{
-		if (source is GuestCard card)
-			OnServeDrinkRequested(card.BoundNPC);
+		GD.PrintErr("FeedMenuInstance missing!");
+		return;
 	}
 
-	// Sends info to the ServeMenuUI
-	private void OnServeFoodRequested(NPCData npc)
-	{
-		GameLog.Debug($"🍽️ {npc.FirstName} requested food!");
-		// TODO: Open food UI here
-	}
+	FeedMenuInstance.OpenAtMouse(card.BoundGuest, true); // Drink
 
-	private void OnServeDrinkRequested(NPCData npc)
-	{
-		GameLog.Debug($"🍷 {npc.FirstName} requested drink!");
-		// TODO: Open drink UI here
-	}
+}
+
 
 
 

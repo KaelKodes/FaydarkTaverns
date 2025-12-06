@@ -20,6 +20,7 @@ public class QuestManager
 	private List<Quest> activeQuests = new();
 	public List<Quest> ActiveQuests => activeQuests;
 	private List<Quest> completedQuests = new();
+	private bool questJournalUnlocked = false;
 
 	
 	public event Action OnQuestsUpdated;
@@ -263,21 +264,19 @@ public void CompleteQuest(Quest quest)
 	quest.Failed = !result.Success;
 	HandleQuestReturn(quest);
 
-
 	if (result.Success)
-{
-	TavernManager.Instance.AddGold(result.GoldEarned);
-	TavernManager.Instance.IncrementSuccessCombo();
-	int tavernExp = CalculateTavernExp(quest, result);
-	TavernManager.Instance.GainTavernExp(tavernExp);
+	{
+		TavernManager.Instance.AddGold(result.GoldEarned);
+		TavernManager.Instance.IncrementSuccessCombo();
+		int tavernExp = CalculateTavernExp(quest, result);
+		TavernManager.Instance.GainTavernExp(tavernExp);
 
-	activeQuests.Remove(quest);
-	completedQuests.Add(quest); // ✅ add here
+		activeQuests.Remove(quest);
+		completedQuests.Add(quest);
 
-	GameLog.Info($"💰 Player earned {result.GoldEarned}g!");
-	GameLog.Info($"✨ Success Combo: {TavernManager.Instance.SuccessComboCount} → +{TavernManager.Instance.SuccessComboCount} EXP bonus");
-}
-
+		GameLog.Info($"💰 Player earned {result.GoldEarned}g!");
+		GameLog.Info($"✨ Success Combo: {TavernManager.Instance.SuccessComboCount} → +{TavernManager.Instance.SuccessComboCount} EXP bonus");
+	}
 	else
 	{
 		TavernManager.Instance.ResetSuccessCombo();
@@ -291,7 +290,15 @@ public void CompleteQuest(Quest quest)
 	LogQuestResult(quest, result);
 	NotifyQuestStateChanged(quest);
 	GameLog.Info($"🎉 Quest '{quest.Title}' completed. Success: {result.Success}");
+
+	// Unlock Quest Journal on first completion (success OR fail)
+	if (!questJournalUnlocked)
+	{
+		questJournalUnlocked = true;
+		QuestJournalUnlockController.Instance?.TryUnlockJournal();
+	}
 }
+
 
 
 
@@ -332,7 +339,15 @@ public void EnforceDeadline(Quest quest)
 
 	NotifyQuestStateChanged(quest);
 	GameLog.Info($"❌ Quest '{quest.Title}' failed due to missed deadline.");
+
+	// Also unlock journal on a first-ever failure
+	if (!questJournalUnlocked)
+	{
+		questJournalUnlocked = true;
+		QuestJournalUnlockController.Instance?.TryUnlockJournal();
+	}
 }
+
 
 	public int GetActiveQuestCount()
 {

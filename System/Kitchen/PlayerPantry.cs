@@ -1,13 +1,22 @@
+using System;
 using Godot;
 using System.Collections.Generic;
 
-public partial class PlayerPantry : Node
+public static class PlayerPantry
 {
+	public static event Action SuppliesChanged;
+
+
+	// =============================
+	//  INVENTORY STORES
+	// =============================
 	public static Dictionary<string, int> Ingredients = new();
 	public static Dictionary<string, int> Supplies = new();
+	
 
-	// ========== INGREDIENTS ==========
-
+	// =============================
+	//  INGREDIENT METHODS
+	// =============================
 	public static void AddIngredient(string ingredient, int amount = 1)
 	{
 		if (Ingredients.ContainsKey(ingredient))
@@ -43,17 +52,22 @@ public partial class PlayerPantry : Node
 		}
 	}
 
-	// ========== SUPPLIES ==========
 
+	// =============================
+	//  SUPPLY METHODS (FOOD/DRINK)
+	// =============================
 	public static void AddSupply(string supply, int amount = 1)
-	{
-		if (Supplies.ContainsKey(supply))
-			Supplies[supply] += amount;
-		else
-			Supplies[supply] = amount;
+{
+	if (Supplies.ContainsKey(supply))
+		Supplies[supply] += amount;
+	else
+		Supplies[supply] = amount;
 
-		GD.Print($"> Gained {amount}x {supply}");
-	}
+	GD.Print($"> Gained {amount}x {supply}");
+
+	SuppliesChanged?.Invoke();
+}
+
 
 	public static bool HasSupplies(List<string> needed)
 	{
@@ -68,24 +82,35 @@ public partial class PlayerPantry : Node
 	}
 
 	public static void ConsumeSupplies(List<string> used)
+{
+	foreach (var item in used)
 	{
-		foreach (var item in used)
+		if (Supplies.ContainsKey(item))
 		{
-			if (Supplies.ContainsKey(item))
-			{
-				Supplies[item] = Mathf.Max(Supplies[item] - 1, 0);
-				GD.Print($"> Used 1x {item}");
-			}
+			Supplies[item] = Mathf.Max(Supplies[item] - 1, 0);
+			GD.Print($"> Used 1x {item}");
+			
+			if (Supplies[item] <= 0)
+				Supplies.Remove(item);
 		}
 	}
 
-	// ========== DEBUG DISPLAY ==========
+	SuppliesChanged?.Invoke();
+}
 
+
+
+
+	// =============================
+	//  DEBUG
+	// =============================
 	public static void PrintInventory()
 	{
 		GD.Print("--- Pantry Inventory ---");
+		
 		foreach (var kvp in Ingredients)
 			GD.Print($"[Ingredient] {kvp.Key}: {kvp.Value}");
+		
 		foreach (var kvp in Supplies)
 			GD.Print($"[Supply]     {kvp.Key}: {kvp.Value}");
 	}
