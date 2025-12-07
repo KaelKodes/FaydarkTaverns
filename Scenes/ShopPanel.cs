@@ -84,9 +84,8 @@ public partial class ShopPanel : Window
 
 		// 🔢 Determine current owned and cap
 		int current = TavernManager.Instance.GetPurchasedCount(item.Name);
-		int cap = isTable
-			? TavernStats.Instance.TableCaps.GetValueOrDefault(item.Name, 0)
-			: item.MaxOwned;
+		int cap = item.MaxOwned; // Use proper item-defined cap for tables
+
 
 		bool isUnderCap = (cap == -1 || current < cap);
 		bool levelUnlocked = TavernStats.Instance.Level >= item.LevelRequirement;
@@ -135,9 +134,8 @@ public partial class ShopPanel : Window
 
 	// 🧠 Determine cap and how many are already owned
 	int currentOwned = TavernManager.Instance.GetPurchasedCount(item.Name);
-	int cap = isTable
-		? TavernStats.Instance.TableCaps.GetValueOrDefault(item.Name, 0)
-		: item.MaxOwned;
+	int cap = item.MaxOwned;
+
 
 	int totalAfterAdd = cart[item.Name] + currentOwned;
 

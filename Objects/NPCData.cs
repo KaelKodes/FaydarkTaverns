@@ -137,16 +137,51 @@ namespace FaydarkTaverns.Objects
 		// ======================================================
 		//  UTILITY METHODS
 		// ======================================================
+		// ======================================================
+		//  PROGRESSION BUCKETS (stat/skill usage accumulators)
+		// ======================================================
+
+		// Tracks how much each STAT contributed since last level
+		public Dictionary<string, float> StatUsageBucket { get; set; } = new();
+
+		// Tracks how much each SKILL contributed since last level
+		public Dictionary<string, float> SkillUsageBucket { get; set; } = new();
+
+		// Safely add to stat usage
+		public void AddStatUsage(string stat, float amount)
+		{
+			if (amount <= 0) return;
+			if (!StatUsageBucket.ContainsKey(stat))
+				StatUsageBucket[stat] = 0f;
+			StatUsageBucket[stat] += amount;
+		}
+
+		// Safely add to skill usage
+		public void AddSkillUsage(string skill, float amount)
+		{
+			if (amount <= 0) return;
+			if (!SkillUsageBucket.ContainsKey(skill))
+				SkillUsageBucket[skill] = 0f;
+			SkillUsageBucket[skill] += amount;
+		}
+
+
 		public void GainXP(int amount)
 		{
 			Xp += amount;
+
 			while (Xp >= XPToLevelUp)
 			{
 				Xp -= XPToLevelUp;
 				Level++;
+
+				// Apply stew-based stat/skill growth
+				ApplyStewGrowth();
+
 				GameLog.Info($"📈 {Role} {Name} leveled up to {Level}!");
 			}
 		}
+
 
 		public string GetMoodStatus()
 		{
@@ -193,6 +228,53 @@ namespace FaydarkTaverns.Objects
 				}
 			}
 		}
+
+		private void ApplyStewGrowth()
+		{
+			// -----------------------------
+			// STAT GROWTH (0.1–0.4 per level)
+			// -----------------------------
+			foreach (var kvp in StatUsageBucket)
+			{
+				float used = kvp.Value;
+				float gain = Mathf.Clamp(used * 0.10f, 0.1f, 0.4f);
+
+				switch (kvp.Key)
+				{
+					case "Strength": Strength += (int)MathF.Round(gain); break;
+					case "Dexterity": Dexterity += (int)MathF.Round(gain); break;
+					case "Constitution": Constitution += (int)MathF.Round(gain); break;
+					case "Intelligence": Intelligence += (int)MathF.Round(gain); break;
+				}
+			}
+
+			// -----------------------------
+			// SKILL GROWTH (0.1–0.8 per level)
+			// -----------------------------
+			foreach (var kvp in SkillUsageBucket)
+			{
+				float used = kvp.Value;
+				float gain = Mathf.Clamp(used * 0.15f, 0.1f, 0.8f);
+
+				switch (kvp.Key)
+				{
+					case "Athletics": Athletics += (int)MathF.Round(gain); break;
+					case "Tracking": Tracking += (int)MathF.Round(gain); break;
+					case "LockPicking": LockPicking += (int)MathF.Round(gain); break;
+					case "Buffing": Buffing += (int)MathF.Round(gain); break;
+					case "Debuffing": Debuffing += (int)MathF.Round(gain); break;
+					case "Transport": Transport += (int)MathF.Round(gain); break;
+					case "Taming": Taming += (int)MathF.Round(gain); break;
+					case "SpellResearch": SpellResearch += (int)MathF.Round(gain); break;
+					case "Investigation": Investigation += (int)MathF.Round(gain); break;
+				}
+			}
+
+			// Clear stew for next level
+			StatUsageBucket.Clear();
+			SkillUsageBucket.Clear();
+		}
+
 
 		// Combat helpers (adventurer only)
 		public int GetHp() => Constitution * 10;

@@ -339,7 +339,4 @@ private void AssignDailyHungerAndThirst()
 }
 
 
-
-
-
 }

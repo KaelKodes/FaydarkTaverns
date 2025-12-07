@@ -34,17 +34,26 @@ public partial class AudioPanelManager : Panel
 	}
 
 	private void SetBusVolume(int index, double value)
-	{
-		float db = Mathf.Lerp(-40, 0, (float)value / 100f);
-		AudioServer.SetBusVolumeDb(index, db);
-	}
-	public override void _UnhandledInput(InputEvent @event)
 {
-	if (@event is InputEventMouseButton mouseEvent && mouseEvent.Pressed)
-	{
-		if (AudioPanel.Visible && !AudioPanel.GetGlobalRect().HasPoint(mouseEvent.GlobalPosition))
-			AudioPanel.Visible = false;
-	}
+    float linear = (float)value / 100f;
+
+    float db = Mathf.LinearToDb(linear);
+
+    // Handle silence case cleanly
+    if (linear <= 0.0001f)
+        db = -80f;
+
+    AudioServer.SetBusVolumeDb(index, db);
 }
+
+
+	public override void _UnhandledInput(InputEvent @event)
+	{
+		if (@event is InputEventMouseButton mouseEvent && mouseEvent.Pressed)
+		{
+			if (AudioPanel.Visible && !AudioPanel.GetGlobalRect().HasPoint(mouseEvent.GlobalPosition))
+				AudioPanel.Visible = false;
+		}
+	}
 
 }

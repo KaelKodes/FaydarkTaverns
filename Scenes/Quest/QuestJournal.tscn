@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://hyodte5lne4l" path="res://Assets/UI/Buttons/CRibbon.png" id="3_6ajf7"]
 [ext_resource type="Texture2D" uid="uid://dn5pdhfu6h363" path="res://Assets/UI/Buttons/FRibbon.png" id="4_h826o"]
 
-[node name="QuestJournal" type="Control" node_paths=PackedStringArray("PageLabel", "GeneralTab1", "GeneralTab2", "CompletedQuests1", "CompletedQuests2", "FailedQuests1", "FailedQuests2", "GeneralButton", "CompletedButton", "FailedButton", "CloseButton", "CompletedQuestList", "FailedQuestList", "QuestDetailContainer")]
+[node name="QuestJournal" type="Control" node_paths=PackedStringArray("PageLabel", "GeneralTab1", "GeneralTab2", "CompletedQuests1", "CompletedQuests2", "FailedQuests1", "FailedQuests2", "GeneralButton", "CompletedButton", "FailedButton", "CloseButton", "QuestAttemptedSpinbox", "QuestsSucceededSpinbox", "QuestsFailedSpinbox", "SuccessRateSpinbox", "FavoriteQuestTypeLabel", "FavoriteQuestGiverLabel", "GPQSpinbox", "HighestPayoutSpinbox", "CompletedQuestList", "FailedQuestList", "QuestDetailContainer")]
 z_index = 12
 layout_mode = 3
 anchors_preset = 0
@@ -22,6 +22,14 @@ GeneralButton = NodePath("TextureRect/GeneralButton")
 CompletedButton = NodePath("TextureRect/CompletedButton")
 FailedButton = NodePath("TextureRect/FailedButton")
 CloseButton = NodePath("CloseButton")
+QuestAttemptedSpinbox = NodePath("GeneralTab1/QuestAttemptedSpinbox")
+QuestsSucceededSpinbox = NodePath("GeneralTab1/QuestsSucceededSpinbox")
+QuestsFailedSpinbox = NodePath("GeneralTab1/QuestsFailedSpinbox")
+SuccessRateSpinbox = NodePath("GeneralTab1/SuccessRateSpinbox")
+FavoriteQuestTypeLabel = NodePath("GeneralTab2/FavoriteQuestTypeLabel")
+FavoriteQuestGiverLabel = NodePath("GeneralTab2/FavoriteQuestGiverLabel")
+GPQSpinbox = NodePath("GeneralTab2/GPQSpinbox")
+HighestPayoutSpinbox = NodePath("GeneralTab2/HighestPayoutSpinbox")
 CompletedQuestList = NodePath("CompletedQuests1/CompletedQuestList")
 FailedQuestList = NodePath("FailedQuests1/FailedQuestContainer")
 QuestDetailContainer = NodePath("QuestDetails/QuestDetailContainer")
@@ -73,7 +81,6 @@ scale = Vector2(0.26798823, 0.22982296)
 texture_normal = ExtResource("4_h826o")
 
 [node name="GeneralTab1" type="VBoxContainer" parent="."]
-visible = false
 layout_mode = 0
 offset_left = 146.0
 offset_top = 269.0
@@ -102,6 +109,7 @@ horizontal_alignment = 1
 layout_mode = 2
 size_flags_horizontal = 4
 alignment = 1
+editable = false
 
 [node name="Label3" type="Label" parent="GeneralTab1"]
 layout_mode = 2
@@ -113,6 +121,7 @@ horizontal_alignment = 1
 layout_mode = 2
 size_flags_horizontal = 4
 alignment = 1
+editable = false
 
 [node name="Label4" type="Label" parent="GeneralTab1"]
 layout_mode = 2
@@ -124,9 +133,9 @@ horizontal_alignment = 1
 layout_mode = 2
 size_flags_horizontal = 4
 alignment = 1
+editable = false
 
 [node name="GeneralTab2" type="VBoxContainer" parent="."]
-visible = false
 layout_mode = 0
 offset_left = 808.0
 offset_top = 262.0
@@ -165,6 +174,7 @@ horizontal_alignment = 1
 layout_mode = 2
 size_flags_horizontal = 4
 alignment = 1
+editable = false
 
 [node name="Label4" type="Label" parent="GeneralTab2"]
 layout_mode = 2
@@ -176,9 +186,9 @@ horizontal_alignment = 1
 layout_mode = 2
 size_flags_horizontal = 4
 alignment = 1
+editable = false
 
 [node name="CompletedQuests1" type="ScrollContainer" parent="."]
-visible = false
 layout_mode = 0
 offset_left = 132.0
 offset_top = 243.0

@@ -185,33 +185,6 @@ public partial class TavernManager : Node
 		RecheckSeating();
 		RecheckQuestPosting();
 
-		// 🔁 Check for quest resolution
-		foreach (var quest in QuestManager.Instance.GetAcceptedQuests())
-		{
-			if (!quest.IsComplete && ClockManager.CurrentTime >= quest.ExpectedReturn)
-			{
-				var result = QuestSimulator.Simulate(quest);
-				quest.IsComplete = true;
-				quest.Failed = !result.Success;
-
-				AddGold(result.GoldEarned);
-
-				foreach (var adventurer in quest.AssignedAdventurers)
-				{
-					adventurer.GainXP(result.ExpGained);
-				}
-
-				DisplayAdventurers();
-
-				QuestManager.Instance.LogQuestResult(quest, result);
-			}
-		}
-
-		foreach (var q in QuestManager.Instance.GetAcceptedQuests())
-		{
-			GameLog.Debug($"🔍 Active Quest: {q.QuestId} | {q.Title} | Accepted: {q.IsAccepted}");
-		}
-
 		// 🕒 Check for guests who should leave
 		GuestManager.Instance.TickGuests(ClockManager.CurrentTime);
 	}

@@ -632,9 +632,13 @@ ShineSweep = NodePath("QuestJournalFX/ShineSweep")
 QuestJournalScene = ExtResource("30_xdfn1")
 
 [node name="QuestJournalFX" type="Control" parent="QuestJournalAnchor"]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+layout_mode = 1
+anchor_right = 1.0
+anchor_bottom = 1.462
+offset_left = 35.0
+offset_top = 834.0
+offset_right = 76.0
+offset_bottom = 847.52
 
 [node name="SparkleBurst" type="AnimatedSprite2D" parent="QuestJournalAnchor/QuestJournalFX"]
 visible = false

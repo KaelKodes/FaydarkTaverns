@@ -19,8 +19,21 @@ public partial class QuestJournal : Control
 	[Export] public TextureButton CompletedButton;
 	[Export] public TextureButton FailedButton;
 	[Export] public Button CloseButton;
+	
+	
+	// GeneralTab1
+	[Export] public SpinBox QuestAttemptedSpinbox { get; set; }
+	[Export] public SpinBox QuestsSucceededSpinbox { get; set; }
+	[Export] public SpinBox QuestsFailedSpinbox { get; set; }
+	[Export] public SpinBox SuccessRateSpinbox { get; set; }
 
-	// NEW
+	// GeneralTab2
+	[Export] public Label FavoriteQuestTypeLabel { get; set; }
+	[Export] public Label FavoriteQuestGiverLabel { get; set; }
+	[Export] public SpinBox GPQSpinbox { get; set; }
+	[Export] public SpinBox HighestPayoutSpinbox { get; set; }
+
+	
 	[Export] public VBoxContainer CompletedQuestList;
 	[Export] public VBoxContainer FailedQuestList;
 	[Export] public Control QuestDetailContainer;
@@ -84,20 +97,23 @@ public partial class QuestJournal : Control
 	}
 
 	public void AddCompletedEntry(Quest quest)
-	{
-		if (CompletedQuestList == null) return;
+{
+	if (CompletedQuestList == null) return;
 
-		var entry = new JournalQuestEntry(quest);
-		CompletedQuestList.AddChild(entry);
-	}
+	var entry = new JournalQuestEntry(quest);
+	CompletedQuestList.AddChild(entry);
+}
 
-	public void AddFailedEntry(Quest quest)
-	{
-		if (FailedQuestList == null) return;
 
-		var entry = new JournalQuestEntry(quest);
-		FailedQuestList.AddChild(entry);
-	}
+public void AddFailedEntry(Quest quest)
+{
+	if (FailedQuestList == null) return;
+
+	var entry = new JournalQuestEntry(quest);
+	FailedQuestList.AddChild(entry);
+}
+
+
 
 	public void ShowQuestDetails(Quest quest)
 	{
@@ -109,4 +125,28 @@ public partial class QuestJournal : Control
 		var detail = new QuestJournalDetailPanel(quest);
 		QuestDetailContainer.AddChild(detail);
 	}
+	public void RefreshGeneralStats()
+{
+	var stats = QuestManager.Instance.Stats;
+
+	QuestAttemptedSpinbox.Value = stats.Attempts;
+	QuestsSucceededSpinbox.Value = stats.Successes;
+	QuestsFailedSpinbox.Value = stats.Failures;
+	SuccessRateSpinbox.Value = stats.SuccessRate;
+
+	FavoriteQuestTypeLabel.Text = stats.FavoriteQuestType;
+	FavoriteQuestGiverLabel.Text = stats.FavoriteQuestGiver;
+
+	GPQSpinbox.Value = stats.GoldEarned;
+	HighestPayoutSpinbox.Value = stats.HighestPayout;
+}
+
+public void OpenJournal()
+{
+	Visible = true;
+	RefreshGeneralStats();
+}
+
+
+	
 }

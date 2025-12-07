@@ -46,6 +46,7 @@ public partial class QuestDetailPopup : Window
 
 	public void SetQuest(Quest q)
 	{
+		q = QuestManager.Instance.GetQuestById(q.QuestId);
 		quest = q;
 		boundQuest = q;
 
@@ -135,11 +136,12 @@ public partial class QuestDetailPopup : Window
 
 		// ARCHIVE —
 		if (boundQuest.IsComplete)
-		{
-			ArchiveQuest(boundQuest);
-			Hide();
-			return;
-		}
+{
+	QuestManager.Instance.DismissQuest(boundQuest);
+	Hide();
+	return;
+}
+
 
 		// NORMAL DISMISS —
 		if (boundQuest.IsAccepted && !boundQuest.IsComplete)

@@ -16,40 +16,51 @@ public partial class QuestJournalUnlockController : Control
 	private bool _unlocked = false;
 
 	public override void _Ready()
+{
+	if (Instance != null && Instance != this)
+		GD.PrintErr("❌ Multiple QuestJournalUnlockController instances detected.");
+
+	Instance = this;
+
+	if (QuestJournalButton != null)
 	{
-		if (Instance != null && Instance != this)
-			GD.PrintErr("❌ Multiple QuestJournalUnlockController instances detected.");
+		QuestJournalButton.Visible = false;
+		QuestJournalButton.Scale = new Vector2(0.25f, 0.25f);
+		QuestJournalButton.Position = new Vector2(17f, 833f);
+		QuestJournalButton.RotationDegrees = -7.9f;
+		QuestJournalButton.Modulate = Colors.White;
 
-		Instance = this;
-
-		if (QuestJournalButton != null)
-		{
-			QuestJournalButton.Visible = false;
-			QuestJournalButton.Scale = new Vector2(0.25f, 0.25f);
-			QuestJournalButton.Position = new Vector2(17f, 833f);
-			QuestJournalButton.RotationDegrees = -7.9f;
-			QuestJournalButton.Modulate = Colors.White;
-
-			QuestJournalButton.Pressed += OnJournalButtonPressed;
-		}
-
-		if (QuestJournalFX != null)
-			QuestJournalFX.Visible = false;
-
-		if (SparkleBurst != null)
-		{
-			SparkleBurst.Visible = false;
-			SparkleBurst.Stop();
-		}
-
-		if (ShineSweep != null)
-		{
-			ShineSweep.Visible = false;
-			var c = ShineSweep.Modulate;
-			c.A = 0f;
-			ShineSweep.Modulate = c;
-		}
+		QuestJournalButton.Pressed += OnJournalButtonPressed;
 	}
+
+	if (QuestJournalFX != null)
+		QuestJournalFX.Visible = false;
+
+	if (SparkleBurst != null)
+	{
+		SparkleBurst.Visible = false;
+		SparkleBurst.Stop();
+	}
+
+	if (ShineSweep != null)
+	{
+		ShineSweep.Visible = false;
+		var c = ShineSweep.Modulate;
+		c.A = 0f;
+		ShineSweep.Modulate = c;
+	}
+
+	// ⭐ PRE-INSTANTIATE JOURNAL SO FIRST QUEST CAN WRITE TO IT
+	if (QuestJournalScene != null)
+	{
+		_journalInstance = QuestJournalScene.Instantiate<Control>();
+		_journalInstance.Visible = false; // initialize but keep hidden
+		GetTree().Root.AddChild(_journalInstance);
+
+		GD.Print("📘 QuestJournal pre-instantiated for early logging.");
+	}
+}
+
 
 	private void OnJournalButtonPressed()
 	{
@@ -67,6 +78,8 @@ public partial class QuestJournalUnlockController : Control
 
 		_journalInstance.Visible = true;
 		_journalInstance.MoveToFront();
+		QuestJournal.Instance.RefreshGeneralStats();
+
 	}
 
 	public void TryUnlockJournal()

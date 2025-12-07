@@ -179,13 +179,18 @@ private void OnItemSelected(string itemId, string itemName, bool isDrink)
 
 
 	private void ApplyAftermath(Guest guest, ConsumptionResult result)
-	{
-		guest.ShowRequestBubble(false);
-		guest.ShowReaction(result.Reaction);
+{
+	guest.ShowRequestBubble(false);
+	guest.ShowReaction(result.Reaction);
 
-		if (result.WantsAnotherServing)
-			guest.ScheduleAnotherOrder();
-	}
+	if (result.WantsAnotherServing)
+		guest.ScheduleAnotherOrder();
+
+	// ⭐ Refresh GuestCards (including request bubbles)
+	TavernManager.Instance.DisplayAdventurers();
+}
+
+
 
 	public void ConnectGuestCard(GuestCard card)
 	{

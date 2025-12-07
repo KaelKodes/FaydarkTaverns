@@ -307,13 +307,11 @@ public partial class GuestCard : Panel
 	private void OnHungryBubblePressed()
 	{
 		ServeFoodRequested?.Invoke(this);
-		HungryBubble.Visible = false;
 	}
 
 	private void OnThirstyBubblePressed()
 	{
 		ServeDrinkRequested?.Invoke(this);
-		ThirstyBubble.Visible = false;
 	}
 
 
