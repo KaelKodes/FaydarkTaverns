@@ -1,8 +1,13 @@
 Faydark : Taverns
+
 Celtic Trinity Studios
+
 KaelKodes
+
 C# Godot 4.5
+
 -=-=-=-=-=-=-=-=-
+
 **Faydark Taverns v0.9.38 SAVE/LOAD & NPC Data**
 
 Added:
