@@ -1,9 +1,11 @@
-[gd_scene load_steps=42 format=3 uid="uid://bp53yv3ypaa5j"]
+[gd_scene load_steps=79 format=3 uid="uid://bp53yv3ypaa5j"]
 
 [ext_resource type="Script" uid="uid://hacx1tuggxkp" path="res://Scenes/QuestBoardPanel.cs" id="1_7ljul"]
-[ext_resource type="Texture2D" uid="uid://c4yn8u5hh50nr" path="res://Assets/UI/Bkg/TavernBKGEmpty.png" id="1_e0xf5"]
+[ext_resource type="Script" uid="uid://c75ghsbdpuavi" path="res://Scenes/OutsideLighting.cs" id="1_j8kms"]
+[ext_resource type="Texture2D" uid="uid://da413lmo7vbyu" path="res://Assets/UI/Bkg/TavernBKGEmptyNoOUTSIDE.png" id="1_s0wl0"]
 [ext_resource type="Script" uid="uid://bw4esvijflh3" path="res://Scenes/TavernManager.cs" id="1_v6xsb"]
 [ext_resource type="PackedScene" uid="uid://w7he4xk8qe6k" path="res://Scenes/UI/QuestCard.tscn" id="2_6wg6o"]
+[ext_resource type="Texture2D" uid="uid://bqdgb4x54p4hk" path="res://Assets/UI/Placeholder/WINDOW1.png" id="2_j8kms"]
 [ext_resource type="Script" uid="uid://x4id2gkwvhxq" path="res://System/TimerManager.cs" id="2_t546b"]
 [ext_resource type="Script" uid="uid://bo03gb6exqxki" path="res://Scenes/AdventurerRosterPanel.cs" id="2_w3872"]
 [ext_resource type="PackedScene" uid="uid://ch7r0s51qa60a" path="res://Scenes/UI/GuestCard.tscn" id="5_6wg6o"]
@@ -29,16 +31,211 @@
 [ext_resource type="Texture2D" uid="uid://ck07m4ymrsgus" path="res://Assets/UI/Buttons/Audio.png" id="25_yj0io"]
 [ext_resource type="Script" uid="uid://cy12bvwpnd4qw" path="res://Scenes/MusicManager.cs" id="27_e0xf5"]
 [ext_resource type="Script" uid="uid://coqlsgkc7oc21" path="res://System/Quests/QuestJournalUnlockController.cs" id="29_vlkay"]
+[ext_resource type="PackedScene" uid="uid://c8yf82sn7sn2f" path="res://Scenes/UI/EscMenu.tscn" id="30_4pqvv"]
 [ext_resource type="Texture2D" uid="uid://q4sadsktlrrk" path="res://Assets/UI/Buttons/QuestLog.png" id="30_a4f71"]
 [ext_resource type="Texture2D" uid="uid://dwu6b0hytl2jx" path="res://Assets/UI/FX/burst.png" id="30_u8d0f"]
 [ext_resource type="PackedScene" uid="uid://dbl2xruqo3b45" path="res://Scenes/Quest/QuestJournal.tscn" id="30_xdfn1"]
+[ext_resource type="PackedScene" uid="uid://drdts6pixgb8h" path="res://Scenes/UI/PlayThroughSelectWindow.tscn" id="32_4pqvv"]
+[ext_resource type="Script" uid="uid://hsbvhx31d2c8" path="res://Scenes/ConfirmationWindow.cs" id="33_l6d2f"]
 [ext_resource type="PackedScene" uid="uid://c5vdtaboy0ony" path="res://Scenes/Kitchen/FeedMenu.tscn" id="33_xdfn1"]
+[ext_resource type="Texture2D" uid="uid://dbyysdbetfpq2" path="res://Assets/UI/Bkg/TorchFire.png" id="34_4alcf"]
+[ext_resource type="Texture2D" uid="uid://g01efhop6vi1" path="res://Assets/Weather/weather effects, rain light anim 32x128.png" id="34_jfcjx"]
+[ext_resource type="Script" uid="uid://bafckoygn2c4p" path="res://Scenes/DayNightTint.cs" id="34_m23cf"]
+[ext_resource type="Texture2D" uid="uid://cq7sjwsrgupqu" path="res://Assets/Weather/weather effects, snow light anim 32x128.png" id="35_4alcf"]
+[ext_resource type="Texture2D" uid="uid://cg3a72hpntemu" path="res://Assets/Lighting/light_mask_128.png" id="35_gj511"]
+[ext_resource type="Script" uid="uid://b826old1pobld" path="res://Scenes/TorchLight.cs" id="36_gj511"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i3wdn"]
+atlas = ExtResource("34_4alcf")
+region = Rect2(18, 0, 97, 292)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8v6bh"]
+atlas = ExtResource("34_4alcf")
+region = Rect2(116, 0, 97, 292)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vaqey"]
+atlas = ExtResource("34_4alcf")
+region = Rect2(214, 0, 97, 292)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mvsog"]
+atlas = ExtResource("34_4alcf")
+region = Rect2(312, 0, 97, 292)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hadq7"]
+atlas = ExtResource("34_4alcf")
+region = Rect2(410, 0, 97, 292)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yg175"]
+atlas = ExtResource("34_4alcf")
+region = Rect2(508, 0, 97, 292)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8mhwy"]
+atlas = ExtResource("34_4alcf")
+region = Rect2(606, 0, 97, 292)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kp4vn"]
+atlas = ExtResource("34_4alcf")
+region = Rect2(704, 0, 97, 292)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cp05a"]
+atlas = ExtResource("34_jfcjx")
+region = Rect2(0, 0, 32, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fcjcw"]
+atlas = ExtResource("34_jfcjx")
+region = Rect2(32, 0, 32, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4pqvv"]
+atlas = ExtResource("34_jfcjx")
+region = Rect2(64, 0, 32, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l6d2f"]
+atlas = ExtResource("34_jfcjx")
+region = Rect2(96, 0, 32, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mrdno"]
+atlas = ExtResource("34_jfcjx")
+region = Rect2(128, 0, 32, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wp528"]
+atlas = ExtResource("34_jfcjx")
+region = Rect2(160, 0, 32, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_66k73"]
+atlas = ExtResource("34_jfcjx")
+region = Rect2(192, 0, 32, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2qfea"]
+atlas = ExtResource("34_jfcjx")
+region = Rect2(224, 0, 32, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1pb4o"]
+atlas = ExtResource("35_4alcf")
+region = Rect2(0, 0, 32, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_abdn4"]
+atlas = ExtResource("35_4alcf")
+region = Rect2(32, 0, 32, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lrq1h"]
+atlas = ExtResource("35_4alcf")
+region = Rect2(64, 0, 32, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hlntx"]
+atlas = ExtResource("35_4alcf")
+region = Rect2(96, 0, 32, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k07pq"]
+atlas = ExtResource("35_4alcf")
+region = Rect2(128, 0, 32, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kmvkr"]
+atlas = ExtResource("35_4alcf")
+region = Rect2(160, 0, 32, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7tpp7"]
+atlas = ExtResource("35_4alcf")
+region = Rect2(192, 0, 32, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_42fxi"]
+atlas = ExtResource("35_4alcf")
+region = Rect2(224, 0, 32, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mrdno"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i3wdn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8v6bh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vaqey")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mvsog")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hadq7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yg175")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8mhwy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kp4vn")
+}],
+"loop": true,
+"name": &"Fire",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cp05a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fcjcw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4pqvv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l6d2f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mrdno")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wp528")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_66k73")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2qfea")
+}],
+"loop": true,
+"name": &"RainFx",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1pb4o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_abdn4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lrq1h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hlntx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k07pq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kmvkr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7tpp7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_42fxi")
+}],
+"loop": true,
+"name": &"SnowFX",
+"speed": 4.0
+}]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_esg4o"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3yx2a"]
-
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_slrnj"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3yx2a"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xdfn1"]
 atlas = ExtResource("30_u8d0f")
@@ -76,7 +273,11 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mrdno"]
+bg_color = Color(0.30110523, 3.5195612e-07, 9.62615e-08, 1)
+
 [node name="TavernMain" type="Control"]
+process_mode = 3
 layout_mode = 3
 anchor_right = 1.031
 anchor_bottom = 1.022
@@ -87,283 +288,301 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-metadata/_edit_horizontal_guides_ = [75.0]
-metadata/_edit_vertical_guides_ = [1627.0]
 
-[node name="MainBkg" type="TextureRect" parent="."]
+[node name="World" type="Node" parent="."]
+
+[node name="Outside" type="Node" parent="World" node_paths=PackedStringArray("Outside")]
+script = ExtResource("1_j8kms")
+Outside = NodePath("OutsideBKG")
+
+[node name="OutsideBKG" type="TextureRect" parent="World/Outside"]
+z_index = -3
+offset_left = 6.0
+offset_top = 238.0
+offset_right = 1510.0
+offset_bottom = 982.0
+mouse_filter = 2
+texture = ExtResource("2_j8kms")
+expand_mode = 3
+
+[node name="Windows" type="TextureRect" parent="World/Outside"]
+self_modulate = Color(1, 1, 1, 0.3019608)
+z_index = -2
+offset_left = 6.0
+offset_top = 238.0
+offset_right = 1919.0
+offset_bottom = 982.0
+mouse_filter = 2
+texture = ExtResource("35_gj511")
+expand_mode = 3
+
+[node name="Weather" type="Node" parent="World/Outside"]
+
+[node name="WeatherFXL" type="AnimatedSprite2D" parent="World/Outside/Weather"]
+visible = false
+z_index = -2
+texture_repeat = 2
+position = Vector2(426.0306, 458)
+scale = Vector2(7.4355865, 2.9687502)
+sprite_frames = SubResource("SpriteFrames_mrdno")
+animation = &"RainFx"
+frame_progress = 0.5821264
+
+[node name="WeatherFXR" type="AnimatedSprite2D" parent="World/Outside/Weather"]
+visible = false
+z_index = -2
+texture_repeat = 2
+position = Vector2(1317.9999, 455)
+scale = Vector2(7.4355865, 2.9687502)
+sprite_frames = SubResource("SpriteFrames_mrdno")
+animation = &"SnowFX"
+frame_progress = 0.50513893
+
+[node name="Tavern" type="Node" parent="World"]
+
+[node name="TavernBkg" type="TextureRect" parent="World/Tavern"]
 z_index = -1
-layout_mode = 0
-offset_left = 3.0
+offset_left = 5.0
 offset_top = 1.0
-offset_right = 1912.0
+offset_right = 1914.0
 offset_bottom = 1080.0
-texture = ExtResource("1_e0xf5")
+mouse_filter = 2
+texture = ExtResource("1_s0wl0")
 
-[node name="TavernFloorLabel" type="Label" parent="."]
+[node name="TavernFloorLabel" type="Label" parent="World/Tavern"]
 z_index = 5
 custom_minimum_size = Vector2(30, 0)
-layout_mode = 0
-offset_left = 277.0
+offset_left = 279.0
 offset_top = 44.0
-offset_right = 307.0
+offset_right = 309.0
 offset_bottom = 67.0
 size_flags_vertical = 0
 horizontal_alignment = 1
 
-[node name="QuestCapacity" type="Label" parent="."]
-layout_mode = 0
-offset_left = 64.0
-offset_top = 43.0
-offset_right = 188.0
-offset_bottom = 66.0
+[node name="QuestCapacity" type="Label" parent="World/Tavern"]
+offset_left = 70.0
+offset_top = 51.0
+offset_right = 194.0
+offset_bottom = 74.0
 text = "Questboard #/#"
 
-[node name="ClockManager" type="Node" parent="."]
+[node name="TavernLighting" type="Node" parent="World/Tavern"]
+
+[node name="LeftTorch" type="AnimatedSprite2D" parent="World/Tavern/TavernLighting"]
+texture_repeat = 2
+position = Vector2(623.00006, 420)
+scale = Vector2(0.36734694, 0.43835616)
+sprite_frames = SubResource("SpriteFrames_mrdno")
+animation = &"Fire"
+autoplay = "Fire"
+frame_progress = 0.73372847
+
+[node name="RightTorch" type="AnimatedSprite2D" parent="World/Tavern/TavernLighting"]
+texture_repeat = 2
+position = Vector2(1195, 422)
+scale = Vector2(0.36734694, 0.43835616)
+sprite_frames = SubResource("SpriteFrames_mrdno")
+animation = &"Fire"
+autoplay = "Fire"
+
+[node name="LeftTorchLight" type="PointLight2D" parent="World/Tavern/TavernLighting"]
+z_index = 1
+position = Vector2(619, 430)
+scale = Vector2(3.253906, 2.6230464)
+texture = ExtResource("35_gj511")
+script = ExtResource("36_gj511")
+
+[node name="RightTorchLight" type="PointLight2D" parent="World/Tavern/TavernLighting"]
+z_index = 1
+position = Vector2(1197.0001, 436.00003)
+scale = Vector2(3.109374, 2.642578)
+texture = ExtResource("35_gj511")
+script = ExtResource("36_gj511")
+
+[node name="HearthLight" type="PointLight2D" parent="World/Tavern/TavernLighting"]
+position = Vector2(1643, 591)
+scale = Vector2(4.292968, 3.4941404)
+texture = ExtResource("35_gj511")
+script = ExtResource("36_gj511")
+
+[node name="CandleLight" type="PointLight2D" parent="World/Tavern/TavernLighting"]
+position = Vector2(1850.9999, 947)
+scale = Vector2(2.3415542, 1.5972894)
+texture = ExtResource("35_gj511")
+script = ExtResource("36_gj511")
+
+[node name="DayNightTint" type="CanvasModulate" parent="World/Tavern/TavernLighting"]
+top_level = true
+z_index = 1
+script = ExtResource("34_m23cf")
+
+[node name="Systems" type="Node" parent="."]
+
+[node name="ClockManager" type="Node" parent="Systems"]
 script = ExtResource("7_6462i")
 
-[node name="TimerManager" type="Node" parent="."]
+[node name="TavernManager" type="Node" parent="Systems" node_paths=PackedStringArray("TimeLabel", "GoldLabel", "PauseButton", "Button1x", "Button2x", "Button4x", "Button8x", "ShopButton", "PantryPanel", "TavernRenownDisplay", "TavernLevelDisplay", "TavernLevelLabel", "AdventurerListContainer", "TavernFloorPanel", "FloorSlots", "TavernFloorLabel", "EscMenu")]
+script = ExtResource("1_v6xsb")
+TimeLabel = NodePath("../../UI/TavernDisplay/ControlPanel/TimeLabel")
+GoldLabel = NodePath("../../UI/TavernDisplay/ControlPanel/GoldLabel")
+PauseButton = NodePath("../../UI/TavernDisplay/ControlPanel/TopBar/PauseButton")
+Button1x = NodePath("../../UI/TavernDisplay/ControlPanel/TopBar/Button1x")
+Button2x = NodePath("../../UI/TavernDisplay/ControlPanel/TopBar/Button2x")
+Button4x = NodePath("../../UI/TavernDisplay/ControlPanel/TopBar/Button4x")
+Button8x = NodePath("../../UI/TavernDisplay/ControlPanel/TopBar/Button8x")
+ShopButton = NodePath("../../UI/TavernDisplay/ControlPanel/ShopButton")
+QuestBoardPath = NodePath("../../UI/QuestBoardPanel/ScrollContainer/QuestBoard")
+PantryPanel = NodePath("../../UI/PantryControl")
+TavernRenownDisplay = NodePath("../../UI/TavernDisplay/TavernRenown/VBoxContainer/TavernRenownDisplay")
+TavernLevelDisplay = NodePath("../../UI/TavernDisplay/TavernLevelControl/VBoxContainer/TavernLevelDisplay")
+TavernLevelLabel = NodePath("../../UI/TavernDisplay/TavernLevelControl/VBoxContainer/TavernLevelLabel")
+AdventurerListContainer = NodePath("../../UI/AdventurerRosterPanel/AdventurerListContainer")
+TavernFloorPanel = NodePath("../../UI/AdventurerRosterPanel/AdventurerListContainer/TavernFloorPanel")
+FloorSlots = NodePath("../../UI/AdventurerRosterPanel/AdventurerListContainer/TavernFloorPanel/FloorSlots")
+TavernFloorLabel = NodePath("../../World/Tavern/TavernFloorLabel")
+EscMenu = NodePath("../../UI/UI/EscMenu")
+AdventurerRosterPath = NodePath("../../UI/AdventurerRosterPanel")
+ShopPanelScene = ExtResource("5_icuts")
+FurniturePanelPath = NodePath("../../UI/FurnitureContainer/FurniturePanel")
+
+[node name="TimerManager" type="Node" parent="Systems"]
 script = ExtResource("2_t546b")
 
-[node name="TavernManager" type="Node" parent="." node_paths=PackedStringArray("TimeLabel", "GoldLabel", "PauseButton", "Button1x", "Button2x", "Button4x", "Button8x", "ShopButton", "PantryPanel", "TavernRenownDisplay", "TavernLevelDisplay", "TavernLevelLabel", "AdventurerListContainer", "TavernFloorPanel", "FloorSlots", "TavernFloorLabel")]
-script = ExtResource("1_v6xsb")
-TimeLabel = NodePath("../TavernDisplay/ControlPanel/TimeLabel")
-GoldLabel = NodePath("../TavernDisplay/ControlPanel/GoldLabel")
-PauseButton = NodePath("../TavernDisplay/ControlPanel/TopBar/PauseButton")
-Button1x = NodePath("../TavernDisplay/ControlPanel/TopBar/Button1x")
-Button2x = NodePath("../TavernDisplay/ControlPanel/TopBar/Button2x")
-Button4x = NodePath("../TavernDisplay/ControlPanel/TopBar/Button4x")
-Button8x = NodePath("../TavernDisplay/ControlPanel/TopBar/Button8x")
-ShopButton = NodePath("../TavernDisplay/ControlPanel/ShopButton")
-QuestBoardPath = NodePath("../QuestBoardPanel/ScrollContainer/QuestBoard")
-PantryPanel = NodePath("../PantryControl")
-TavernRenownDisplay = NodePath("../TavernDisplay/TavernRenown/VBoxContainer/TavernRenownDisplay")
-TavernLevelDisplay = NodePath("../TavernDisplay/TavernLevelControl/VBoxContainer/TavernLevelDisplay")
-TavernLevelLabel = NodePath("../TavernDisplay/TavernLevelControl/VBoxContainer/TavernLevelLabel")
-AdventurerListContainer = NodePath("../AdventurerRosterPanel/AdventurerListContainer")
-TavernFloorPanel = NodePath("../AdventurerRosterPanel/AdventurerListContainer/TavernFloorPanel")
-FloorSlots = NodePath("../AdventurerRosterPanel/AdventurerListContainer/TavernFloorPanel/FloorSlots")
-TavernFloorLabel = NodePath("../TavernFloorLabel")
-AdventurerRosterPath = NodePath("../AdventurerRosterPanel")
-ShopPanelScene = ExtResource("5_icuts")
-FurniturePanelPath = NodePath("../FurnitureContainer/FurniturePanel")
+[node name="UI" type="Node" parent="."]
 
-[node name="TavernDisplay" type="Panel" parent="."]
-layout_mode = 0
-offset_left = 1380.0
-offset_top = 6.0
-offset_right = 1869.0
-offset_bottom = 182.0
-
-[node name="TextureRect" type="TextureRect" parent="TavernDisplay"]
-layout_mode = 0
-offset_left = -5.0
-offset_top = -4.0
-offset_right = 503.0
-offset_bottom = 188.0
-texture = ExtResource("12_slrnj")
-expand_mode = 1
-
-[node name="ControlPanel" type="VBoxContainer" parent="TavernDisplay"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 11.0
-offset_top = 7.0
-offset_right = -2.0
-offset_bottom = -7.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 17
-
-[node name="TimeLabel" type="Label" parent="TavernDisplay/ControlPanel"]
-layout_mode = 2
-text = "06:00"
-horizontal_alignment = 1
-
-[node name="TopBar" type="HBoxContainer" parent="TavernDisplay/ControlPanel"]
-layout_mode = 2
-alignment = 1
-
-[node name="PauseButton" type="Button" parent="TavernDisplay/ControlPanel/TopBar"]
-layout_mode = 2
-text = "Pause"
-script = ExtResource("14_udw8w")
-
-[node name="Button1x" type="Button" parent="TavernDisplay/ControlPanel/TopBar"]
-layout_mode = 2
-text = "1x"
-script = ExtResource("14_udw8w")
-
-[node name="Button2x" type="Button" parent="TavernDisplay/ControlPanel/TopBar"]
-layout_mode = 2
-text = "2x"
-script = ExtResource("14_udw8w")
-
-[node name="Button4x" type="Button" parent="TavernDisplay/ControlPanel/TopBar"]
-layout_mode = 2
-text = "4x"
-script = ExtResource("14_udw8w")
-
-[node name="Button8x" type="Button" parent="TavernDisplay/ControlPanel/TopBar"]
-layout_mode = 2
-text = "10x"
-script = ExtResource("14_udw8w")
-
-[node name="GoldLabel" type="Label" parent="TavernDisplay/ControlPanel"]
-layout_mode = 2
-horizontal_alignment = 1
-
-[node name="ShopButton" type="Button" parent="TavernDisplay/ControlPanel"]
-layout_mode = 2
-size_flags_horizontal = 4
-text = "Shop"
-script = ExtResource("14_udw8w")
-
-[node name="TavernRenown" type="Control" parent="TavernDisplay"]
-anchors_preset = 0
-offset_left = 354.0
-offset_top = 43.0
-offset_right = 470.0
-offset_bottom = 134.0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="TavernDisplay/TavernRenown"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -1.0
-offset_top = -3.0
-offset_right = 3.0
-offset_bottom = -3.0
-grow_horizontal = 2
-grow_vertical = 2
-alignment = 1
-
-[node name="TavernRenownLabel" type="Label" parent="TavernDisplay/TavernRenown/VBoxContainer"]
-layout_mode = 2
-text = "Tavern Renown"
-horizontal_alignment = 1
-
-[node name="TavernRenownDisplay" type="Label" parent="TavernDisplay/TavernRenown/VBoxContainer"]
-layout_mode = 2
-text = "0"
-horizontal_alignment = 1
-
-[node name="TavernLevelControl" type="Control" parent="TavernDisplay"]
-anchors_preset = 0
-offset_left = 22.0
-offset_top = 40.0
-offset_right = 139.0
-offset_bottom = 130.0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="TavernDisplay/TavernLevelControl"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -1.0
-offset_right = -1.0
-grow_horizontal = 2
-grow_vertical = 2
-alignment = 1
-
-[node name="TavernLevelLabel" type="Label" parent="TavernDisplay/TavernLevelControl/VBoxContainer"]
-layout_mode = 2
-tooltip_text = "Test"
-mouse_filter = 1
-text = "Tavern Level"
-horizontal_alignment = 1
-
-[node name="TavernLevelDisplay" type="Label" parent="TavernDisplay/TavernLevelControl/VBoxContainer"]
-layout_mode = 2
-text = "0"
-horizontal_alignment = 1
-
-[node name="AdventurerRosterPanel" type="PanelContainer" parent="."]
-layout_mode = 0
-offset_left = 252.0
+[node name="AdventurerRosterPanel" type="PanelContainer" parent="UI"]
+offset_left = 254.0
 offset_top = 72.0
-offset_right = 252.0
+offset_right = 254.0
 offset_bottom = 1017.0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_esg4o")
 script = ExtResource("2_w3872")
 GuestCardScene = ExtResource("5_6wg6o")
 
-[node name="AdventurerListContainer" type="VBoxContainer" parent="AdventurerRosterPanel"]
+[node name="AdventurerListContainer" type="VBoxContainer" parent="UI/AdventurerRosterPanel"]
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 101
 
-[node name="TavernFloorPanel" type="VBoxContainer" parent="AdventurerRosterPanel/AdventurerListContainer"]
+[node name="TavernFloorPanel" type="VBoxContainer" parent="UI/AdventurerRosterPanel/AdventurerListContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 27
 alignment = 1
 
-[node name="FloorSlots" type="VBoxContainer" parent="AdventurerRosterPanel/AdventurerListContainer/TavernFloorPanel"]
+[node name="FloorSlots" type="VBoxContainer" parent="UI/AdventurerRosterPanel/AdventurerListContainer/TavernFloorPanel"]
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 108
 
-[node name="QuestBoardPanel" type="PanelContainer" parent="."]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 0
-offset_left = 25.0
-offset_top = 72.0
-offset_right = 114.0
-offset_bottom = 1017.0
-size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StyleBoxEmpty_3yx2a")
-script = ExtResource("1_7ljul")
-CardHolderPath = NodePath("ScrollContainer/QuestBoard/ActiveQuestPanel/ActiveQuestContainer")
-QuestCardScene = ExtResource("2_6wg6o")
-ActiveQuestContainerPath = NodePath("ScrollContainer/QuestBoard/ActiveQuestPanel/ActiveQuestContainer")
-CompletedQuestContainerPath = NodePath("ScrollContainer/QuestBoard/CompletedQuestPanel/CompletedQuestContainer")
+[node name="FeedMenu" parent="UI" instance=ExtResource("33_xdfn1")]
+visible = false
+offset_left = -27.0
+offset_top = -26.500061
+offset_right = 37.0
+offset_bottom = 37.49994
 
-[node name="ScrollContainer" type="ScrollContainer" parent="QuestBoardPanel"]
-layout_mode = 2
-size_flags_horizontal = 0
-horizontal_scroll_mode = 0
-
-[node name="QuestBoard" type="VBoxContainer" parent="QuestBoardPanel/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 0
-theme_override_constants/separation = 1
-alignment = 1
-
-[node name="ActiveQuestPanel" type="PanelContainer" parent="QuestBoardPanel/ScrollContainer/QuestBoard"]
-layout_mode = 2
-size_flags_horizontal = 0
-
-[node name="ActiveQuestContainer" type="VBoxContainer" parent="QuestBoardPanel/ScrollContainer/QuestBoard/ActiveQuestPanel"]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 4
-alignment = 1
-
-[node name="CompletedQuestPanel" type="PanelContainer" parent="QuestBoardPanel/ScrollContainer/QuestBoard"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="CompletedQuestContainer" type="VBoxContainer" parent="QuestBoardPanel/ScrollContainer/QuestBoard/CompletedQuestPanel"]
-z_index = 3
-layout_mode = 2
-alignment = 1
-
-[node name="PantryControl" type="Control" parent="." node_paths=PackedStringArray("ItemListContainer", "IngredientListContainer")]
+[node name="FurnitureContainer" type="Control" parent="UI"]
+visible = false
 z_index = 1
+layout_mode = 3
 anchors_preset = 0
-offset_left = 1419.0
+offset_left = 1421.0
 offset_top = 211.0
-offset_right = 1829.0
+offset_right = 1831.0
+offset_bottom = 605.0
+
+[node name="TextureRect" type="TextureRect" parent="UI/FurnitureContainer"]
+layout_mode = 0
+offset_right = 410.0
+offset_bottom = 394.0
+texture = ExtResource("8_3yx2a")
+expand_mode = 1
+
+[node name="FurniturePanel" type="Panel" parent="UI/FurnitureContainer"]
+z_index = 2
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 0
+offset_left = 14.0
+offset_top = 23.0
+offset_right = 395.0
+offset_bottom = 374.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+script = ExtResource("9_wnxq3")
+
+[node name="FurnitureVBox" type="VBoxContainer" parent="UI/FurnitureContainer/FurniturePanel"]
+layout_mode = 0
+offset_left = 3.0
+offset_right = 381.0
+offset_bottom = 353.0
+theme_override_constants/separation = 35
+
+[node name="LogControl" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 1371.0
+offset_top = 622.0
+offset_right = 1892.0
+offset_bottom = 1062.0
+
+[node name="LogPanelBKG" type="TextureRect" parent="UI/LogControl"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 68.0
+offset_right = 4.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("12_slrnj")
+expand_mode = 1
+
+[node name="CandleIMG" type="TextureRect" parent="UI/LogControl"]
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 452.0
+offset_top = 308.0
+offset_right = -30.0
+offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("13_wlqhj")
+
+[node name="LogPanel" type="PanelContainer" parent="UI/LogControl"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = 91.0
+offset_right = -21.0
+offset_bottom = -26.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_slrnj")
+
+[node name="LogText" type="RichTextLabel" parent="UI/LogControl/LogPanel"]
+layout_mode = 2
+scroll_following = true
+
+[node name="PantryControl" type="Control" parent="UI" node_paths=PackedStringArray("ItemListContainer", "IngredientListContainer")]
+z_index = 1
+layout_mode = 3
+anchors_preset = 0
+offset_left = 1421.0
+offset_top = 211.0
+offset_right = 1831.0
 offset_bottom = 605.0
 script = ExtResource("13_yj0io")
 ItemListContainer = NodePath("ScrollContainer/ItemListContainer")
 IngredientListContainer = NodePath("ScrollContainer2/IngredientListContainer")
 
-[node name="BKG" type="TextureRect" parent="PantryControl"]
+[node name="BKG" type="TextureRect" parent="UI/PantryControl"]
 z_index = 2
 layout_mode = 0
 offset_right = 410.0
@@ -371,7 +590,7 @@ offset_bottom = 394.0
 texture = ExtResource("8_3yx2a")
 expand_mode = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="PantryControl"]
+[node name="ScrollContainer" type="ScrollContainer" parent="UI/PantryControl"]
 z_index = 1
 layout_mode = 1
 anchors_preset = 15
@@ -386,16 +605,16 @@ grow_vertical = 2
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 2
 
-[node name="ItemListContainer" type="VBoxContainer" parent="PantryControl/ScrollContainer"]
+[node name="ItemListContainer" type="VBoxContainer" parent="UI/PantryControl/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 
-[node name="Label" type="Label" parent="PantryControl/ScrollContainer/ItemListContainer"]
+[node name="Label" type="Label" parent="UI/PantryControl/ScrollContainer/ItemListContainer"]
 layout_mode = 2
 text = "Test"
 
-[node name="ScrollContainer2" type="ScrollContainer" parent="PantryControl"]
+[node name="ScrollContainer2" type="ScrollContainer" parent="UI/PantryControl"]
 z_index = 1
 layout_mode = 1
 anchors_preset = 15
@@ -410,91 +629,371 @@ grow_vertical = 2
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 2
 
-[node name="IngredientListContainer" type="VBoxContainer" parent="PantryControl/ScrollContainer2"]
+[node name="IngredientListContainer" type="VBoxContainer" parent="UI/PantryControl/ScrollContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 
-[node name="Label" type="Label" parent="PantryControl/ScrollContainer2/IngredientListContainer"]
+[node name="Label" type="Label" parent="UI/PantryControl/ScrollContainer2/IngredientListContainer"]
 layout_mode = 2
 text = "Test"
 
-[node name="LogControl" type="Control" parent="."]
-anchors_preset = 0
-offset_left = 1369.0
-offset_top = 622.0
-offset_right = 1890.0
-offset_bottom = 1062.0
+[node name="QuestBoardPanel" type="PanelContainer" parent="UI"]
+custom_minimum_size = Vector2(150, 0)
+offset_left = 27.0
+offset_top = 72.0
+offset_right = 177.0
+offset_bottom = 723.0
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_3yx2a")
+script = ExtResource("1_7ljul")
+CardHolderPath = NodePath("ScrollContainer/QuestBoard/ActiveQuestPanel/ActiveQuestContainer")
+QuestCardScene = ExtResource("2_6wg6o")
+ActiveQuestContainerPath = NodePath("ScrollContainer/QuestBoard/ActiveQuestPanel/ActiveQuestContainer")
+CompletedQuestContainerPath = NodePath("ScrollContainer/QuestBoard/CompletedQuestPanel/CompletedQuestContainer")
 
-[node name="TextureRect" type="TextureRect" parent="LogControl"]
+[node name="ScrollContainer" type="ScrollContainer" parent="UI/QuestBoardPanel"]
+layout_mode = 2
+size_flags_horizontal = 0
+horizontal_scroll_mode = 0
+
+[node name="QuestBoard" type="VBoxContainer" parent="UI/QuestBoardPanel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="ActiveQuestPanel" type="PanelContainer" parent="UI/QuestBoardPanel/ScrollContainer/QuestBoard"]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="ActiveQuestContainer" type="VBoxContainer" parent="UI/QuestBoardPanel/ScrollContainer/QuestBoard/ActiveQuestPanel"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+alignment = 1
+
+[node name="CompletedQuestPanel" type="PanelContainer" parent="UI/QuestBoardPanel/ScrollContainer/QuestBoard"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CompletedQuestContainer" type="VBoxContainer" parent="UI/QuestBoardPanel/ScrollContainer/QuestBoard/CompletedQuestPanel"]
+z_index = 3
+layout_mode = 2
+alignment = 1
+
+[node name="QuestDetailPopup" parent="UI" instance=ExtResource("6_smfey")]
+oversampling_override = 1.0
+position = Vector2i(750, 100)
+visible = false
+
+[node name="QuestJournalAnchor" type="Control" parent="UI" node_paths=PackedStringArray("QuestJournalButton", "QuestJournalFX", "SparkleBurst", "ShineSweep")]
+z_index = 4
+layout_mode = 3
+anchors_preset = 0
+offset_left = 2.0
+offset_right = 42.0
+offset_bottom = 40.0
+script = ExtResource("29_vlkay")
+QuestJournalButton = NodePath("QuestJournalButton")
+QuestJournalFX = NodePath("QuestJournalFX")
+SparkleBurst = NodePath("QuestJournalFX/SparkleBurst")
+ShineSweep = NodePath("QuestJournalFX/ShineSweep")
+QuestJournalScene = ExtResource("30_xdfn1")
+
+[node name="QuestJournalFX" type="Control" parent="UI/QuestJournalAnchor"]
 layout_mode = 1
-anchors_preset = 15
 anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 68.0
-offset_right = 4.0
-offset_bottom = 2.0
-grow_horizontal = 2
-grow_vertical = 2
+anchor_bottom = 1.462
+offset_left = 35.0
+offset_top = 834.0
+offset_right = 76.0
+offset_bottom = 847.52
+
+[node name="SparkleBurst" type="AnimatedSprite2D" parent="UI/QuestJournalAnchor/QuestJournalFX"]
+visible = false
+z_index = 1
+position = Vector2(82, 865)
+scale = Vector2(0.45, 0.45)
+sprite_frames = SubResource("SpriteFrames_gj511")
+frame = 2
+frame_progress = 0.5589632
+speed_scale = 0.5
+
+[node name="ShineSweep" type="ColorRect" parent="UI/QuestJournalAnchor/QuestJournalFX"]
+visible = false
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="QuestJournalButton" type="TextureButton" parent="UI/QuestJournalAnchor"]
+layout_mode = 0
+offset_left = 17.0
+offset_top = 833.0
+offset_right = 442.0
+offset_bottom = 1258.0
+rotation = -0.13788101
+scale = Vector2(0.25, 0.25)
+texture_normal = ExtResource("30_a4f71")
+stretch_mode = 0
+
+[node name="TavernDisplay" type="Panel" parent="UI"]
+offset_left = 1382.0
+offset_top = 6.0
+offset_right = 1871.0
+offset_bottom = 182.0
+
+[node name="TextureRect" type="TextureRect" parent="UI/TavernDisplay"]
+layout_mode = 0
+offset_left = -5.0
+offset_top = -4.0
+offset_right = 503.0
+offset_bottom = 188.0
 texture = ExtResource("12_slrnj")
 expand_mode = 1
 
-[node name="TextureRect2" type="TextureRect" parent="LogControl"]
-z_index = 1
+[node name="ControlPanel" type="VBoxContainer" parent="UI/TavernDisplay"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 452.0
-offset_top = 308.0
-offset_right = -30.0
-offset_bottom = -18.0
+offset_left = 11.0
+offset_top = 7.0
+offset_right = -2.0
+offset_bottom = -7.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("13_wlqhj")
+theme_override_constants/separation = 17
 
-[node name="LogPanel" type="PanelContainer" parent="LogControl"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 30.0
-offset_top = 91.0
-offset_right = -21.0
-offset_bottom = -26.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_slrnj")
-
-[node name="LogText" type="RichTextLabel" parent="LogControl/LogPanel"]
+[node name="TimeLabel" type="Label" parent="UI/TavernDisplay/ControlPanel"]
 layout_mode = 2
-scroll_following = true
+text = "06:00"
+horizontal_alignment = 1
 
-[node name="UIAudio" type="Node" parent="." node_paths=PackedStringArray("AudioPlayer")]
+[node name="TopBar" type="HBoxContainer" parent="UI/TavernDisplay/ControlPanel"]
+layout_mode = 2
+alignment = 1
+
+[node name="PauseButton" type="Button" parent="UI/TavernDisplay/ControlPanel/TopBar"]
+layout_mode = 2
+text = "Pause"
+script = ExtResource("14_udw8w")
+
+[node name="Button1x" type="Button" parent="UI/TavernDisplay/ControlPanel/TopBar"]
+layout_mode = 2
+text = "1x"
+script = ExtResource("14_udw8w")
+
+[node name="Button2x" type="Button" parent="UI/TavernDisplay/ControlPanel/TopBar"]
+layout_mode = 2
+text = "2x"
+script = ExtResource("14_udw8w")
+
+[node name="Button4x" type="Button" parent="UI/TavernDisplay/ControlPanel/TopBar"]
+layout_mode = 2
+text = "4x"
+script = ExtResource("14_udw8w")
+
+[node name="Button8x" type="Button" parent="UI/TavernDisplay/ControlPanel/TopBar"]
+layout_mode = 2
+text = "10x"
+script = ExtResource("14_udw8w")
+
+[node name="GoldLabel" type="Label" parent="UI/TavernDisplay/ControlPanel"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="ShopButton" type="Button" parent="UI/TavernDisplay/ControlPanel"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Shop"
+script = ExtResource("14_udw8w")
+
+[node name="TavernRenown" type="Control" parent="UI/TavernDisplay"]
+anchors_preset = 0
+offset_left = 354.0
+offset_top = 43.0
+offset_right = 470.0
+offset_bottom = 134.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/TavernDisplay/TavernRenown"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_top = -3.0
+offset_right = 3.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="TavernRenownLabel" type="Label" parent="UI/TavernDisplay/TavernRenown/VBoxContainer"]
+layout_mode = 2
+text = "Tavern Renown"
+horizontal_alignment = 1
+
+[node name="TavernRenownDisplay" type="Label" parent="UI/TavernDisplay/TavernRenown/VBoxContainer"]
+layout_mode = 2
+text = "0"
+horizontal_alignment = 1
+
+[node name="TavernLevelControl" type="Control" parent="UI/TavernDisplay"]
+anchors_preset = 0
+offset_left = 22.0
+offset_top = 40.0
+offset_right = 139.0
+offset_bottom = 130.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/TavernDisplay/TavernLevelControl"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_right = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="TavernLevelLabel" type="Label" parent="UI/TavernDisplay/TavernLevelControl/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "Test"
+mouse_filter = 1
+text = "Tavern Level"
+horizontal_alignment = 1
+
+[node name="TavernLevelDisplay" type="Label" parent="UI/TavernDisplay/TavernLevelControl/VBoxContainer"]
+layout_mode = 2
+text = "0"
+horizontal_alignment = 1
+
+[node name="UI" type="CanvasLayer" parent="UI"]
+process_mode = 3
+
+[node name="EscMenu" parent="UI/UI" node_paths=PackedStringArray("PlaythroughWindow", "ConfirmationWindow") instance=ExtResource("30_4pqvv")]
+visible = false
+PlaythroughWindow = NodePath("../PlaythroughSelectWindow")
+ConfirmationWindow = NodePath("../ConfirmationWindow")
+
+[node name="ConfirmationWindow" type="Control" parent="UI/UI" node_paths=PackedStringArray("ConfirmationLabel", "YesButton", "NoButton")]
+visible = false
+z_index = 8
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("33_l6d2f")
+ConfirmationLabel = NodePath("Panel/VBoxContainer/ConfirmationLabel")
+YesButton = NodePath("Panel/VBoxContainer/HBoxContainer/YesButton")
+NoButton = NodePath("Panel/VBoxContainer/HBoxContainer/NoButton")
+
+[node name="Panel" type="Panel" parent="UI/UI/ConfirmationWindow"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -135.0
+offset_right = 100.0
+offset_bottom = 86.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_mrdno")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/UI/ConfirmationWindow/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="ConfirmationLabel" type="Label" parent="UI/UI/ConfirmationWindow/Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 2
+text = "Do you really want to do this?"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/UI/ConfirmationWindow/Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 10
+alignment = 1
+
+[node name="YesButton" type="Button" parent="UI/UI/ConfirmationWindow/Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Yes"
+
+[node name="NoButton" type="Button" parent="UI/UI/ConfirmationWindow/Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "No"
+
+[node name="PlaythroughSelectWindow" parent="UI/UI" instance=ExtResource("32_4pqvv")]
+visible = false
+z_index = 4
+
+[node name="FX" type="Node" parent="."]
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="FX"]
+visible = false
+z_index = -2
+position = Vector2(510.00003, 283.00003)
+scale = Vector2(500, 500)
+amount = 250
+lifetime = 0.05
+preprocess = 1.0
+randomness = 0.2
+fixed_fps = 2
+direction = Vector2(1, 10)
+spread = 72.84
+gravity = Vector2(-0.95, 1805.875)
+initial_velocity_max = 188.66
+scale_amount_min = 0.5
+scale_amount_max = 11.31
+
+[node name="CPUParticles2D2" type="CPUParticles2D" parent="FX"]
+visible = false
+z_index = -2
+position = Vector2(1313, 335.00003)
+scale = Vector2(500, 500)
+amount = 250
+lifetime = 0.9
+preprocess = 1.0
+randomness = 0.2
+fixed_fps = 4
+direction = Vector2(1, 10)
+spread = 72.84
+gravity = Vector2(-0.95, 1805.875)
+initial_velocity_max = 188.66
+scale_amount_min = 0.5
+scale_amount_max = 11.31
+
+[node name="UIAudio" type="Node" parent="FX" node_paths=PackedStringArray("AudioPlayer")]
 script = ExtResource("16_kk1q5")
 AudioPlayer = NodePath("UIStreamPlayer")
 HoverSound = ExtResource("17_rf4u6")
 ClickSound = ExtResource("18_udw8w")
 
-[node name="UIStreamPlayer" type="AudioStreamPlayer" parent="UIAudio"]
+[node name="UIStreamPlayer" type="AudioStreamPlayer" parent="FX/UIAudio"]
 bus = &"Interface"
 
-[node name="UICursor" type="Node" parent="."]
-script = ExtResource("19_udw8w")
-IdleCursor = ExtResource("20_31se6")
-GrabCursor = ExtResource("21_vy8gr")
-PointCursor = ExtResource("22_abkob")
-
-[node name="QuestDetailPopup" parent="." instance=ExtResource("6_smfey")]
-position = Vector2i(750, 100)
-visible = false
-
-[node name="MusicManager" type="Node" parent="." node_paths=PackedStringArray("MusicPlayer")]
+[node name="MusicManager" type="Node" parent="FX" node_paths=PackedStringArray("MusicPlayer")]
 process_mode = 1
 script = ExtResource("27_e0xf5")
 MusicPlayer = NodePath("MusicStreamPlayer")
 
-[node name="AudioButton" type="TextureButton" parent="MusicManager"]
+[node name="AudioButton" type="TextureButton" parent="FX/MusicManager"]
 offset_left = 1840.0
 offset_top = 643.0
 offset_right = 1893.0
@@ -505,7 +1004,7 @@ texture_pressed = ExtResource("24_e0xf5")
 ignore_texture_size = true
 stretch_mode = 0
 
-[node name="Icon" type="TextureRect" parent="MusicManager/AudioButton"]
+[node name="Icon" type="TextureRect" parent="FX/MusicManager/AudioButton"]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 5.0
@@ -513,7 +1012,7 @@ offset_right = 44.0
 offset_bottom = 45.0
 texture = ExtResource("25_yj0io")
 
-[node name="AudioPanelManager" type="Panel" parent="MusicManager" node_paths=PackedStringArray("AudioButton", "AudioPanel", "MusicSlider", "InterfaceSlider")]
+[node name="AudioPanelManager" type="Panel" parent="FX/MusicManager" node_paths=PackedStringArray("AudioButton", "AudioPanel", "MusicSlider", "InterfaceSlider")]
 process_mode = 1
 visible = false
 z_index = 2
@@ -527,7 +1026,7 @@ AudioPanel = NodePath(".")
 MusicSlider = NodePath("VBoxContainer/MusicSlider")
 InterfaceSlider = NodePath("VBoxContainer/InterfaceSlider")
 
-[node name="TextureRect" type="TextureRect" parent="MusicManager/AudioPanelManager"]
+[node name="TextureRect" type="TextureRect" parent="FX/MusicManager/AudioPanelManager"]
 z_index = 2
 layout_mode = 1
 anchors_preset = 15
@@ -539,7 +1038,7 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("23_m6qgr")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MusicManager/AudioPanelManager"]
+[node name="VBoxContainer" type="VBoxContainer" parent="FX/MusicManager/AudioPanelManager"]
 z_index = 2
 layout_mode = 0
 offset_left = 16.0
@@ -547,7 +1046,7 @@ offset_top = 9.0
 offset_right = 163.0
 offset_bottom = 157.0
 
-[node name="Label" type="Label" parent="MusicManager/AudioPanelManager/VBoxContainer"]
+[node name="Label" type="Label" parent="FX/MusicManager/AudioPanelManager/VBoxContainer"]
 z_index = 2
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
@@ -558,119 +1057,40 @@ theme_override_constants/shadow_outline_size = 4
 text = "Volume Control"
 horizontal_alignment = 1
 
-[node name="MusicLabel" type="Label" parent="MusicManager/AudioPanelManager/VBoxContainer"]
+[node name="MusicLabel" type="Label" parent="FX/MusicManager/AudioPanelManager/VBoxContainer"]
 z_index = 2
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Music Volume:"
 horizontal_alignment = 1
 
-[node name="MusicSlider" type="HSlider" parent="MusicManager/AudioPanelManager/VBoxContainer"]
+[node name="MusicSlider" type="HSlider" parent="FX/MusicManager/AudioPanelManager/VBoxContainer"]
 z_index = 2
 layout_mode = 2
 
-[node name="InterfaceLabel" type="Label" parent="MusicManager/AudioPanelManager/VBoxContainer"]
+[node name="InterfaceLabel" type="Label" parent="FX/MusicManager/AudioPanelManager/VBoxContainer"]
 z_index = 2
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Interface Volume:"
 horizontal_alignment = 1
 
-[node name="InterfaceSlider" type="HSlider" parent="MusicManager/AudioPanelManager/VBoxContainer"]
+[node name="InterfaceSlider" type="HSlider" parent="FX/MusicManager/AudioPanelManager/VBoxContainer"]
 z_index = 2
 layout_mode = 2
 
-[node name="MusicStreamPlayer" type="AudioStreamPlayer" parent="MusicManager"]
+[node name="MusicStreamPlayer" type="AudioStreamPlayer" parent="FX/MusicManager"]
 process_mode = 1
 bus = &"Music"
 playback_type = 1
 
-[node name="FurnitureContainer" type="Control" parent="."]
-visible = false
-z_index = 1
-anchors_preset = 0
-offset_left = 1419.0
-offset_top = 211.0
-offset_right = 1829.0
-offset_bottom = 605.0
+[node name="UICursor" type="Node" parent="FX"]
+script = ExtResource("19_udw8w")
+IdleCursor = ExtResource("20_31se6")
+GrabCursor = ExtResource("21_vy8gr")
+PointCursor = ExtResource("22_abkob")
 
-[node name="TextureRect" type="TextureRect" parent="FurnitureContainer"]
-layout_mode = 0
-offset_right = 410.0
-offset_bottom = 394.0
-texture = ExtResource("8_3yx2a")
-expand_mode = 1
-
-[node name="FurniturePanel" type="Panel" parent="FurnitureContainer"]
-z_index = 2
-custom_minimum_size = Vector2(25, 25)
-layout_mode = 0
-offset_left = 14.0
-offset_top = 23.0
-offset_right = 395.0
-offset_bottom = 374.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-script = ExtResource("9_wnxq3")
-
-[node name="FurnitureVBox" type="VBoxContainer" parent="FurnitureContainer/FurniturePanel"]
-layout_mode = 0
-offset_left = 3.0
-offset_right = 381.0
-offset_bottom = 353.0
-theme_override_constants/separation = 35
-
-[node name="QuestJournalAnchor" type="Control" parent="." node_paths=PackedStringArray("QuestJournalButton", "QuestJournalFX", "SparkleBurst", "ShineSweep")]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-script = ExtResource("29_vlkay")
-QuestJournalButton = NodePath("QuestJournalButton")
-QuestJournalFX = NodePath("QuestJournalFX")
-SparkleBurst = NodePath("QuestJournalFX/SparkleBurst")
-ShineSweep = NodePath("QuestJournalFX/ShineSweep")
-QuestJournalScene = ExtResource("30_xdfn1")
-
-[node name="QuestJournalFX" type="Control" parent="QuestJournalAnchor"]
-layout_mode = 1
-anchor_right = 1.0
-anchor_bottom = 1.462
-offset_left = 35.0
-offset_top = 834.0
-offset_right = 76.0
-offset_bottom = 847.52
-
-[node name="SparkleBurst" type="AnimatedSprite2D" parent="QuestJournalAnchor/QuestJournalFX"]
-visible = false
-z_index = 1
-position = Vector2(82, 865)
-scale = Vector2(0.45, 0.45)
-sprite_frames = SubResource("SpriteFrames_gj511")
-frame = 2
-frame_progress = 0.5589632
-speed_scale = 0.5
-
-[node name="ShineSweep" type="ColorRect" parent="QuestJournalAnchor/QuestJournalFX"]
-visible = false
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="QuestJournalButton" type="TextureButton" parent="QuestJournalAnchor"]
-layout_mode = 0
-offset_left = 17.0
-offset_top = 833.0
-offset_right = 442.0
-offset_bottom = 1258.0
-rotation = -0.13788101
-scale = Vector2(0.25, 0.25)
-texture_normal = ExtResource("30_a4f71")
-stretch_mode = 0
-
-[node name="FeedMenu" parent="." instance=ExtResource("33_xdfn1")]
-layout_mode = 1
-
-[connection signal="pressed" from="TavernDisplay/ControlPanel/TopBar/Button1x" to="QuestBoardPanel" method="OnSpeed1xPressed"]
-[connection signal="pressed" from="TavernDisplay/ControlPanel/TopBar/Button2x" to="QuestBoardPanel" method="OnSpeed2xPressed"]
-[connection signal="pressed" from="TavernDisplay/ControlPanel/TopBar/Button4x" to="QuestBoardPanel" method="OnSpeed4xPressed"]
-[connection signal="pressed" from="TavernDisplay/ControlPanel/TopBar/Button8x" to="ClockManager" method="OnSpeed8xPressed"]
+[connection signal="pressed" from="UI/TavernDisplay/ControlPanel/TopBar/Button1x" to="UI/QuestBoardPanel" method="OnSpeed1xPressed"]
+[connection signal="pressed" from="UI/TavernDisplay/ControlPanel/TopBar/Button2x" to="UI/QuestBoardPanel" method="OnSpeed2xPressed"]
+[connection signal="pressed" from="UI/TavernDisplay/ControlPanel/TopBar/Button4x" to="UI/QuestBoardPanel" method="OnSpeed4xPressed"]
+[connection signal="pressed" from="UI/TavernDisplay/ControlPanel/TopBar/Button8x" to="Systems/ClockManager" method="OnSpeed8xPressed"]

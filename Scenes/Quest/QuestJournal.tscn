@@ -7,7 +7,9 @@
 [ext_resource type="Texture2D" uid="uid://dn5pdhfu6h363" path="res://Assets/UI/Buttons/FRibbon.png" id="4_h826o"]
 
 [node name="QuestJournal" type="Control" node_paths=PackedStringArray("PageLabel", "GeneralTab1", "GeneralTab2", "CompletedQuests1", "CompletedQuests2", "FailedQuests1", "FailedQuests2", "GeneralButton", "CompletedButton", "FailedButton", "CloseButton", "QuestAttemptedSpinbox", "QuestsSucceededSpinbox", "QuestsFailedSpinbox", "SuccessRateSpinbox", "FavoriteQuestTypeLabel", "FavoriteQuestGiverLabel", "GPQSpinbox", "HighestPayoutSpinbox", "CompletedQuestList", "FailedQuestList", "QuestDetailContainer")]
-z_index = 12
+top_level = true
+visibility_layer = 2
+z_index = 13
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_6ajf7")

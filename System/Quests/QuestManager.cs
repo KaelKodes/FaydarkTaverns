@@ -273,95 +273,95 @@ public class QuestManager
 	}
 
 	public void CompleteQuest(Quest quest)
-{
-	if (quest.IsComplete)
 	{
-		GameLog.Debug($"⚠️ Tried to complete Quest {quest.QuestId}, but it's already complete.");
-		return;
+		if (quest.IsComplete)
+		{
+			GameLog.Debug($"⚠️ Tried to complete Quest {quest.QuestId}, but it's already complete.");
+			return;
+		}
+
+		var result = QuestSimulator.Simulate(quest);
+		quest.IsComplete = true;
+		quest.Failed = !result.Success;
+		HandleQuestReturn(quest);
+
+		// ==============================
+		// 📊 UPDATE JOURNAL STATISTICS
+		// ==============================
+		Stats.Attempts++;
+
+		// Count quest type (convert enum → string for dictionary key)
+		string typeKey = quest.Type.ToString();
+
+		if (!Stats.QuestTypeCount.ContainsKey(typeKey))
+			Stats.QuestTypeCount[typeKey] = 0;
+
+		Stats.QuestTypeCount[typeKey]++;
+
+
+		// Count quest giver
+		if (quest.PostedBy != null)
+		{
+			string giver = quest.PostedBy.Name;
+			if (!Stats.QuestGiverCount.ContainsKey(giver))
+				Stats.QuestGiverCount[giver] = 0;
+			Stats.QuestGiverCount[giver]++;
+		}
+		// ==============================
+
+
+		if (result.Success)
+		{
+			Stats.Successes++;
+			Stats.GoldEarned += result.GoldEarned;
+
+			if (result.GoldEarned > Stats.HighestPayout)
+				Stats.HighestPayout = result.GoldEarned;
+
+			TavernManager.Instance.AddGold(result.GoldEarned);
+			TavernManager.Instance.IncrementSuccessCombo();
+			int tavernExp = CalculateTavernExp(quest, result);
+			TavernManager.Instance.GainTavernExp(tavernExp);
+
+			activeQuests.Remove(quest);
+			completedQuests.Add(quest);
+
+			GameLog.Info($"💰 Player earned {result.GoldEarned}g!");
+			GameLog.Info($"✨ Success Combo: {TavernManager.Instance.SuccessComboCount} → +{TavernManager.Instance.SuccessComboCount} EXP bonus");
+		}
+		else
+		{
+			Stats.Failures++;
+			TavernManager.Instance.ResetSuccessCombo();
+		}
+
+		foreach (var adventurer in quest.AssignedAdventurers)
+		{
+			adventurer.GainXP(result.ExpGained);
+		}
+
+		TavernManager.Instance.DisplayAdventurers();
+		LogQuestResult(quest, result);
+		GameLog.Info($"🎉 Quest '{quest.Title}' completed. Success: {result.Success}");
+
+		// Unlock Quest Journal on first completion
+		if (!questJournalUnlocked)
+		{
+			questJournalUnlocked = true;
+			QuestJournalUnlockController.Instance?.TryUnlockJournal();
+		}
+
+		// 🔄 Reset quest giver posting state so they may post again
+		if (quest.PostedBy != null)
+		{
+			quest.PostedBy.PostedQuest = null;
+			quest.PostedBy.HasPostedToday = false;
+		}
+
+		// 🔔 Final UI refresh
+		QuestJournal.Instance?.RefreshGeneralStats();
+		OnQuestsUpdated?.Invoke();
 	}
-
-	var result = QuestSimulator.Simulate(quest);
-	quest.IsComplete = true;
-	quest.Failed = !result.Success;
-	HandleQuestReturn(quest);
-
-	// ==============================
-	// 📊 UPDATE JOURNAL STATISTICS
-	// ==============================
-	Stats.Attempts++;
-
-	// Count quest type (convert enum → string for dictionary key)
-string typeKey = quest.Type.ToString();
-
-if (!Stats.QuestTypeCount.ContainsKey(typeKey))
-	Stats.QuestTypeCount[typeKey] = 0;
-
-Stats.QuestTypeCount[typeKey]++;
-
-
-	// Count quest giver
-	if (quest.PostedBy != null)
-	{
-		string giver = quest.PostedBy.Name;
-		if (!Stats.QuestGiverCount.ContainsKey(giver))
-			Stats.QuestGiverCount[giver] = 0;
-		Stats.QuestGiverCount[giver]++;
-	}
-	// ==============================
-
-
-	if (result.Success)
-	{
-		Stats.Successes++;
-		Stats.GoldEarned += result.GoldEarned;
-
-		if (result.GoldEarned > Stats.HighestPayout)
-			Stats.HighestPayout = result.GoldEarned;
-
-		TavernManager.Instance.AddGold(result.GoldEarned);
-		TavernManager.Instance.IncrementSuccessCombo();
-		int tavernExp = CalculateTavernExp(quest, result);
-		TavernManager.Instance.GainTavernExp(tavernExp);
-
-		activeQuests.Remove(quest);
-		completedQuests.Add(quest);
-
-		GameLog.Info($"💰 Player earned {result.GoldEarned}g!");
-		GameLog.Info($"✨ Success Combo: {TavernManager.Instance.SuccessComboCount} → +{TavernManager.Instance.SuccessComboCount} EXP bonus");
-	}
-	else
-	{
-		Stats.Failures++;
-		TavernManager.Instance.ResetSuccessCombo();
-	}
-
-	foreach (var adventurer in quest.AssignedAdventurers)
-	{
-		adventurer.GainXP(result.ExpGained);
-	}
-
-	TavernManager.Instance.DisplayAdventurers();
-	LogQuestResult(quest, result);
-	GameLog.Info($"🎉 Quest '{quest.Title}' completed. Success: {result.Success}");
-
-	// Unlock Quest Journal on first completion
-	if (!questJournalUnlocked)
-	{
-		questJournalUnlocked = true;
-		QuestJournalUnlockController.Instance?.TryUnlockJournal();
-	}
-
-	// 🔄 Reset quest giver posting state so they may post again
-	if (quest.PostedBy != null)
-	{
-		quest.PostedBy.PostedQuest = null;
-		quest.PostedBy.HasPostedToday = false;
-	}
-
-	// 🔔 Final UI refresh
-	QuestJournal.Instance?.RefreshGeneralStats();
-	OnQuestsUpdated?.Invoke();
-}
 
 
 	// 💡 You can define this however you like — basic example:
@@ -439,6 +439,204 @@ Stats.QuestTypeCount[typeKey]++;
 		MaxQuestSlots++;
 		GameLog.Info($"📈 Quest board capacity increased to {MaxQuestSlots}.");
 	}
+
+	// Save Load	
+	public QuestDataBlock ToData()
+	{
+		var data = new QuestDataBlock
+		{
+			MaxQuestSlots = this.MaxQuestSlots,
+			NextQuestId = this.nextQuestId,
+
+			ActiveQuests = new List<QuestSaveData>(),
+			CompletedQuests = new List<QuestSaveData>(),
+			Stats = new QuestStatisticsData
+			{
+				Attempts = Stats.Attempts,
+				Successes = Stats.Successes,
+				Failures = Stats.Failures,
+				GoldEarned = Stats.GoldEarned,
+				HighestPayout = Stats.HighestPayout,
+				QuestTypeCount = new Dictionary<string, int>(Stats.QuestTypeCount),
+				QuestGiverCount = new Dictionary<string, int>(Stats.QuestGiverCount)
+			}
+		};
+
+		// Convert active quests
+		foreach (var q in activeQuests)
+			data.ActiveQuests.Add(ConvertQuestToSave(q));
+
+		// Convert completed quests
+		foreach (var q in completedQuests)
+			data.CompletedQuests.Add(ConvertQuestToSave(q));
+
+		return data;
+	}
+
+	private QuestSaveData ConvertQuestToSave(Quest q)
+	{
+		return new QuestSaveData
+		{
+			QuestId = q.QuestId,
+			Title = q.Title,
+			Region = q.Region.ToString(),
+			Type = q.Type.ToString(),
+			Reward = q.Reward,
+
+			IsAccepted = q.IsAccepted,
+			IsComplete = q.IsComplete,
+			Failed = q.Failed,
+
+			AssignedAdventurerIDs = q.AssignedAdventurers?
+				.ConvertAll(a => a.Id) ?? new List<string>(),   // string IDs
+
+			PostedByNPCId = q.PostedBy?.Id                    // string ID
+		};
+	}
+
+	public void FromData(QuestDataBlock data)
+	{
+		if (data == null)
+			return;
+
+		this.MaxQuestSlots = data.MaxQuestSlots;
+		this.nextQuestId = data.NextQuestId;
+
+		// Wipe current quests
+		allQuests = new List<Quest>();
+		activeQuests = new List<Quest>();
+		completedQuests = new List<Quest>();
+
+		// Rebuild active quests
+		foreach (var qd in data.ActiveQuests)
+			activeQuests.Add(RebuildQuest(qd));
+
+		// Rebuild completed quests
+		foreach (var qd in data.CompletedQuests)
+			completedQuests.Add(RebuildQuest(qd));
+
+		// Rebuild stats
+		Stats = new QuestStatistics
+		{
+			Attempts = data.Stats.Attempts,
+			Successes = data.Stats.Successes,
+			Failures = data.Stats.Failures,
+			GoldEarned = data.Stats.GoldEarned,
+			HighestPayout = data.Stats.HighestPayout,
+			QuestTypeCount = new Dictionary<string, int>(data.Stats.QuestTypeCount ?? new()),
+			QuestGiverCount = new Dictionary<string, int>(data.Stats.QuestGiverCount ?? new())
+		};
+
+		// Rebuild `allQuests` so logic expecting it still works
+		allQuests.AddRange(activeQuests);
+		allQuests.AddRange(completedQuests);
+
+		OnQuestsUpdated?.Invoke();
+	}
+
+	private Quest RebuildQuest(QuestSaveData qd)
+	{
+		var q = new Quest
+		{
+			QuestId = qd.QuestId,
+			Title = qd.Title,
+			Region = Enum.Parse<Region>(qd.Region),
+			Reward = qd.Reward,
+			IsAccepted = qd.IsAccepted,
+			IsComplete = qd.IsComplete,
+			Failed = qd.Failed,
+			Type = Enum.Parse<QuestType>(qd.Type)
+		};
+
+		//load from save
+		q.SaveData = qd;
+
+		// Assigned adventurers linked later (via GuestManager)
+		q.AssignedAdventurers = new List<NPCData>();
+
+		// PostedBy linked later
+		// (NPCs aren’t loaded yet at this stage)
+
+		return q;
+	}
+
+	public void ResolveNPCLinks()
+	{
+		// We need access to all restored guests
+		var villagers = TavernManager.Instance?.AllVillagers;
+		if (villagers == null || villagers.Count == 0)
+		{
+			GameLog.Debug("⚠️ ResolveNPCLinks: No villagers available. Skipping.");
+			return;
+		}
+
+		// Helper to look up NPCData by ID
+		NPCData FindNPC(string id)
+		{
+			if (string.IsNullOrEmpty(id))
+				return null;
+
+			foreach (var g in villagers)
+			{
+				if (g?.BoundNPC != null && g.BoundNPC.Id == id)
+					return g.BoundNPC;
+			}
+			return null;
+		}
+
+		// Process both active + completed quests
+		IEnumerable<Quest> all = ActiveQuests.Concat(completedQuests);
+
+		foreach (var q in all)
+		{
+			if (q.SaveData == null)
+			{
+				GameLog.Debug($"⚠️ Quest {q.Title} missing SaveData. Skipping link.");
+				continue;
+			}
+
+			// -------------------------------
+			// Restore Assigned Adventurers
+			// -------------------------------
+			q.AssignedAdventurers.Clear();
+
+			if (q.SaveData.AssignedAdventurerIDs != null)
+			{
+				foreach (var id in q.SaveData.AssignedAdventurerIDs)
+				{
+					var npc = FindNPC(id);
+					if (npc != null)
+					{
+						q.AssignedAdventurers.Add(npc);
+					}
+					else
+					{
+						GameLog.Debug($"⚠️ Could not find NPC with ID {id} for quest '{q.Title}'.");
+					}
+				}
+			}
+
+			// -------------------------------
+			// Restore Quest Giver (PostedBy)
+			// -------------------------------
+			if (!string.IsNullOrEmpty(q.SaveData.PostedByNPCId))
+			{
+				q.PostedBy = FindNPC(q.SaveData.PostedByNPCId);
+
+				if (q.PostedBy == null)
+					GameLog.Debug($"⚠️ Could not restore PostedBy NPC for quest '{q.Title}'.");
+			}
+			else
+			{
+				q.PostedBy = null;
+			}
+		}
+
+		GameLog.Info("🔗 Quest NPC links resolved.");
+	}
+
+
+	// QuestManager end	
 }
 
 public class QuestReport

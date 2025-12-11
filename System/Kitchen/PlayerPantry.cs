@@ -6,13 +6,11 @@ public static class PlayerPantry
 {
 	public static event Action SuppliesChanged;
 
-
 	// =============================
 	//  INVENTORY STORES
 	// =============================
 	public static Dictionary<string, int> Ingredients = new();
 	public static Dictionary<string, int> Supplies = new();
-	
 
 	// =============================
 	//  INGREDIENT METHODS
@@ -52,22 +50,20 @@ public static class PlayerPantry
 		}
 	}
 
-
 	// =============================
 	//  SUPPLY METHODS (FOOD/DRINK)
 	// =============================
 	public static void AddSupply(string supply, int amount = 1)
-{
-	if (Supplies.ContainsKey(supply))
-		Supplies[supply] += amount;
-	else
-		Supplies[supply] = amount;
+	{
+		if (Supplies.ContainsKey(supply))
+			Supplies[supply] += amount;
+		else
+			Supplies[supply] = amount;
 
-	GD.Print($"> Gained {amount}x {supply}");
+		GD.Print($"> Gained {amount}x {supply}");
 
-	SuppliesChanged?.Invoke();
-}
-
+		SuppliesChanged?.Invoke();
+	}
 
 	public static bool HasSupplies(List<string> needed)
 	{
@@ -82,24 +78,21 @@ public static class PlayerPantry
 	}
 
 	public static void ConsumeSupplies(List<string> used)
-{
-	foreach (var item in used)
 	{
-		if (Supplies.ContainsKey(item))
+		foreach (var item in used)
 		{
-			Supplies[item] = Mathf.Max(Supplies[item] - 1, 0);
-			GD.Print($"> Used 1x {item}");
-			
-			if (Supplies[item] <= 0)
-				Supplies.Remove(item);
+			if (Supplies.ContainsKey(item))
+			{
+				Supplies[item] = Mathf.Max(Supplies[item] - 1, 0);
+				GD.Print($"> Used 1x {item}");
+
+				if (Supplies[item] <= 0)
+					Supplies.Remove(item);
+			}
 		}
+
+		SuppliesChanged?.Invoke();
 	}
-
-	SuppliesChanged?.Invoke();
-}
-
-
-
 
 	// =============================
 	//  DEBUG
@@ -107,11 +100,49 @@ public static class PlayerPantry
 	public static void PrintInventory()
 	{
 		GD.Print("--- Pantry Inventory ---");
-		
+
 		foreach (var kvp in Ingredients)
 			GD.Print($"[Ingredient] {kvp.Key}: {kvp.Value}");
-		
+
 		foreach (var kvp in Supplies)
 			GD.Print($"[Supply]     {kvp.Key}: {kvp.Value}");
+	}
+
+	// =============================
+	//  SAVE / LOAD
+	// =============================
+	public static PlayerData ToData()
+	{
+		return new PlayerData
+		{
+			Ingredients = new Dictionary<string, int>(Ingredients),
+			Supplies = new Dictionary<string, int>(Supplies)
+		};
+	}
+
+	public static void FromData(PlayerData data)
+	{
+		if (data == null)
+			return;
+
+		Ingredients = new Dictionary<string, int>(data.Ingredients ?? new Dictionary<string, int>());
+		Supplies = new Dictionary<string, int>(data.Supplies ?? new Dictionary<string, int>());
+
+		GD.Print("[PlayerPantry] Inventory restored from save.");
+
+		// =============================
+		//  SAFE UI REFRESH (prevents crash)
+		// =============================
+		// Only refresh PantryPanel if it is valid and part of the NEW scene tree.
+		if (PantryPanel.Instance != null && GodotObject.IsInstanceValid(PantryPanel.Instance))
+		{
+			PantryPanel.Instance.CallDeferred(nameof(PantryPanel.RefreshPantry));
+		}
+		else
+		{
+			GD.PrintErr("[PlayerPantry] PantryPanel not ready; deferred UI update skipped.");
+		}
+
+		SuppliesChanged?.Invoke();
 	}
 }

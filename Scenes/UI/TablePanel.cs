@@ -43,65 +43,69 @@ public partial class TablePanel : VBoxContainer
 		}
 	}
 
-public void UpdateSeatSlots()
-{
-	if (LinkedTable == null || SeatSlotContainer == null)
+	public void UpdateSeatSlots()
 	{
-		GD.PrintErr("⛔ TablePanel: UpdateSeatSlots called with null LinkedTable or SeatSlotContainer.");
-		return;
-	}
+		// 🔥 Prevent crashes during save/load UI rebuild
+		if (LinkedTable == null || SeatSlotContainer == null || !IsInstanceValid(SeatSlotContainer))
+			return;
 
-	SeatSlotContainer.ClearChildren();
+		// Godot sometimes disposes UI nodes during scene activation.
+		// This avoids calling ClearChildren() on a freed container.
+		if (!IsInsideTree())
+			return;
 
-	for (int i = 0; i < LinkedTable.SeatCount; i++)
-	{
-		var guest = LinkedTable.SeatedGuests.ElementAtOrDefault(i);
 
-		// 🎛️ Furniture mode: show basic slot visuals only
-		if (Owner is FurniturePanel)
+		SeatSlotContainer.ClearChildren();
+
+		for (int i = 0; i < LinkedTable.SeatCount; i++)
 		{
-			var slot = new SeatSlot();
+			var guest = LinkedTable.SeatedGuests.ElementAtOrDefault(i);
 
-			if (guest == null)
-				slot.SetEmpty();
-			else if (guest.IsAdventurer)
-				slot.SetAdventurer();
-			else if (guest.IsQuestGiver)
-				slot.SetQuestGiver();
-			else
-				slot.SetEmpty();
-
-			SeatSlotContainer.AddChild(slot);
-		}
-		else // 👥 Guest mode: show full GuestCards
-		{
-			var card = GuestCardScene.Instantiate<GuestCard>();
-			card.SetMouseFilter(Control.MouseFilterEnum.Stop);
-
-			if (guest != null && !guest.IsOnQuest && guest.BoundNPC != null)
+			// 🎛️ Furniture mode: show basic slot visuals only
+			if (Owner is FurniturePanel)
 			{
-				card.BoundGuest = guest;
-				card.BoundNPC = guest.BoundNPC;
+				var slot = new SeatSlot();
 
-				var lastInitial = string.IsNullOrEmpty(guest.BoundNPC.LastName) ? "" : $"{guest.BoundNPC.LastName[0]}.";
-				card.GetNode<Label>("VBoxContainer/NameLabel").Text = $"{guest.BoundNPC.FirstName} {lastInitial}";
-				card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"{guest.BoundNPC.Level} {guest.BoundNPC.ClassName}";
+				if (guest == null)
+					slot.SetEmpty();
+				else if (guest.IsAdventurer)
+					slot.SetAdventurer();
+				else if (guest.IsQuestGiver)
+					slot.SetQuestGiver();
+				else
+					slot.SetEmpty();
 
-				// ✅ Hook up event handlers for bubble click actions
-				card.ServeFoodRequested += TavernManager.Instance.OnServeFoodRequestedFromCard;
-				card.ServeDrinkRequested += TavernManager.Instance.OnServeDrinkRequestedFromCard;
-
-				// ✅ Ensure bubbles are evaluated after scene readiness
-				card.CallDeferred(nameof(card.UpdateBubbleDisplay));
+				SeatSlotContainer.AddChild(slot);
 			}
-			else
+			else // 👥 Guest mode: show full GuestCards
 			{
-				card.SetEmptySlot();
-			}
+				var card = GuestCardScene.Instantiate<GuestCard>();
+				card.SetMouseFilter(Control.MouseFilterEnum.Stop);
 
-			SeatSlotContainer.AddChild(card);
+				if (guest != null && !guest.IsOnQuest && guest.BoundNPC != null)
+				{
+					card.BoundGuest = guest;
+					card.BoundNPC = guest.BoundNPC;
+
+					var lastInitial = string.IsNullOrEmpty(guest.BoundNPC.LastName) ? "" : $"{guest.BoundNPC.LastName[0]}.";
+					card.GetNode<Label>("VBoxContainer/NameLabel").Text = $"{guest.BoundNPC.FirstName} {lastInitial}";
+					card.GetNode<Label>("VBoxContainer/ClassLabel").Text = $"{guest.BoundNPC.Level} {guest.BoundNPC.ClassName}";
+
+					// ✅ Hook up event handlers for bubble click actions
+					card.ServeFoodRequested += TavernManager.Instance.OnServeFoodRequestedFromCard;
+					card.ServeDrinkRequested += TavernManager.Instance.OnServeDrinkRequestedFromCard;
+
+					// ✅ Ensure bubbles are evaluated after scene readiness
+					card.CallDeferred(nameof(card.UpdateBubbleDisplay));
+				}
+				else
+				{
+					card.SetEmptySlot();
+				}
+
+				SeatSlotContainer.AddChild(card);
+			}
 		}
 	}
-}
 
 }

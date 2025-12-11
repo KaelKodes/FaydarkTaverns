@@ -3,64 +3,105 @@ using System.Linq;
 
 public partial class PantryPanel : Control
 {
-	[Export]
-	public VBoxContainer ItemListContainer;         // Supplies / Complete Dishes container
+    // ===============================
+    // SINGLETON INSTANCE
+    // ===============================
+    public static PantryPanel Instance;
 
-	[Export]
-	public VBoxContainer IngredientListContainer;   // Ingredients container
+    [Export] public VBoxContainer ItemListContainer;         // Supplies / Complete Dishes
+    [Export] public VBoxContainer IngredientListContainer;   // Ingredients
 
-	public override void _Ready()
-{
-	// Listen to pantry supply updates
-	PlayerPantry.SuppliesChanged += RefreshPantry;
+    public override void _Ready()
+    {
+        // SAFE SINGLETON GUARD
+        if (Instance != null && Instance != this && GodotObject.IsInstanceValid(Instance))
+        {
+            GD.PrintErr("❌ Duplicate PantryPanel detected! Replacing old instance.");
+        }
 
-	RefreshPantry();
-}
+        Instance = this;
 
+        // Listen to supply changes AFTER singleton is valid
+        PlayerPantry.SuppliesChanged += OnSuppliesChanged;
 
-	public void RefreshPantry()
-	{
-		// Clear existing children in both containers
-		foreach (var child in ItemListContainer.GetChildren())
-			child.QueueFree();
+        // Deferred refresh prevents race condition during load
+        CallDeferred(nameof(RefreshPantry));
+    }
 
-		foreach (var child in IngredientListContainer.GetChildren())
-			child.QueueFree();
+    public override void _ExitTree()
+    {
+        if (Instance == this)
+            Instance = null;
 
-		// Show all supplies (complete dishes) with quantity > 0
-		foreach (var entry in PlayerPantry.Supplies)
-		{
-			if (entry.Value > 0)
-			{
-				var label = new Label();
+        PlayerPantry.SuppliesChanged -= OnSuppliesChanged;
+    }
 
-				// Lookup name in Food/Drink DB
-				var food = FoodDrinkDatabase.AllFood.FirstOrDefault(f => f.Id == entry.Key);
-				var drink = FoodDrinkDatabase.AllDrinks.FirstOrDefault(d => d.Id == entry.Key);
-				string displayName = food?.Name ?? drink?.Name ?? entry.Key;
+    private void OnSuppliesChanged()
+    {
+        // UI updates must ALWAYS be deferred during load
+        CallDeferred(nameof(RefreshPantry));
+    }
 
-				label.Text = $"{displayName} x{entry.Value}";
-				ItemListContainer.AddChild(label);
-			}
-		}
+    // ===============================
+    // SAFE REFRESH
+    // ===============================
+    public void RefreshPantry()
+    {
+        // Prevent crashes if UI is not yet ready (save/load timing)
+        if (ItemListContainer == null || 
+            !GodotObject.IsInstanceValid(ItemListContainer) ||
+            IngredientListContainer == null ||
+            !GodotObject.IsInstanceValid(IngredientListContainer))
+        {
+            GD.PrintErr("❌ PantryPanel.RefreshPantry aborted — containers not ready.");
+            return;
+        }
 
-		// Show all ingredients with quantity > 0
-		foreach (var entry in PlayerPantry.Ingredients)
-		{
-			if (entry.Value > 0)
-			{
-				var label = new Label();
+        // Clear existing items
+        foreach (var child in ItemListContainer.GetChildren())
+            child.QueueFree();
 
-				// Lookup ingredient name in Ingredient DB
-				var ingredient = IngredientDatabase.Ingredients.ContainsKey(entry.Key)
-					? IngredientDatabase.Ingredients[entry.Key]
-					: null;
+        foreach (var child in IngredientListContainer.GetChildren())
+            child.QueueFree();
 
-				string displayName = ingredient?.Name ?? entry.Key;
+        // ===============================
+        // SUPPLIES (FOOD/DRINKS)
+        // ===============================
+        foreach (var entry in PlayerPantry.Supplies)
+        {
+            if (entry.Value > 0)
+            {
+                var label = new Label();
 
-				label.Text = $"{displayName} x{entry.Value}";
-				IngredientListContainer.AddChild(label);
-			}
-		}
-	}
+                var food = FoodDrinkDatabase.AllFood.FirstOrDefault(f => f.Id == entry.Key);
+                var drink = FoodDrinkDatabase.AllDrinks.FirstOrDefault(d => d.Id == entry.Key);
+                string displayName = food?.Name ?? drink?.Name ?? entry.Key;
+
+                label.Text = $"{displayName} x{entry.Value}";
+                ItemListContainer.AddChild(label);
+            }
+        }
+
+        // ===============================
+        // INGREDIENTS
+        // ===============================
+        foreach (var entry in PlayerPantry.Ingredients)
+        {
+            if (entry.Value > 0)
+            {
+                var label = new Label();
+
+                var ingredient = IngredientDatabase.Ingredients.ContainsKey(entry.Key)
+                    ? IngredientDatabase.Ingredients[entry.Key]
+                    : null;
+
+                string displayName = ingredient?.Name ?? entry.Key;
+
+                label.Text = $"{displayName} x{entry.Value}";
+                IngredientListContainer.AddChild(label);
+            }
+        }
+
+        GD.Print("[PantryPanel] Pantry refreshed.");
+    }
 }

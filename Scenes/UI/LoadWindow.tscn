@@ -1,0 +1,210 @@
+[gd_scene load_steps=2 format=3 uid="uid://cgyxw33ixowqr"]
+
+[sub_resource type="CSharpScript" id="CSharpScript_2exjn"]
+script/source = "using Godot;
+using System;
+
+public partial class LoadWindow : Control
+{
+	[Export] public Label Slot1Details;
+	[Export] public Label Slot2Details;
+	[Export] public Label Slot3Details;
+	[Export] public Label Slot4Details;
+
+	[Export] public Button Slot1Select;
+	[Export] public Button Slot2Select;
+	[Export] public Button Slot3Select;
+	[Export] public Button Slot4Select;
+
+	public override void _Ready()
+	{
+		Visible = false;
+
+		Slot1Select.Pressed += () => OnPressSlot(1);
+		Slot2Select.Pressed += () => OnPressSlot(2);
+		Slot3Select.Pressed += () => OnPressSlot(3);
+		Slot4Select.Pressed += () => OnPressSlot(4);
+	}
+
+	// ======================================
+	// Open and close
+	// ======================================
+	public void Open()
+	{
+		RefreshUI();
+		Show();
+	}
+
+	public void Close() => Hide();
+
+	// ======================================
+	// Slot display
+	// ======================================
+	private void RefreshUI()
+	{
+		SetSlotDetails(1, Slot1Details);
+		SetSlotDetails(2, Slot2Details);
+		SetSlotDetails(3, Slot3Details);
+		SetSlotDetails(4, Slot4Details);
+	}
+
+	private void SetSlotDetails(int slot, Label label)
+	{
+		var manual = SaveManager.GetManualSlotInfo(slot);
+
+		if (manual == null)
+		{
+			label.Text = \"Empty Slot\";
+			return;
+		}
+
+		string hourFormatted = FormatHour(manual.GameHour);
+
+		label.Text =
+			$\"Day {manual.GameDay} — {hourFormatted}\\n\" +
+			$\"Level {manual.TavernLevel} — Renown {manual.Renown}\\n\" +
+			$\"Saved: {manual.RealWorldTimestamp}\";
+	}
+
+	private string FormatHour(int hour24)
+	{
+		int h = hour24 % 12;
+		if (h == 0) h = 12;
+
+		string ampm = (hour24 < 12) ? \"AM\" : \"PM\";
+		return $\"{h}:00 {ampm}\";
+	}
+
+	// ======================================
+	// Slot selection
+	// ======================================
+	private void OnPressSlot(int slot)
+	{
+		SaveManager.SetCurrentSlot(slot);
+
+		var manual = SaveManager.GetManualSlotInfo(slot);
+		var auto = SaveManager.GetAutoSlotInfo(slot);
+
+		if (manual == null && auto == null)
+		{
+			GD.Print($\"[LoadWindow] Slot {slot} is empty.\");
+			return;
+		}
+
+		// Manual AND Autosave exist -> show popup
+		if (manual != null && auto != null)
+		{
+			ConfirmationWindow.Instance.ShowTripleChoice(
+				$\"Load from Slot {slot}?\",
+				$\"Manual: Day {manual.GameDay}, {FormatHour(manual.GameHour)}\",
+				$\"Autosave: Day {auto.GameDay}, {FormatHour(auto.GameHour)}\",
+				onManual: () => LoadManual(slot),
+				onAuto: () => LoadAuto(slot),
+				onCancel: () => { }
+			);
+			return;
+		}
+
+		// Only manual exists
+		if (manual != null)
+		{
+			LoadManual(slot);
+			return;
+		}
+
+		// Only autosave exists
+		LoadAuto(slot);
+	}
+
+	// ======================================
+	// Load logic
+	// ======================================
+	private void LoadManual(int slot)
+	{
+		var data = SaveManager.LoadManualFromSlot(slot);
+		if (data == null)
+		{
+			GD.PrintErr(\"[LoadWindow] Failed to load manual save.\");
+			return;
+		}
+
+		ApplyGameState(data);
+	}
+
+	private void LoadAuto(int slot)
+	{
+		var data = SaveManager.LoadAutoFromSlot(slot);
+		if (data == null)
+		{
+			GD.PrintErr(\"[LoadWindow] Failed to load autosave.\");
+			return;
+		}
+
+		ApplyGameState(data);
+	}
+
+	private void ApplyGameState(SaveData data)
+	{
+		GD.Print($\"[LoadWindow] Applying loaded game state…\");
+
+		GameStateLoader.Apply(data); // A script we will create next
+
+		Close();
+
+		// Load Tavern Main Scene
+		GetTree().ChangeSceneToFile(\"res://TavernMain.tscn\");
+	}
+	
+	public void ShowWindow()
+{
+	Visible = true;
+	GetTree().Paused = true;
+}
+
+public void HideWindow()
+{
+	Visible = false;
+	GetTree().Paused = false;
+}
+
+
+}
+"
+
+[node name="LoadWindow" type="Control"]
+process_mode = 2
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("CSharpScript_2exjn")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Save Game"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="LoadSlotContainer" type="VBoxContainer" parent="Panel/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+
+[node name="LoadButton" type="Button" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Load"
+
+[node name="CloseButton" type="Button" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Close"

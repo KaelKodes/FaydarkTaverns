@@ -376,7 +376,7 @@ private void UnassignFromSlot(int index)
 	{
 		if (mouseEvent.ButtonIndex == MouseButton.Left)
 		{
-			var popup = GetTree().Root.GetNode<QuestDetailPopup>("TavernMain/QuestDetailPopup");
+			var popup = GetTree().Root.GetNode<QuestDetailPopup>("TavernMain/UI/QuestDetailPopup");
 			popup.SetQuest(quest);
 			popup.Show();
 		}

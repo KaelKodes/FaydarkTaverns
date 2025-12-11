@@ -2,6 +2,8 @@ using Godot;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
+
 
 namespace FaydarkTaverns.Objects
 {
@@ -123,8 +125,10 @@ namespace FaydarkTaverns.Objects
 
 		public float Happiness { get; set; } = 0f; // -100 to +100
 
-		public Quest ActiveQuest { get; set; } = null;
-		public Quest PostedQuest { get; set; } = null;
+		[JsonIgnore] public Quest ActiveQuest { get; set; } = null;
+		[JsonIgnore] public Quest PostedQuest { get; set; } = null;
+		
+
 
 		// ======================================================
 		//  TIMERS (for guest simulation)

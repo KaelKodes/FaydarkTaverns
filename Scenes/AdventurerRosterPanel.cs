@@ -39,6 +39,16 @@ public partial class AdventurerRosterPanel : PanelContainer
 
 	private void HandleGuestLeft(Guest guest)
 	{
+		// Panel is gone
+		if (!IsInsideTree())
+			return;
+
+		// VBox is gone
+		if (adventurerListContainer == null ||
+			!GodotObject.IsInstanceValid(adventurerListContainer))
+			return;
+
+		// Safe removal
 		foreach (var card in adventurerListContainer.GetChildren())
 		{
 			if (card is GuestCard gc && gc.BoundGuest == guest)
@@ -48,4 +58,11 @@ public partial class AdventurerRosterPanel : PanelContainer
 			}
 		}
 	}
+
+	public override void _ExitTree()
+	{
+		GuestManager.OnGuestLeft -= HandleGuestLeft;
+	}
+
+
 }

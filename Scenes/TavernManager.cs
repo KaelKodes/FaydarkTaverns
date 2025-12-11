@@ -23,13 +23,14 @@ public partial class TavernManager : Node
 
 
 	[Export] public Label TavernRenownDisplay;
-	[Export] public Label TavernLevelDisplay;           // shows current level (e.g. "1")
-	[Export] public Label TavernLevelLabel;             // shows static text "Tavern Level"
-														//[Export] private Label floorLabel;
+	[Export] public Label TavernLevelDisplay;
+	[Export] public Label TavernLevelLabel;
 	[Export] public VBoxContainer AdventurerListContainer;
 	[Export] public VBoxContainer TavernFloorPanel;
 	[Export] public VBoxContainer FloorSlots;
 	[Export] public Label TavernFloorLabel;
+	[Export] public EscMenu EscMenu;
+
 
 
 	public List<Guest> floorGuests = new();
@@ -52,7 +53,7 @@ public partial class TavernManager : Node
 
 	public static int Gold => currentGold;
 	public Dictionary<string, int> PurchasedItems = new();
-	
+
 
 	// --- Adventurers ---
 	private List<Guest> streetOutsideGuests = new();
@@ -74,30 +75,40 @@ public partial class TavernManager : Node
 	private FurniturePanel furniturePanel;
 
 
+
+
 	// --- Chaos! ---
 	public override void _Ready()
 	{
-		//Random NumGen Seed
+		SetProcessInput(true);
+
+		// Random NumGen Seed
 		GD.Seed((ulong)DateTime.Now.Ticks);
 
-		if (Instance != null)
+		// =============================
+		// 🔧 FIXED SINGLETON GUARD
+		// =============================
+		if (Instance != null && Instance != this && GodotObject.IsInstanceValid(Instance))
 		{
-			GD.PrintErr("❌ Multiple TavernManager instances detected!");
-			return;
+			GD.PrintErr("❌ Multiple TavernManager instances detected! Replacing old instance.");
 		}
 
 		Instance = this;
 
-		// Wire up UI
-		var logText = GetNode<RichTextLabel>("../LogControl/LogPanel/LogText");
+		// =============================
+		// UI WIRING
+		// =============================
+		var logText = GetNode<RichTextLabel>("../../UI/LogControl/LogPanel/LogText");
 		GameLog.BindLogText(logText);
 
+		ClockManager.OnNewDay -= StartNewDay; // prevent duplicate subscription
 		ClockManager.OnNewDay += StartNewDay;
+
+
 		TimeLabel ??= GetNode<Label>("../TopBar/TimeLabel");
 		GoldLabel ??= GetNode<Label>("../TopBar/GoldLabel");
 		PauseButton ??= GetNode<Button>("../TopBar/PauseButton");
 		PauseButton.Pressed += TogglePause;
-
 
 		Button1x ??= GetNode<Button>("../ControlPanel/TopBar/Button1x");
 		Button1x.Pressed += OnSpeed1xPressed;
@@ -111,23 +122,22 @@ public partial class TavernManager : Node
 		Button8x ??= GetNode<Button>("../ControlPanel/TopBar/Button8x");
 		Button8x.Pressed += OnSpeed8xPressed;
 
-		var board = GetNode<QuestBoardPanel>("../QuestBoardPanel");
+		var board = GetNode<QuestBoardPanel>("../../UI/QuestBoardPanel");
 
-		ShopButton = GetNode<Button>("../TavernDisplay/ControlPanel/ShopButton");
+		ShopButton = GetNode<Button>("../../UI/TavernDisplay/ControlPanel/ShopButton");
 		ShopButton.Pressed += ToggleShop;
-		TavernLevelDisplay = GetNode<Label>("../TavernDisplay/TavernLevelControl/VBoxContainer/TavernLevelDisplay");
-		TavernLevelLabel = GetNode<Label>("../TavernDisplay/TavernLevelControl/VBoxContainer/TavernLevelLabel");
-		TavernRenownDisplay = GetNode<Label>("../TavernDisplay/TavernRenown/VBoxContainer/TavernRenownDisplay");
-		FeedMenuInstance = GetNode<FeedMenu>("../FeedMenu");
 
+		TavernLevelDisplay = GetNode<Label>("../../UI/TavernDisplay/TavernLevelControl/VBoxContainer/TavernLevelDisplay");
+		TavernLevelLabel = GetNode<Label>("../../UI/TavernDisplay/TavernLevelControl/VBoxContainer/TavernLevelLabel");
+		TavernRenownDisplay = GetNode<Label>("../../UI/TavernDisplay/TavernRenown/VBoxContainer/TavernRenownDisplay");
+
+		FeedMenuInstance = GetNode<FeedMenu>("../../UI/FeedMenu");
 
 		QuestManager.Instance.OnQuestsUpdated += UpdateQuestCapacityLabel;
 		UpdateQuestCapacityLabel();
 
-
-		// Locate UI container to hold adventurer cards
-		adventurerListUI = GetNodeOrNull<VBoxContainer>("../AdventurerRosterPanel/AdventurerListContainer");
-
+		// Adventurer List UI
+		adventurerListUI = GetNodeOrNull<VBoxContainer>("../../UI/AdventurerRosterPanel/AdventurerListContainer");
 		if (adventurerListUI == null)
 		{
 			GD.PrintErr("❌ 'adventurerListUI' was not found — check scene tree and node paths.");
@@ -136,62 +146,121 @@ public partial class TavernManager : Node
 		GuestCardScene ??= GD.Load<PackedScene>("res://Scenes/UI/GuestCard.tscn");
 
 		if (!string.IsNullOrEmpty(AdventurerRosterPath))
-		{
 			adventurerRosterPanel = GetNode<AdventurerRosterPanel>(AdventurerRosterPath);
-		}
-		if (!string.IsNullOrEmpty(FurniturePanelPath))
-		{
-			var panel = GetNode<FurniturePanel>(FurniturePanelPath); // ✅ Uses the actual FurniturePanel class
-			furniturePanel = panel;
-		}
 
-		//load DBs
+		if (!string.IsNullOrEmpty(FurniturePanelPath))
+			furniturePanel = GetNode<FurniturePanel>(FurniturePanelPath);
+
+		// Load Databases
 		FoodDrinkDatabase.LoadData();
 		DishDatabase.LoadFromFoodDB();
 		GD.Print($"Loaded {FoodDrinkDatabase.AllFood.Count} food items and {FoodDrinkDatabase.AllDrinks.Count} drinks.");
-		
-		// Listen to all guest cards
-	foreach (var card in GetTree().GetNodesInGroup("GuestCard"))
-	{
-		var gc = card as GuestCard;
-		if (gc != null)
+
+		// GuestCard events
+		foreach (var card in GetTree().GetNodesInGroup("GuestCard"))
 		{
-			gc.ServeFoodRequested += OnServeFoodRequested;
-			gc.ServeDrinkRequested += OnServeDrinkRequested;
+			if (card is GuestCard gc)
+			{
+				gc.ServeFoodRequested += OnServeFoodRequested;
+				gc.ServeDrinkRequested += OnServeDrinkRequested;
+			}
 		}
-	}
 
-
+		Input.SetUseAccumulatedInput(true);
 		UpdateTimeLabel();
 		UpdateGoldLabel();
 
-		// ✅ Delay anything that relies on singletons
+		// Delay some initialization
 		CallDeferred(nameof(DeferredStart));
 
 	}
 
+
 	private void DeferredStart()
 	{
+		if (GameStateLoader.PendingLoadData != null)
+		{
+			GD.Print("[TavernManager] Deferred restore...");
+			GameStateLoader.RestoreIntoScene(GameStateLoader.PendingLoadData);
+			GameStateLoader.PendingLoadData = null;
+		}
 		UpdateTavernStatsDisplay();
 	}
+	public override void _ExitTree()
+	{
+		if (Instance == this)
+		{
+			// UNHOOK CLOCKMANAGER EVENTS
+			if (ClockManager.Instance != null)
+			{
+				ClockManager.OnNewDay -= StartNewDay;
+			}
+
+			// UNHOOK QUESTMANAGER EVENTS
+			if (QuestManager.Instance != null)
+			{
+				QuestManager.Instance.OnQuestsUpdated -= UpdateQuestCapacityLabel;
+			}
+
+			// UNHOOK GUESTMANAGER EVENTS (STATIC EVENTS)
+			GuestManager.OnGuestAdmitted -= AdmitGuestToTavern;
+
+			// ❗ Only include this if you actually have a handler
+			// GuestManager.OnGuestLeft -= OnGuestLeft;
+
+			Instance = null;
+		}
+
+		GD.Print("[TavernManager] Clean exit: unsubscribed from global events.");
+	}
+
+
 
 
 	public override void _Process(double delta)
 	{
+
+
+		// Prevent simulation while paused
 		if (isPaused || TimeMultiplier == 0)
 			return;
 
+		// Normal Tavern tick
 		UpdateTimeLabel();
 		RecheckSeating();
 		RecheckQuestPosting();
-
-		// 🕒 Check for guests who should leave
 		GuestManager.Instance.TickGuests(ClockManager.CurrentTime);
+	}
+
+
+	// Keybinds
+	public override void _Input(InputEvent @event)
+	{
+		if (@event.IsActionPressed("ui_pause"))
+		{
+			if (EscMenu.Visible)
+				EscMenu.HideMenu();
+			else
+				EscMenu.ShowMenu();
+
+		}
+	}
+
+	public void CloseEscMenu()
+	{
+		if (EscMenu != null && EscMenu.Visible)
+			EscMenu.HideMenu();
 	}
 
 
 	private void StartNewDay(DateTime currentDate)
 	{
+		if (GameStateLoader.IsRestoring)
+		{
+			GameLog.Debug("⏭ StartNewDay skipped during save restore.");
+			return;
+		}
+
 		GameLog.Debug($"🌅 New day triggered by ClockManager: {currentDate:D}");
 
 		QuestManager.Instance?.ClearUnclaimedQuests();
@@ -271,7 +340,7 @@ public partial class TavernManager : Node
 
 	private void UpdateQuestCapacityLabel()
 	{
-		var questCapacityLabel = GetNodeOrNull<Label>("../QuestCapacity");
+		var questCapacityLabel = GetNodeOrNull<Label>("../../World/Tavern/QuestCapacity");
 		if (questCapacityLabel != null)
 		{
 			questCapacityLabel.Text = QuestManager.Instance.GetQuestBoardStatusLabel();
@@ -370,41 +439,41 @@ public partial class TavernManager : Node
 
 
 	public void OnServeFoodRequestedFromCard(Node source)
-{
-	if (source is GuestCard card)
-		OnServeFoodRequested(card);
-}
+	{
+		if (source is GuestCard card)
+			OnServeFoodRequested(card);
+	}
 
-public void OnServeDrinkRequestedFromCard(Node source)
-{
-	if (source is GuestCard card)
-		OnServeDrinkRequested(card);
-}
+	public void OnServeDrinkRequestedFromCard(Node source)
+	{
+		if (source is GuestCard card)
+			OnServeDrinkRequested(card);
+	}
 
 
 	private void OnServeFoodRequested(GuestCard card)
-{
-	if (FeedMenuInstance == null)
 	{
-		GD.PrintErr("FeedMenuInstance missing!");
-		return;
+		if (FeedMenuInstance == null)
+		{
+			GD.PrintErr("FeedMenuInstance missing!");
+			return;
+		}
+
+		FeedMenuInstance.OpenAtMouse(card.BoundGuest, false); // Food
+
 	}
 
-	FeedMenuInstance.OpenAtMouse(card.BoundGuest, false); // Food
-
-}
-
-private void OnServeDrinkRequested(GuestCard card)
-{
-	if (FeedMenuInstance == null)
+	private void OnServeDrinkRequested(GuestCard card)
 	{
-		GD.PrintErr("FeedMenuInstance missing!");
-		return;
+		if (FeedMenuInstance == null)
+		{
+			GD.PrintErr("FeedMenuInstance missing!");
+			return;
+		}
+
+		FeedMenuInstance.OpenAtMouse(card.BoundGuest, true); // Drink
+
 	}
-
-	FeedMenuInstance.OpenAtMouse(card.BoundGuest, true); // Drink
-
-}
 
 
 
@@ -439,7 +508,7 @@ private void OnServeDrinkRequested(GuestCard card)
 	}
 	private void UpdateGoldUI()
 	{
-		var label = GetNode<Label>("../TavernDisplay/ControlPanel/GoldLabel");
+		var label = GetNode<Label>("../../UI/TavernDisplay/ControlPanel/GoldLabel");
 		label.Text = $"{currentGold}g";
 	}
 
@@ -832,26 +901,26 @@ private void OnServeDrinkRequested(GuestCard card)
 	#region Shop
 
 	private void ToggleShop()
-{
-	FoodDrinkDatabase.LoadData();
-	ShopDatabase.RefreshSupplyItems();
-
-	if (shopPanelInstance == null)
 	{
-		shopPanelInstance = (Window)ShopPanelScene.Instantiate();
+		FoodDrinkDatabase.LoadData();
+		ShopDatabase.RefreshSupplyItems();
 
-		if (shopPanelInstance is ShopPanel shopPanel)
+		if (shopPanelInstance == null)
 		{
-			shopPanel.PantryPanel = PantryPanel;
+			shopPanelInstance = (Window)ShopPanelScene.Instantiate();
+
+			if (shopPanelInstance is ShopPanel shopPanel)
+			{
+				shopPanel.PantryPanel = PantryPanel;
+			}
+
+			GetTree().Root.AddChild(shopPanelInstance);
+
+			shopPanelInstance.CloseRequested += () => shopPanelInstance.Hide();
 		}
 
-		GetTree().Root.AddChild(shopPanelInstance);
-
-		shopPanelInstance.CloseRequested += () => shopPanelInstance.Hide();
+		shopPanelInstance.Visible = !shopPanelInstance.Visible;
 	}
-
-	shopPanelInstance.Visible = !shopPanelInstance.Visible;
-}
 
 
 
@@ -859,71 +928,151 @@ private void OnServeDrinkRequested(GuestCard card)
 
 
 	public void PurchaseItem(ShopItem item)
-{
-	// Handle Tables
-	switch (item.Name)
 	{
-		case "Starting Table":
-		case "Tiny Table":
-		case "Small Table":
-		case "Medium Table":
-		case "Large Table":
-			GameLog.Debug($"[PURCHASE] Purchased table: {item.Name}");
-			AddTable(item.Name);
-			break;
-
-		case "Wall Banner":
-		case "Fancy Rug":
-		case "Mounted Trophy":
-			AddDecoration(item.Name);
-			break;
-
-		default:
-	if (item.Name.EndsWith("x10"))
-	{
-		string baseName = item.Name.Replace(" x10", "");
-
-		var food = FoodDrinkDatabase.AllFood.FirstOrDefault(f => f.Name == baseName);
-		if (food != null)
+		// Handle Tables
+		switch (item.Name)
 		{
-			PlayerPantry.AddSupply(food.Id, 10);
-			PantryPanel?.RefreshPantry();
-			break;
+			case "Starting Table":
+			case "Tiny Table":
+			case "Small Table":
+			case "Medium Table":
+			case "Large Table":
+				GameLog.Debug($"[PURCHASE] Purchased table: {item.Name}");
+				AddTable(item.Name);
+				break;
+
+			case "Wall Banner":
+			case "Fancy Rug":
+			case "Mounted Trophy":
+				AddDecoration(item.Name);
+				break;
+
+			default:
+				if (item.Name.EndsWith("x10"))
+				{
+					string baseName = item.Name.Replace(" x10", "");
+
+					var food = FoodDrinkDatabase.AllFood.FirstOrDefault(f => f.Name == baseName);
+					if (food != null)
+					{
+						PlayerPantry.AddSupply(food.Id, 10);
+						PantryPanel?.RefreshPantry();
+						break;
+					}
+
+					var drink = FoodDrinkDatabase.AllDrinks.FirstOrDefault(d => d.Name == baseName);
+					if (drink != null)
+					{
+						PlayerPantry.AddSupply(drink.Id, 10);
+						PantryPanel?.RefreshPantry();
+						break;
+					}
+
+					GameLog.Debug($"⚠️ Purchased unknown supply bundle: {item.Name}");
+				}
+				else
+				{
+					GameLog.Debug($"⚠️ Unknown shop item purchased: {item.Name}");
+				}
+				break;
+
 		}
 
-		var drink = FoodDrinkDatabase.AllDrinks.FirstOrDefault(d => d.Name == baseName);
-		if (drink != null)
+		// ✅ Grant Renown
+		if (item.RenownValue > 0)
 		{
-			PlayerPantry.AddSupply(drink.Id, 10);
-			PantryPanel?.RefreshPantry();
-			break;
+			TavernStats.Instance.AddRenown(item.RenownValue);
+			UpdateTavernStatsDisplay();
+			GameLog.Info($"🏅 Gained {item.RenownValue} Renown from {item.Name}!");
 		}
 
-		GameLog.Debug($"⚠️ Purchased unknown supply bundle: {item.Name}");
-	}
-	else
-	{
-		GameLog.Debug($"⚠️ Unknown shop item purchased: {item.Name}");
-	}
-	break;
-
+		// ✅ Track purchases for enforcement logic
+		if (!PurchasedItems.ContainsKey(item.Name))
+			PurchasedItems[item.Name] = 1;
+		else
+			PurchasedItems[item.Name]++;
 	}
 
-	// ✅ Grant Renown
-	if (item.RenownValue > 0)
+
+
+	#endregion
+	#region Save Load
+	public TavernData ToData()
 	{
-		TavernStats.Instance.AddRenown(item.RenownValue);
+		var data = TavernStats.Instance.ToData(); // base stats
+
+		data.Gold = currentGold;
+		data.PurchasedItems = new Dictionary<string, int>(PurchasedItems);
+		data.TavernName = ""; // optional, future
+
+		return data;
+	}
+
+	public void FromData(TavernData data)
+	{
+		if (data == null)
+			return;
+
+		// Gold
+		currentGold = data.Gold;
+		UpdateGoldLabel();
+
+		// TavernStats handles tavern progression
+		TavernStats.Instance?.FromData(data);
+
+		// Purchased items
+		PurchasedItems = new Dictionary<string, int>(data.PurchasedItems ?? new());
+
+		// Refresh UI
 		UpdateTavernStatsDisplay();
-		GameLog.Info($"🏅 Gained {item.RenownValue} Renown from {item.Name}!");
+		UpdateFloorLabel();
+
+		GD.Print("[TavernManager] Tavern restored (gold + purchases + stats).");
 	}
 
-	// ✅ Track purchases for enforcement logic
-	if (!PurchasedItems.ContainsKey(item.Name))
-		PurchasedItems[item.Name] = 1;
-	else
-		PurchasedItems[item.Name]++;
-}
+	public void OnGameStateLoaded()
+	{
+		// Rebuild AllVillagers from restored GuestManager data
+		AllVillagers.Clear();
 
+		foreach (var g in GuestManager.GuestsInside)
+			AllVillagers.Add(g);
+
+		foreach (var g in GuestManager.GuestsOutside)
+			AllVillagers.Add(g);
+
+		// link quests to NPCs
+		QuestManager.Instance.ResolveNPCLinks();
+
+		// Rebuild tables from purchased items
+		foreach (var entry in PurchasedItems)
+		{
+			string itemName = entry.Key;
+			int count = entry.Value;
+
+			// Only handle table-type purchases
+			if (itemName.Contains("Table"))
+			{
+				for (int i = 0; i < count; i++)
+					AddTable(itemName);
+			}
+		}
+
+
+
+		// Refresh UI panels
+		UpdateTimeLabel();
+		UpdateGoldLabel();
+		UpdateQuestCapacityLabel();
+
+		// Rebuild adventurer cards
+		DisplayAdventurers();
+
+		// Ensure shop, journal, etc. reflect correct state
+		RecheckQuestPosting();
+
+		GameLog.Info("🏁 Save game successfully loaded.");
+	}
 
 
 	#endregion

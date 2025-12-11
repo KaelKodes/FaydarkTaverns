@@ -1,0 +1,211 @@
+[gd_scene load_steps=2 format=3 uid="uid://drdts6pixgb8h"]
+
+[ext_resource type="Script" uid="uid://cp7almuvdcemt" path="res://Scenes/UI/PlayThroughSelectWindow.cs" id="1_63w6l"]
+
+[node name="PlaythroughSelectWindow" type="Control" node_paths=PackedStringArray("Slot1Details", "Slot2Details", "Slot3Details", "Slot4Details", "Slot1Select", "Slot2Select", "Slot3Select", "Slot4Select", "CloseButton")]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_63w6l")
+Slot1Details = NodePath("Panel/GridContainer/Slot1/Slot1Details")
+Slot2Details = NodePath("Panel/GridContainer/Slot2/Slot2Details")
+Slot3Details = NodePath("Panel/GridContainer/Slot3/Slot3Details")
+Slot4Details = NodePath("Panel/GridContainer/Slot4/Slot4Details")
+Slot1Select = NodePath("Panel/GridContainer/Slot1/Select1Button")
+Slot2Select = NodePath("Panel/GridContainer/Slot2/Select2Button")
+Slot3Select = NodePath("Panel/GridContainer/Slot3/Select3Button")
+Slot4Select = NodePath("Panel/GridContainer/Slot4/Select4Button")
+CloseButton = NodePath("Panel/CloseButton")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -593.0
+offset_top = -131.5
+offset_right = 593.0
+offset_bottom = 131.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridContainer" type="HBoxContainer" parent="Panel"]
+z_index = 2
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -480.0
+offset_top = -97.0
+offset_right = 479.0
+offset_bottom = 123.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = -4
+
+[node name="Slot1" type="VBoxContainer" parent="Panel/GridContainer"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Panel/GridContainer/Slot1"]
+layout_mode = 2
+text = "Slot 1"
+horizontal_alignment = 1
+
+[node name="Slot1Details" type="Label" parent="Panel/GridContainer/Slot1"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="Select1Button" type="Button" parent="Panel/GridContainer/Slot1"]
+z_index = 3
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 10
+text = "Select"
+
+[node name="Slot2" type="VBoxContainer" parent="Panel/GridContainer"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Panel/GridContainer/Slot2"]
+layout_mode = 2
+text = "Slot 2"
+horizontal_alignment = 1
+
+[node name="Slot2Details" type="Label" parent="Panel/GridContainer/Slot2"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="Select2Button" type="Button" parent="Panel/GridContainer/Slot2"]
+z_index = 3
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 10
+text = "Select"
+
+[node name="Slot3" type="VBoxContainer" parent="Panel/GridContainer"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Panel/GridContainer/Slot3"]
+layout_mode = 2
+text = "Slot 3"
+horizontal_alignment = 1
+
+[node name="Slot3Details" type="Label" parent="Panel/GridContainer/Slot3"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="Select3Button" type="Button" parent="Panel/GridContainer/Slot3"]
+z_index = 3
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 10
+text = "Select"
+
+[node name="Slot4" type="VBoxContainer" parent="Panel/GridContainer"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Panel/GridContainer/Slot4"]
+layout_mode = 2
+text = "Slot 4"
+horizontal_alignment = 1
+
+[node name="Slot4Details" type="Label" parent="Panel/GridContainer/Slot4"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="Select4Button" type="Button" parent="Panel/GridContainer/Slot4"]
+z_index = 3
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 10
+text = "Select"
+
+[node name="SaveGameLabel" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -43.0
+offset_right = 43.0
+offset_bottom = 23.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 24
+text = "Save//Load Game"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -355.0
+offset_top = -93.5
+offset_right = 355.0
+offset_bottom = 93.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+
+[node name="Slot1Color" type="ColorRect" parent="Panel/HBoxContainer"]
+custom_minimum_size = Vector2(225, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+mouse_behavior_recursive = 1
+color = Color(0.6746549, 0.22120473, 0.19839928, 1)
+
+[node name="Slot2Color" type="ColorRect" parent="Panel/HBoxContainer"]
+custom_minimum_size = Vector2(225, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+color = Color(0.71708125, 0.53070205, 0.06362111, 1)
+
+[node name="Slot3Color" type="ColorRect" parent="Panel/HBoxContainer"]
+custom_minimum_size = Vector2(225, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+color = Color(0.35622188, 0.65151215, 0.19931993, 1)
+
+[node name="Slot4Color" type="ColorRect" parent="Panel/HBoxContainer"]
+custom_minimum_size = Vector2(225, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+color = Color(0.31369218, 0.56723744, 0.9069422, 1)
+
+[node name="CloseButton" type="Button" parent="Panel"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -18.0
+offset_bottom = 31.0
+grow_horizontal = 0
+text = "X"

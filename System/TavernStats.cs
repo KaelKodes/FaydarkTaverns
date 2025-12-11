@@ -64,4 +64,57 @@ public partial class TavernStats : Node
 		}
 		Instance = this;
 	}
+	
+	// Save Load
+	public TavernData ToData()
+{
+	return new TavernData
+	{
+		// Core stats
+		Level = Level,
+		Exp = Exp,
+		Renown = Renown,
+		MaxFloorGuests = MaxFloorGuests,
+		TavernSignLevel = TavernSignLevel,
+
+		// Dictionaries and sets
+		TableCaps = new Dictionary<string, int>(TableCaps),
+		UnlockedUpgrades = new HashSet<string>(UnlockedUpgrades),
+		UpgradeCounts = new Dictionary<string, int>(UpgradeCounts),
+
+		// Event stats
+		AcceptedQuests = AcceptedQuests,
+		CompletedQuests = CompletedQuests,
+		FailedQuests = FailedQuests,
+		AdventurersMet = AdventurersMet,
+		InformantsMet = InformantsMet
+	};
+}
+
+public void FromData(TavernData data)
+{
+	if (data == null)
+		return;
+
+	// Core stats
+	Level = data.Level;
+	Exp = data.Exp;
+	Renown = data.Renown;
+	MaxFloorGuests = data.MaxFloorGuests;
+	TavernSignLevel = data.TavernSignLevel;
+
+	// Dictionaries and sets
+	TableCaps = new Dictionary<string, int>(data.TableCaps ?? new());
+	UnlockedUpgrades = new HashSet<string>(data.UnlockedUpgrades ?? new());
+	UpgradeCounts = new Dictionary<string, int>(data.UpgradeCounts ?? new());
+
+	// Event stats
+	AcceptedQuests = data.AcceptedQuests;
+	CompletedQuests = data.CompletedQuests;
+	FailedQuests = data.FailedQuests;
+	AdventurersMet = data.AdventurersMet;
+	InformantsMet = data.InformantsMet;
+}
+
+
 }

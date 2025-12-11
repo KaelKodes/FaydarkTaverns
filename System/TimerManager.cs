@@ -11,11 +11,10 @@ public partial class TimerManager : Node
 
 	public override void _Ready()
 	{
-		if (Instance != null)
+		// FIXED SINGLETON LOGIC
+		if (Instance != null && Instance != this && GodotObject.IsInstanceValid(Instance))
 		{
-			GD.PrintErr("❌ Duplicate TimerManager instance!");
-			QueueFree();
-			return;
+			GD.PrintErr("❌ Duplicate TimerManager instance! Replacing old instance.");
 		}
 
 		Instance = this;
@@ -23,6 +22,13 @@ public partial class TimerManager : Node
 		var clock = GetNode<ClockManager>("/root/ClockManager");
 		clock.OnTimeAdvanced += CheckEvents;
 	}
+
+	public override void _ExitTree()
+	{
+		if (Instance == this)
+			Instance = null;
+	}
+
 
 	// ★ CORRECT PLACE FOR WaitSeconds ★
 	public static async Task WaitSeconds(double seconds)
@@ -48,6 +54,8 @@ public partial class TimerManager : Node
 
 	private void CheckEvents(DateTime currentTime)
 	{
+		if (GameStateLoader.IsRestoring)
+			return;
 		List<ScheduledEvent> toFire = new();
 
 		foreach (var evt in eventQueue)
