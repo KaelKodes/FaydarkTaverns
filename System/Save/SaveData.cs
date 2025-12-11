@@ -31,6 +31,9 @@ public class WorldData
 [Serializable]
 public class TavernData
 {
+	// Party
+	public bool HasSpawnedInitialParty = false;
+
 	// Economy
 	public int Gold;
 

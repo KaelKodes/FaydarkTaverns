@@ -348,6 +348,7 @@ public partial class GuestManager : Node
 		GameLog.Debug($"🛋️ {guest.Name} will linger {adjustedLingerTime:F1} minutes (Renown={TavernStats.Instance.Renown})");
 
 		guest.SetState(NPCState.Elsewhere);
+		Instance?.AllKnownGuests.Add(guest);
 		return guest;
 	}
 
@@ -361,7 +362,7 @@ public partial class GuestManager : Node
 			return;
 		}
 
-		foreach (var guest in TavernManager.Instance.AllVillagers)
+		foreach (var guest in AllKnownGuests)
 		{
 			if (guest?.BoundNPC == null)
 				continue;
@@ -400,22 +401,16 @@ public partial class GuestManager : Node
 			Guests = new List<GuestSaveData>()
 		};
 
-		// Build a unique set of all guests that are currently tracked
-		var uniqueGuests = new HashSet<Guest>();
+		foreach (var guest in AllKnownGuests)
+		{
+			if (guest != null)
+				data.Guests.Add(ConvertGuestToSave(guest));
+		}
 
-		foreach (var g in guestsInside)
-			if (g != null)
-				uniqueGuests.Add(g);
-
-		foreach (var g in guestsOutside)
-			if (g != null)
-				uniqueGuests.Add(g);
-
-		foreach (var guest in uniqueGuests)
-			data.Guests.Add(ConvertGuestToSave(guest));
-
+		GD.Print($"[GuestManager] Saved {data.Guests.Count} guests.");
 		return data;
 	}
+
 
 	private GuestSaveData ConvertGuestToSave(Guest g)
 	{

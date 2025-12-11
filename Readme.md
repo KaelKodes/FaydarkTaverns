@@ -3,11 +3,36 @@ Celtic Trinity Studios
 KaelKodes
 C# Godot 4.5
 -=-=-=-=-=-=-=-=-
+**Faydark Taverns v0.9.38 SAVE/LOAD & NPC Data**
+
+Added:
+
+4 Game Slots for Saving Progression
+
+Updated:
+
+NPC Creation Process
+
+NPC Data Structure
+
+Tavern Data Structure
+
+TODO:
+
+Finish Quest Journal
+
+Fix UI Bugs
+
+
 
 **Faydark Taverns v0.9.37 Lighting**
+
 Added:
+
 Tavern Lighting
+
 Outside Scene
+
 Scene Lighting
 
 

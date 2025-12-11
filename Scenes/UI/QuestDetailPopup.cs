@@ -44,76 +44,76 @@ public partial class QuestDetailPopup : Window
 		};
 	}
 
-public void SetQuest(Quest q)
-{
-	// Always resolve to the live quest instance (as your file already does)
-	if (q == null)
+	public void SetQuest(Quest q)
 	{
-		GD.PrintErr("QuestDetailPopup ERROR: Null quest passed.");
-		return;
+		// Defensive check
+		if (q == null)
+		{
+			GD.PrintErr("QuestDetailPopup ERROR: Null quest passed.");
+			return;
+		}
+
+		// Use the quest instance we were given
+		quest = q;
+		boundQuest = q;
+
+		if (TitleLabel == null || DescriptionLabel == null)
+			return;
+
+		// ===========================
+		// BASIC FIELDS
+		// ===========================
+		TitleLabel.Text = q.Title;
+		RegionLabel.Text = $"Region: {q.Region}";
+		TypeLabel.Text = $"Type: {q.Type}";
+		RewardLabel.Text = $"Reward: {q.Reward}g";
+
+		if (q.IsAccepted)
+			TimeLabel.Text = $"Est: {q.GetTotalExpectedTU()} hrs / Due: {q.Deadline:MMM dd, HH:mm}";
+		else
+			TimeLabel.Text = $"Est: {q.GetTotalExpectedTU()} hrs";
+
+		DescriptionLabel.Text = q.Description ?? string.Empty;
+
+		// ===========================
+		// REQUIREMENTS
+		// ===========================
+		var req = q.Requirements; // QuestRequirementsLoader.Get(...) 
+
+		// --- REQUIRED SKILLS ---
+		if (req != null && req.RequiredStats != null && req.RequiredStats.Count > 0)
+		{
+			var reqBuilder = new StringBuilder("Required Skills: ");
+			foreach (var kv in req.RequiredStats)
+				reqBuilder.Append($"{kv.Key} {kv.Value}, ");
+
+			RequiredSkillsLabel.Text = reqBuilder.ToString().TrimEnd(',', ' ');
+		}
+		else
+		{
+			RequiredSkillsLabel.Text = "Required Skills: None";
+		}
+
+		// --- BONUS / RECOMMENDED SKILLS ---
+		if (req != null && req.BonusStats != null && req.BonusStats.Count > 0)
+		{
+			var bonusBuilder = new StringBuilder("Recommended Skills: ");
+			foreach (var kv in req.BonusStats)
+				bonusBuilder.Append($"{kv.Key} +{kv.Value}, ");
+
+			RecommendedSkillsLabel.Text = bonusBuilder.ToString().TrimEnd(',', ' ');
+		}
+		else
+		{
+			RecommendedSkillsLabel.Text = "Recommended Skills: None";
+		}
+
+		// ===========================
+		// Rest of popup logic
+		// ===========================
+		SetQuestDetails(q);
 	}
 
-	q = QuestManager.Instance.GetQuestById(q.QuestId);
-	quest = q;
-	boundQuest = q;
-
-	if (TitleLabel == null || DescriptionLabel == null)
-		return;
-
-	// ===========================
-	// BASIC FIELDS
-	// ===========================
-	TitleLabel.Text       = q.Title;
-	RegionLabel.Text      = $"Region: {q.Region}";
-	TypeLabel.Text        = $"Type: {q.Type}";
-	RewardLabel.Text      = $"Reward: {q.Reward}g";
-
-	if (q.IsAccepted)
-		TimeLabel.Text = $"Est: {q.GetTotalExpectedTU()} hrs / Due: {q.Deadline:MMM dd, HH:mm}";
-	else
-		TimeLabel.Text = $"Est: {q.GetTotalExpectedTU()} hrs";
-
-	DescriptionLabel.Text = q.Description ?? string.Empty;
-
-	// ===========================
-	// REQUIREMENTS
-	// q.Requirements -> QuestStatRequirement
-	// ===========================
-	var req = q.Requirements;
-
-	// --- REQUIRED SKILLS ---
-	if (req != null && req.RequiredStats != null && req.RequiredStats.Count > 0)
-	{
-		var reqBuilder = new System.Text.StringBuilder("Required Skills: ");
-		foreach (var kv in req.RequiredStats)
-			reqBuilder.Append($"{kv.Key} {kv.Value}, ");
-
-		RequiredSkillsLabel.Text = reqBuilder.ToString().TrimEnd(',', ' ');
-	}
-	else
-	{
-		RequiredSkillsLabel.Text = "Required Skills: None";
-	}
-
-	// --- BONUS / RECOMMENDED SKILLS ---
-	if (req != null && req.BonusStats != null && req.BonusStats.Count > 0)
-	{
-		var bonusBuilder = new System.Text.StringBuilder("Recommended Skills: ");
-		foreach (var kv in req.BonusStats)
-			bonusBuilder.Append($"{kv.Key} +{kv.Value}, ");
-
-		RecommendedSkillsLabel.Text = bonusBuilder.ToString().TrimEnd(',', ' ');
-	}
-	else
-	{
-		RecommendedSkillsLabel.Text = "Recommended Skills: None";
-	}
-
-	// ===========================
-	// REMAINDER OF EXISTING LOGIC
-	// ===========================
-	SetQuestDetails(q);
-}
 
 
 

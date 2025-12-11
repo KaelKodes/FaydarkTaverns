@@ -266,7 +266,12 @@ public partial class TavernManager : Node
 		QuestManager.Instance?.ClearUnclaimedQuests();
 
 		// 🧍 Only spawn the initial set of villagers once
-		if (!hasSpawnedInitialParty)
+		// 🔒 If loading an existing game, never respawn the party
+		if (hasSpawnedInitialParty)
+		{
+			GameLog.Debug("⛭ Initial party already spawned — skipping NPC creation.");
+		}
+		else
 		{
 			// 🎯 Spawn one adventurer per class
 			foreach (var className in ClassTemplate.GetAllClassNames())
@@ -274,18 +279,15 @@ public partial class TavernManager : Node
 				var guest = GuestManager.SpawnNewNPC(NPCRole.Adventurer, className);
 				if (guest != null)
 				{
-					guest.SetState(NPCState.Elsewhere); // ✅ Start as Elsewhere
+					guest.SetState(NPCState.Elsewhere);
 					if (guest.BoundNPC != null)
-						guest.BoundNPC.State = guest.CurrentState; // <<--- ADD THIS
+						guest.BoundNPC.State = guest.CurrentState;
 
 					guest.VisitDay = ClockManager.CurrentDay;
-					guest.VisitHour = GD.RandRange(7, 22); // 9AM–8PM range
+					guest.VisitHour = GD.RandRange(7, 22);
 					guest.WaitDuration = GD.RandRange(2, 4);
 
 					GuestManager.QueueGuest(guest);
-
-					if (!AllVillagers.Contains(guest))
-						AllVillagers.Add(guest);
 				}
 			}
 
@@ -297,28 +299,27 @@ public partial class TavernManager : Node
 				{
 					guest.SetState(NPCState.Elsewhere);
 					if (guest.BoundNPC != null)
-						guest.BoundNPC.State = guest.CurrentState; // <<--- ADD THIS
+						guest.BoundNPC.State = guest.CurrentState;
 
 					guest.VisitDay = ClockManager.CurrentDay;
 					guest.VisitHour = GD.RandRange(6, 18);
-					GuestManager.QueueGuest(guest);
 
-					if (!AllVillagers.Contains(guest))
-						AllVillagers.Add(guest);
+					GuestManager.QueueGuest(guest);
 				}
 			}
 
+			// ✔ Mark initial party as spawned
 			hasSpawnedInitialParty = true;
 		}
 
-		// 🔁 Persistent Guests
-		foreach (var guest in AllVillagers)
+		// 🔁 Persistent Guests (this will be replaced in Phase 3)
+		foreach (var guest in GuestManager.Instance.AllKnownGuests)
 		{
-			// 🔄 Reset their "HasPostedToday" flag
+			// 🔄 Reset "HasPostedToday"
 			if (guest.BoundNPC != null)
 				guest.BoundNPC.HasPostedToday = false;
 
-			// 🧍 Only persistent guests who are idle elsewhere return
+			// 🧍 Return Elsewhere guests
 			bool isPersistent = guest.BoundNPC != null;
 			bool isIdleElsewhere = guest.CurrentState == NPCState.Elsewhere;
 
@@ -336,6 +337,7 @@ public partial class TavernManager : Node
 		UpdateFloorLabel();
 		RecheckSeating();
 	}
+
 
 
 	private void UpdateQuestCapacityLabel()
@@ -367,7 +369,7 @@ public partial class TavernManager : Node
 			child.QueueFree();
 
 		// Get all guests who are on the floor and not seated
-		var floorList = AllVillagers
+		var floorList = floorGuests
 			.Where(g =>
 				g != null &&
 				g.CurrentState == NPCState.TavernFloor &&
@@ -652,7 +654,7 @@ public partial class TavernManager : Node
 
 	public void RecheckQuestPosting()
 	{
-		foreach (var guest in AllVillagers)
+		foreach (var guest in floorGuests)
 		{
 			if (guest.BoundNPC == null || guest.BoundNPC.Role != NPCRole.QuestGiver)
 				continue;
@@ -742,7 +744,7 @@ public partial class TavernManager : Node
 
 	public void UpdateFloorLabel()
 	{
-		int onFloor = AllVillagers.Count(g =>
+		int onFloor = floorGuests.Count(g =>
 			g != null &&
 			g.CurrentState == NPCState.TavernFloor &&
 			g.AssignedTable == null &&
@@ -794,11 +796,8 @@ public partial class TavernManager : Node
 		// ✅ Proceed with admission: now safe to set state
 		guest.SetState(NPCState.TavernFloor);
 		if (guest.BoundNPC != null)
-			guest.BoundNPC.State = guest.CurrentState; // <-- ADD THIS
+			guest.BoundNPC.State = guest.CurrentState;
 
-		// 🧠 Register in AllVillagers list if new
-		if (!AllVillagers.Contains(guest))
-			AllVillagers.Add(guest);
 
 		// 🎯 Quest givers must stand to post quests
 		if (guest.BoundNPC?.Role == NPCRole.QuestGiver)
@@ -1003,6 +1002,7 @@ public partial class TavernManager : Node
 
 		data.Gold = currentGold;
 		data.PurchasedItems = new Dictionary<string, int>(PurchasedItems);
+		data.HasSpawnedInitialParty = hasSpawnedInitialParty;
 		data.TavernName = ""; // optional, future
 
 		return data;
@@ -1012,6 +1012,13 @@ public partial class TavernManager : Node
 	{
 		if (data == null)
 			return;
+		if (data != null)
+
+		// Party
+		{
+			hasSpawnedInitialParty = data.HasSpawnedInitialParty;
+		}
+
 
 		// Gold
 		currentGold = data.Gold;
@@ -1032,16 +1039,20 @@ public partial class TavernManager : Node
 
 	public void OnGameStateLoaded()
 	{
-		// Rebuild AllVillagers from restored GuestManager data
+		// Rebuild AllVillagers from the canonical NPC roster
 		AllVillagers.Clear();
 
-		foreach (var g in GuestManager.GuestsInside)
-			AllVillagers.Add(g);
+		if (GuestManager.Instance != null)
+		{
+			foreach (var g in GuestManager.Instance.AllKnownGuests)
+				AllVillagers.Add(g);
+		}
+		else
+		{
+			GameLog.Info("❌ GuestManager.Instance missing during OnGameStateLoaded!");
+		}
 
-		foreach (var g in GuestManager.GuestsOutside)
-			AllVillagers.Add(g);
-
-		// link quests to NPCs
+		// Link quests to NPCs
 		QuestManager.Instance.ResolveNPCLinks();
 
 		// Rebuild tables from purchased items
@@ -1058,8 +1069,6 @@ public partial class TavernManager : Node
 			}
 		}
 
-
-
 		// Refresh UI panels
 		UpdateTimeLabel();
 		UpdateGoldLabel();
@@ -1073,6 +1082,7 @@ public partial class TavernManager : Node
 
 		GameLog.Info("🏁 Save game successfully loaded.");
 	}
+
 
 
 	#endregion
