@@ -1,6 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://bgglg2g704c71"]
+[gd_scene load_steps=5 format=3 uid="uid://bmh3vepjq3xvt"]
 
-[ext_resource type="Script" uid="uid://dg7cq0725bmjt" path="res://Scenes/UI/ShopPanel.cs" id="1_yqe7u"]
+[ext_resource type="Script" uid="uid://dg7cq0725bmjt" path="res://Scenes/ShopPanel.cs" id="1_yqe7u"]
 [ext_resource type="Texture2D" uid="uid://dqrf2qcouoqfh" path="res://Assets/UI/Buttons/ActiveTab.png" id="2_c361v"]
 [ext_resource type="Texture2D" uid="uid://hjhwiuyh0eoo" path="res://Assets/UI/Buttons/InactiveTab.png" id="3_4inv5"]
 [ext_resource type="Script" uid="uid://b8lhdmo7btbjy" path="res://System/Sound/UIInteractTextureButton.cs" id="4_4inv5"]

@@ -7,12 +7,17 @@ public partial class MainMenu : Control
 	private HSlider MusicSlider;
 	private Label VolumeLabel;
 	private AudioStreamPlayer MusicPlayer;
+	[Export] public TextureButton LoadButton;
+	[Export] public PlayThroughSelectWindow PlaythroughWindow;
+
 
 	public override void _Ready()
 	{
 		// 🎮 Core buttons (now using TextureButton)
 		GetNode<TextureButton>("VBoxContainer/NewGame").Pressed += OnNewGamePressed;
 		GetNode<TextureButton>("VBoxContainer/Exit").Pressed += OnExitPressed;
+		GetNode<TextureButton>("VBoxContainer/LoadGame").Pressed += OnLoadGamePressed;
+
 
 		// 🐞 Debug toggle
 		DebugToggle = GetNode<CheckBox>("DebugToggle");
@@ -62,4 +67,11 @@ public partial class MainMenu : Control
 		await ToSignal(GetTree().CreateTimer(3f), "timeout");
 		MusicPlayer.Play();
 	}
+	
+	private void OnLoadGamePressed()
+{
+	GD.Print("Opening load game window...");
+	PlaythroughWindow.Open(PlaythroughSelectMode.LoadGame);
+}
+
 }

@@ -44,13 +44,18 @@ public partial class EscMenu : Control
 	}
 
 	private void ShowQuitConfirmation()
-	{
-		HideMenu();
+{
+	HideMenu();
 
-		ConfirmationWindow.ShowWindow(
-			"Are you sure you want to quit?",
-			() => GetTree().Quit(),
-			() => ShowMenu()
-		);
-	}
+	ConfirmationWindow.ShowWindow(
+		"Are you sure you want to return to the main menu?",
+		() => 
+		{
+			GetTree().Paused = false; // ensure time unfreezes
+			GetTree().ChangeSceneToFile("res://Scenes/MainMenu.tscn");
+		},
+		() => ShowMenu()
+	);
+}
+
 }

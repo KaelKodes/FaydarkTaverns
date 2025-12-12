@@ -21,13 +21,11 @@ buses/default_bus_layout="uid://dvar13s26kkyr"
 
 [autoload]
 
-ClockManager="*res://System/ClockManager.cs"
-GuestManager="*res://System/GuestManager.cs"
 UIAudio="*res://System/Sound/UIAudio.cs"
-TavernStats="*res://System/TavernStats.cs"
-UpgradeManager="*res://System/UpgradeManager.cs"
 CookbookManager="*res://System/Kitchen/CookbookManager.cs"
 EscMenu="*res://Scenes/UI/EscMenu.tscn"
+ClockManager="*res://System/SystemManagers/ClockManager.cs"
+TimerManager="*res://System/SystemManagers/TimerManager.cs"
 
 [display]
 

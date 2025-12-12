@@ -35,7 +35,7 @@ public partial class TavernManager : Node
 
 	public List<Guest> floorGuests = new();
 	public static TavernManager Instance { get; private set; }
-	private ClockManager Clock => GetNode<ClockManager>("/root/ClockManager");
+	private ClockManager Clock => GetNode<ClockManager>("../ClockManager");
 	private Dictionary<string, int> tableCounters = new();
 
 
@@ -127,9 +127,6 @@ public partial class TavernManager : Node
 		ShopButton = GetNode<Button>("../../UI/TavernDisplay/ControlPanel/ShopButton");
 		ShopButton.Pressed += ToggleShop;
 
-		TavernLevelDisplay = GetNode<Label>("../../UI/TavernDisplay/TavernLevelControl/VBoxContainer/TavernLevelDisplay");
-		TavernLevelLabel = GetNode<Label>("../../UI/TavernDisplay/TavernLevelControl/VBoxContainer/TavernLevelLabel");
-		TavernRenownDisplay = GetNode<Label>("../../UI/TavernDisplay/TavernRenown/VBoxContainer/TavernRenownDisplay");
 
 		FeedMenuInstance = GetNode<FeedMenu>("../../UI/FeedMenu");
 
@@ -621,7 +618,7 @@ public partial class TavernManager : Node
 
 		string uniqueName = $"{name} {tableCounters[name]}";
 
-		var tableScene = GD.Load<PackedScene>("res://Scenes/Table.tscn");
+		var tableScene = GD.Load<PackedScene>("res://Scenes/UI/Table.tscn");
 		var tableInstance = tableScene.Instantiate<Table>();
 
 		// 👇 Set correct seat count per table type

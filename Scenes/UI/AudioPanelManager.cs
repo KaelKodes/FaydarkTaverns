@@ -35,15 +35,15 @@ public partial class AudioPanelManager : Panel
 
 	private void SetBusVolume(int index, double value)
 {
-    float linear = (float)value / 100f;
+	float linear = (float)value / 100f;
 
-    float db = Mathf.LinearToDb(linear);
+	float db = Mathf.LinearToDb(linear);
 
-    // Handle silence case cleanly
-    if (linear <= 0.0001f)
-        db = -80f;
+	// Handle silence case cleanly
+	if (linear <= 0.0001f)
+		db = -80f;
 
-    AudioServer.SetBusVolumeDb(index, db);
+	AudioServer.SetBusVolumeDb(index, db);
 }
 
 

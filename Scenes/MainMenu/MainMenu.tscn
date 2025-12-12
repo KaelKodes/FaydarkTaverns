@@ -1,10 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://bid4j1dmjtmg8"]
+[gd_scene load_steps=8 format=3 uid="uid://cnbv0kpjf2kmk"]
 
-[ext_resource type="Script" path="res://Scenes/MainMenu.cs" id="1_tt5f1"]
+[ext_resource type="Script" uid="uid://bhj2q8slrlooa" path="res://Scenes/MainMenu.cs" id="1_tt5f1"]
 [ext_resource type="Texture2D" uid="uid://dnq3jwfymsaxh" path="res://Assets/UI/Placeholder/TitleConcept2-Centered.png" id="2_ghw46"]
 [ext_resource type="Texture2D" uid="uid://dqrf2qcouoqfh" path="res://Assets/UI/Buttons/ActiveTab.png" id="3_8um5k"]
 [ext_resource type="AudioStream" uid="uid://bsghs4tohilvv" path="res://Assets/Audio/Music/NothingQuiteLikeIt.mp3" id="3_df05h"]
-[ext_resource type="Script" path="res://Scenes/MainMenuMusicPlayer.cs" id="4_8um5k"]
+[ext_resource type="Script" uid="uid://d0o5nruylpjgu" path="res://Scenes/MainMenuMusicPlayer.cs" id="4_8um5k"]
 [ext_resource type="Texture2D" uid="uid://hjhwiuyh0eoo" path="res://Assets/UI/Buttons/InactiveTab.png" id="4_xim88"]
 [ext_resource type="PackedScene" uid="uid://drdts6pixgb8h" path="res://Scenes/UI/PlayThroughSelectWindow.tscn" id="7_xim88"]
 
@@ -140,7 +140,6 @@ text = "DEBUG"
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_df05h")
 script = ExtResource("4_8um5k")
-DelayBeforeLoop = null
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 0
