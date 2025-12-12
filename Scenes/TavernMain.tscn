@@ -1,4 +1,4 @@
-[gd_scene load_steps=80 format=3 uid="uid://bp53yv3ypaa5j"]
+[gd_scene load_steps=78 format=3 uid="uid://bp53yv3ypaa5j"]
 
 [ext_resource type="Script" uid="uid://hacx1tuggxkp" path="res://Scenes/Quest/QuestBoardPanel.cs" id="1_7ljul"]
 [ext_resource type="Script" uid="uid://c75ghsbdpuavi" path="res://Scenes/UI/OutsideLighting.cs" id="1_j8kms"]
@@ -6,11 +6,9 @@
 [ext_resource type="Script" uid="uid://bw4esvijflh3" path="res://Scenes/TavernManager.cs" id="1_v6xsb"]
 [ext_resource type="PackedScene" uid="uid://w7he4xk8qe6k" path="res://Scenes/UI/QuestCard.tscn" id="2_6wg6o"]
 [ext_resource type="Texture2D" uid="uid://bqdgb4x54p4hk" path="res://Assets/UI/Placeholder/WINDOW1.png" id="2_j8kms"]
-[ext_resource type="Script" uid="uid://x4id2gkwvhxq" path="res://System/SystemManagers/TimerManager.cs" id="2_t546b"]
 [ext_resource type="Script" uid="uid://bo03gb6exqxki" path="res://Scenes/UI/AdventurerRosterPanel.cs" id="2_w3872"]
 [ext_resource type="PackedScene" uid="uid://ch7r0s51qa60a" path="res://Scenes/UI/GuestCard.tscn" id="5_6wg6o"]
 [ext_resource type="PackedScene" uid="uid://bgglg2g704c71" path="res://Scenes/ShopPanel.tscn" id="5_icuts"]
-[ext_resource type="Script" uid="uid://i7n3efuy43nr" path="res://System/SystemManagers/ClockManager.cs" id="7_6462i"]
 [ext_resource type="Texture2D" uid="uid://dq375fefrr82l" path="res://Assets/UI/Bkg/ClearPanel.png" id="8_3yx2a"]
 [ext_resource type="Script" uid="uid://b77bsiakfj8qa" path="res://Scenes/FurniturePanel.cs" id="9_wnxq3"]
 [ext_resource type="Texture2D" uid="uid://bdfjo5q8ltm3j" path="res://Assets/UI/Bkg/Panel.png" id="12_slrnj"]
@@ -36,7 +34,7 @@
 [ext_resource type="Texture2D" uid="uid://dwu6b0hytl2jx" path="res://Assets/UI/FX/burst.png" id="30_u8d0f"]
 [ext_resource type="PackedScene" uid="uid://dbl2xruqo3b45" path="res://Scenes/Quest/QuestJournal.tscn" id="30_xdfn1"]
 [ext_resource type="PackedScene" uid="uid://drdts6pixgb8h" path="res://Scenes/UI/PlayThroughSelectWindow.tscn" id="32_4pqvv"]
-[ext_resource type="PackedScene" path="res://Scenes/Quest/QuestDetailPopup.tscn" id="32_l6d2f"]
+[ext_resource type="PackedScene" uid="uid://crp07owq481ya" path="res://Scenes/Quest/QuestDetailPopup.tscn" id="32_l6d2f"]
 [ext_resource type="Script" uid="uid://hsbvhx31d2c8" path="res://Scenes/UI/ConfirmationWindow.cs" id="33_l6d2f"]
 [ext_resource type="PackedScene" uid="uid://c5vdtaboy0ony" path="res://Scenes/Kitchen/FeedMenu.tscn" id="33_xdfn1"]
 [ext_resource type="Texture2D" uid="uid://dbyysdbetfpq2" path="res://Assets/UI/Bkg/TorchFire.png" id="34_4alcf"]
@@ -358,6 +356,7 @@ offset_top = 44.0
 offset_right = 309.0
 offset_bottom = 67.0
 size_flags_vertical = 0
+text = "Test"
 horizontal_alignment = 1
 
 [node name="QuestCapacity" type="Label" parent="World/Tavern"]
@@ -419,9 +418,6 @@ script = ExtResource("34_m23cf")
 
 [node name="Systems" type="Node" parent="."]
 
-[node name="ClockManager" type="Node" parent="Systems"]
-script = ExtResource("7_6462i")
-
 [node name="TavernManager" type="Node" parent="Systems" node_paths=PackedStringArray("TimeLabel", "GoldLabel", "PauseButton", "Button1x", "Button2x", "Button4x", "Button8x", "ShopButton", "PantryPanel", "TavernRenownDisplay", "TavernLevelDisplay", "TavernLevelLabel", "AdventurerListContainer", "TavernFloorPanel", "FloorSlots", "TavernFloorLabel", "EscMenu")]
 script = ExtResource("1_v6xsb")
 TimeLabel = NodePath("../../UI/TavernDisplay/ControlPanel/TimeLabel")
@@ -432,7 +428,7 @@ Button2x = NodePath("../../UI/TavernDisplay/ControlPanel/TopBar/Button2x")
 Button4x = NodePath("../../UI/TavernDisplay/ControlPanel/TopBar/Button4x")
 Button8x = NodePath("../../UI/TavernDisplay/ControlPanel/TopBar/Button8x")
 ShopButton = NodePath("../../UI/TavernDisplay/ControlPanel/ShopButton")
-QuestBoardPath = NodePath("../../UI/QuestBoardPanel/ScrollContainer/QuestBoard")
+QuestBoardPath = NodePath("../../UI/QuestBoardPanel")
 PantryPanel = NodePath("../../UI/PantryControl")
 TavernRenownDisplay = NodePath("../../UI/TavernDisplay/TavernRenown/VBoxContainer/TavernRenownDisplay")
 TavernLevelDisplay = NodePath("../../UI/TavernDisplay/TavernLevelControl/VBoxContainer/TavernLevelDisplay")
@@ -446,9 +442,6 @@ AdventurerRosterPath = NodePath("../../UI/AdventurerRosterPanel")
 ShopPanelScene = ExtResource("5_icuts")
 FurniturePanelPath = NodePath("../../UI/FurnitureContainer/FurniturePanel")
 
-[node name="TimerManager" type="Node" parent="Systems"]
-script = ExtResource("2_t546b")
-
 [node name="TavernStats" type="Node" parent="Systems"]
 script = ExtResource("14_l6d2f")
 
@@ -457,20 +450,21 @@ script = ExtResource("14_l6d2f")
 [node name="AdventurerRosterPanel" type="PanelContainer" parent="UI"]
 offset_left = 254.0
 offset_top = 72.0
-offset_right = 254.0
+offset_right = 317.0
 offset_bottom = 1017.0
+size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxEmpty_esg4o")
 script = ExtResource("2_w3872")
 GuestCardScene = ExtResource("5_6wg6o")
 
 [node name="AdventurerListContainer" type="VBoxContainer" parent="UI/AdventurerRosterPanel"]
 layout_mode = 2
-size_flags_horizontal = 0
+size_flags_vertical = 0
 theme_override_constants/separation = 101
 
 [node name="TavernFloorPanel" type="VBoxContainer" parent="UI/AdventurerRosterPanel/AdventurerListContainer"]
 layout_mode = 2
-size_flags_horizontal = 0
+size_flags_vertical = 3
 theme_override_constants/separation = 27
 alignment = 1
 
@@ -478,13 +472,6 @@ alignment = 1
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 108
-
-[node name="FeedMenu" parent="UI" instance=ExtResource("33_xdfn1")]
-visible = false
-offset_left = -27.0
-offset_top = -26.500061
-offset_right = 37.0
-offset_bottom = 37.49994
 
 [node name="FurnitureContainer" type="Control" parent="UI"]
 visible = false
@@ -878,7 +865,8 @@ PlaythroughWindow = NodePath("../PlaythroughSelectWindow")
 ConfirmationWindow = NodePath("../ConfirmationWindow")
 
 [node name="ConfirmationWindow" type="Control" parent="UI/UI" node_paths=PackedStringArray("ConfirmationLabel", "YesButton", "NoButton")]
-z_index = 50
+top_level = true
+z_index = 51
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -895,13 +883,11 @@ YesButton = NodePath("Panel/VBoxContainer/HBoxContainer/YesButton")
 NoButton = NodePath("Panel/VBoxContainer/HBoxContainer/NoButton")
 
 [node name="Panel" type="Panel" parent="UI/UI/ConfirmationWindow"]
+custom_minimum_size = Vector2(400, 75)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -135.0
-offset_right = 100.0
-offset_bottom = 86.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 3
@@ -942,7 +928,10 @@ visible = false
 z_index = 4
 
 [node name="QuestDetailPopup" parent="UI/UI" instance=ExtResource("32_l6d2f")]
-oversampling_override = 1.0
+initial_position = 1
+visible = false
+
+[node name="FeedMenu" parent="UI" instance=ExtResource("33_xdfn1")]
 
 [node name="FX" type="Node" parent="."]
 
@@ -1094,4 +1083,3 @@ PointCursor = ExtResource("22_abkob")
 [connection signal="pressed" from="UI/TavernDisplay/ControlPanel/TopBar/Button1x" to="UI/QuestBoardPanel" method="OnSpeed1xPressed"]
 [connection signal="pressed" from="UI/TavernDisplay/ControlPanel/TopBar/Button2x" to="UI/QuestBoardPanel" method="OnSpeed2xPressed"]
 [connection signal="pressed" from="UI/TavernDisplay/ControlPanel/TopBar/Button4x" to="UI/QuestBoardPanel" method="OnSpeed4xPressed"]
-[connection signal="pressed" from="UI/TavernDisplay/ControlPanel/TopBar/Button8x" to="Systems/ClockManager" method="OnSpeed8xPressed"]

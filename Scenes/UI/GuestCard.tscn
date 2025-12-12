@@ -20,13 +20,13 @@ metadata/_edit_horizontal_guides_ = [10.0]
 
 [node name="Background" type="ColorRect" parent="."]
 z_index = 2
-layout_mode = 2
+layout_mode = 0
 offset_right = 92.0
 offset_bottom = 107.0
 scale = Vector2(0.829574, 0.965532)
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-layout_mode = 2
+layout_mode = 0
 offset_top = 15.4629
 offset_right = 76.0
 offset_bottom = 88.4629
@@ -49,7 +49,7 @@ expand_mode = 1
 [node name="KickButton" type="Button" parent="."]
 z_index = 10
 custom_minimum_size = Vector2(5, 5)
-layout_mode = 2
+layout_mode = 0
 offset_left = 72.7498
 offset_right = 80.7498
 offset_bottom = 10.0

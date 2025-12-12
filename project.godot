@@ -21,11 +21,12 @@ buses/default_bus_layout="uid://dvar13s26kkyr"
 
 [autoload]
 
-UIAudio="*res://System/Sound/UIAudio.cs"
-CookbookManager="*res://System/Kitchen/CookbookManager.cs"
-EscMenu="*res://Scenes/UI/EscMenu.tscn"
+GuestManager="*res://System/Guests/GuestManager.cs"
 ClockManager="*res://System/SystemManagers/ClockManager.cs"
 TimerManager="*res://System/SystemManagers/TimerManager.cs"
+EscMenu="*res://Scenes/UI/EscMenu.tscn"
+UIAudio="*res://System/Sound/UIAudio.cs"
+CookbookManager="*res://System/Kitchen/CookbookManager.cs"
 
 [display]
 

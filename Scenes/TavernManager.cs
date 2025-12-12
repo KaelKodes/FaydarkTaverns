@@ -35,7 +35,7 @@ public partial class TavernManager : Node
 
 	public List<Guest> floorGuests = new();
 	public static TavernManager Instance { get; private set; }
-	private ClockManager Clock => GetNode<ClockManager>("../ClockManager");
+	private ClockManager Clock => ClockManager.Instance;
 	private Dictionary<string, int> tableCounters = new();
 
 
@@ -105,26 +105,26 @@ public partial class TavernManager : Node
 		ClockManager.OnNewDay += StartNewDay;
 
 
-		TimeLabel ??= GetNode<Label>("../TopBar/TimeLabel");
-		GoldLabel ??= GetNode<Label>("../TopBar/GoldLabel");
-		PauseButton ??= GetNode<Button>("../TopBar/PauseButton");
+		//TimeLabel ??= GetNode<Label>("../TopBar/TimeLabel");
+		//GoldLabel ??= GetNode<Label>("../TopBar/GoldLabel");
+		//PauseButton ??= GetNode<Button>("../TopBar/PauseButton");
 		PauseButton.Pressed += TogglePause;
 
-		Button1x ??= GetNode<Button>("../ControlPanel/TopBar/Button1x");
+		//Button1x ??= GetNode<Button>("../ControlPanel/TopBar/Button1x");
 		Button1x.Pressed += OnSpeed1xPressed;
 
-		Button2x ??= GetNode<Button>("../ControlPanel/TopBar/Button2x");
+		//Button2x ??= GetNode<Button>("../ControlPanel/TopBar/Button2x");
 		Button2x.Pressed += OnSpeed2xPressed;
 
-		Button4x ??= GetNode<Button>("../ControlPanel/TopBar/Button4x");
+		//Button4x ??= GetNode<Button>("../ControlPanel/TopBar/Button4x");
 		Button4x.Pressed += OnSpeed4xPressed;
 
-		Button8x ??= GetNode<Button>("../ControlPanel/TopBar/Button8x");
+		//Button8x ??= GetNode<Button>("../ControlPanel/TopBar/Button8x");
 		Button8x.Pressed += OnSpeed8xPressed;
 
-		var board = GetNode<QuestBoardPanel>("../../UI/QuestBoardPanel");
+		//var board = GetNode<QuestBoardPanel>("../../UI/QuestBoardPanel");
 
-		ShopButton = GetNode<Button>("../../UI/TavernDisplay/ControlPanel/ShopButton");
+		//ShopButton = GetNode<Button>("../../UI/TavernDisplay/ControlPanel/ShopButton");
 		ShopButton.Pressed += ToggleShop;
 
 
@@ -173,16 +173,34 @@ public partial class TavernManager : Node
 	}
 
 
-	private void DeferredStart()
+private void DeferredStart()
+{
+	if (GameStateLoader.PendingLoadData != null)
 	{
-		if (GameStateLoader.PendingLoadData != null)
-		{
-			GD.Print("[TavernManager] Deferred restore...");
-			GameStateLoader.RestoreIntoScene(GameStateLoader.PendingLoadData);
-			GameStateLoader.PendingLoadData = null;
-		}
-		UpdateTavernStatsDisplay();
+		GD.Print("[TavernManager] Deferred restore...");
+		GameStateLoader.RestoreIntoScene(GameStateLoader.PendingLoadData);
+		GameStateLoader.PendingLoadData = null;
 	}
+
+	UpdateTavernStatsDisplay();
+
+	// --- REQUIRED SIMULATION STARTUP ---
+	// 1. Unfreeze world time
+	ClockManager.SimulationActive = true;
+	ClockManager.SetTimeMultiplier(1f);
+
+	// 2. Force the GuestManager to process today's schedule immediately
+	GuestManager.Instance?.TickGuests(ClockManager.CurrentTime);
+
+	// 3. Refresh UI after systems boot
+	UpdateTimeLabel();
+	UpdateFloorLabel();
+	DisplayAdventurers();
+}
+
+	
+
+
 	public override void _ExitTree()
 	{
 		if (Instance == this)

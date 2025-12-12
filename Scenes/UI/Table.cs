@@ -7,7 +7,7 @@ using FaydarkTaverns.Objects;
 public partial class Table : Panel
 {
 	[Export] public int SeatCount = 2;
-	private PackedScene seatSlotScene = GD.Load<PackedScene>("res://Scenes/SeatSlot.tscn");
+	private PackedScene seatSlotScene = GD.Load<PackedScene>("res://Scenes/UI/SeatSlot.tscn");
 
 	private Label nameLabel;
 	private HBoxContainer seatRow;

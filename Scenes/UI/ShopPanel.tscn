@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://bmh3vepjq3xvt"]
+[gd_scene load_steps=6 format=3 uid="uid://bmh3vepjq3xvt"]
 
 [ext_resource type="Script" uid="uid://dg7cq0725bmjt" path="res://Scenes/ShopPanel.cs" id="1_yqe7u"]
 [ext_resource type="Texture2D" uid="uid://dqrf2qcouoqfh" path="res://Assets/UI/Buttons/ActiveTab.png" id="2_c361v"]
 [ext_resource type="Texture2D" uid="uid://hjhwiuyh0eoo" path="res://Assets/UI/Buttons/InactiveTab.png" id="3_4inv5"]
 [ext_resource type="Script" uid="uid://b8lhdmo7btbjy" path="res://System/Sound/UIInteractTextureButton.cs" id="4_4inv5"]
+[ext_resource type="Texture2D" uid="uid://d0f5jt1n8fr3i" path="res://Assets/UI/Bkg/ParchmentBKG.png" id="4_auuba"]
 
 [node name="ShopPanel" type="Window" node_paths=PackedStringArray("ItemListContainer", "CartContainer", "TotalLabel", "ConfirmButton", "CloseButton", "TabTables", "TabDecorations", "TabSupplies", "TabUpgrade")]
 transparent_bg = true
@@ -25,7 +26,7 @@ TabTables = NodePath("VBoxContainer/Tabs/Tables")
 TabDecorations = NodePath("VBoxContainer/Tabs/Decorations")
 TabSupplies = NodePath("VBoxContainer/Tabs/Supplies")
 TabUpgrade = NodePath("VBoxContainer/Tabs/Upgrades")
-activeTexture = ExtResource("2_c361v")
+activeTexture = ExtResource("4_auuba")
 inactiveTexture = ExtResource("3_4inv5")
 metadata/_edit_horizontal_guides_ = [420.0]
 
@@ -41,7 +42,8 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-texture = ExtResource("2_c361v")
+texture = ExtResource("4_auuba")
+expand_mode = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 anchors_preset = 15
@@ -160,6 +162,7 @@ alignment = 1
 
 [node name="YourCart" type="Label" parent="VBoxContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Your Cart"
 horizontal_alignment = 1
 
@@ -174,6 +177,7 @@ layout_mode = 2
 
 [node name="Total" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Total:"
 horizontal_alignment = 1
 
@@ -195,6 +199,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Confirm"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -217,6 +222,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "Close"
 horizontal_alignment = 1
 vertical_alignment = 1

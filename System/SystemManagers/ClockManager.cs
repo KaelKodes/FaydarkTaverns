@@ -18,6 +18,8 @@ public partial class ClockManager : Node
 	public static int CurrentDay => (CurrentTime - GameStartTime).Days;
 	private bool autosavedToday = false;
 
+	public static bool SimulationActive = false;
+
 	public override void _Ready()
 	{
 		// Safe singleton guard — should generally only be one (autoload)
@@ -36,6 +38,9 @@ public partial class ClockManager : Node
 
 	public override void _Process(double delta)
 	{
+		if (!SimulationActive)
+        return;
+		
 		if (TimeMultiplier == 0f)
 			return;
 

@@ -1,7 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://g7cdgtjmhjxt"]
+[gd_scene load_steps=7 format=3 uid="uid://crp07owq481ya"]
 
 [ext_resource type="Texture2D" uid="uid://dqrf2qcouoqfh" path="res://Assets/UI/Buttons/ActiveTab.png" id="1_8losi"]
-[ext_resource type="Script" uid="uid://sfjxjgulmfra" path="res://Scenes/UI/QuestDetailPopup.cs" id="1_jec6c"]
+[ext_resource type="Script" uid="uid://sfjxjgulmfra" path="res://Scenes/Quest/QuestDetailPopup.cs" id="1_jec6c"]
 [ext_resource type="Script" uid="uid://qi56yy8o3hs4" path="res://System/Sound/UIInteractButton.cs" id="2_psih4"]
 [ext_resource type="Texture2D" uid="uid://hjhwiuyh0eoo" path="res://Assets/UI/Buttons/InactiveTab.png" id="3_5me6y"]
 
@@ -21,7 +21,8 @@ expand_margin_bottom = 35.0
 
 [node name="QuestDetailPopup" type="Window" node_paths=PackedStringArray("TitleLabel", "RegionLabel", "TypeLabel", "RewardLabel", "TimeLabel", "RequiredSkillsLabel", "RecommendedSkillsLabel", "DescriptionLabel", "AcceptButton", "CloseButton", "DismissButton", "RetryDialog")]
 transparent_bg = true
-position = Vector2i(0, 36)
+oversampling_override = 1.0
+position = Vector2i(385, 100)
 size = Vector2i(234, 305)
 wrap_controls = true
 content_scale_mode = 1

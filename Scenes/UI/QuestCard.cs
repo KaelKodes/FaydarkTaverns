@@ -370,21 +370,40 @@ private void UnassignFromSlot(int index)
 
 
 
-	public override void _GuiInput(InputEvent @event)
+public override void _GuiInput(InputEvent @event)
 {
 	if (@event is InputEventMouseButton mouseEvent && mouseEvent.Pressed)
 	{
 		if (mouseEvent.ButtonIndex == MouseButton.Left)
 		{
-			var popup = GetTree().Root.GetNode<QuestDetailPopup>("TavernMain/UI/QuestDetailPopup");
-			popup.SetQuest(quest);
-			popup.Show();
+			ShowQuestDetailPopup();
 		}
 
 		// 🧹 Removed right-click unassign fallback
 	}
 }
 
+
+private void ShowQuestDetailPopup()
+{
+	// Load the popup scene
+	var popupScene = GD.Load<PackedScene>("res://Scenes/Quest/QuestDetailPopup.tscn");
+	var popup = popupScene.Instantiate<QuestDetailPopup>();
+
+	// Where the popup USED to be located
+	var uiRoot = GetTree().Root.GetNode("TavernMain/UI/UI");
+
+	// If the second UI container no longer exists, fall back safely
+	if (uiRoot == null)
+		uiRoot = GetTree().Root.GetNode("TavernMain/UI");
+
+	uiRoot.AddChild(popup);
+
+	// Pass the data into the popup
+	popup.SetQuest(quest);
+
+	popup.Show();
+}
 
 
 
